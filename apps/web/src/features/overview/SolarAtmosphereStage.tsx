@@ -166,7 +166,7 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
     <div className="w-full select-none font-sans">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_310px] gap-4 min-h-[296px]">
         <div
-          className={`rounded-[20px] relative overflow-hidden flex flex-col justify-between p-6 sm:p-7 shadow-sm transition-all duration-300 min-h-[296px] ${stateData.bgClass}`}
+          className={`rounded-3xl relative overflow-hidden flex flex-col justify-between p-6 sm:p-7 card-floating-static transition-all duration-300 min-h-[296px] ${stateData.bgClass}`}
         >
           <svg
             className="absolute bottom-0 left-0 right-0 w-full h-[55px] pointer-events-none opacity-10"

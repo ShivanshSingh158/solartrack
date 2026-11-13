@@ -64,7 +64,7 @@ export const SatellitePlantMap: React.FC<SatellitePlantMapProps> = ({
   }, [coords.lat, coords.lon]);
 
   return (
-    <div className="rounded-[20px] overflow-hidden relative h-full min-h-[296px] shadow-sm border border-slate-200/90 bg-slate-950 flex flex-col isolate">
+    <div className="rounded-3xl overflow-hidden relative h-full min-h-[296px] card-floating-static !bg-slate-950 border border-slate-200/90 flex flex-col isolate">
       <div className="absolute top-3 left-3 z-20 flex items-center pointer-events-none">
         <div className="px-3 py-1 rounded-full bg-slate-950/85 backdrop-blur-md shadow-xs flex items-center space-x-1.5 pointer-events-auto border border-white/20">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />

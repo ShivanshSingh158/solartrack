@@ -20,6 +20,38 @@ body, button, input, select {
 }
 
 /* ==========================================================================
+   AQI.in / Apple Multi-Layered Floating Elevation Shadow
+   ========================================================================== */
+.card-floating-elevation {
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 
+    0 2px 4px -1px rgba(15, 23, 42, 0.03),
+    0 12px 24px -4px rgba(15, 23, 42, 0.06),
+    0 28px 56px -12px rgba(15, 23, 42, 0.09);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease;
+}
+
+.card-floating-elevation:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 6px -1px rgba(15, 23, 42, 0.04),
+    0 16px 32px -4px rgba(15, 23, 42, 0.08),
+    0 36px 72px -15px rgba(15, 23, 42, 0.13);
+}
+
+.card-floating-static {
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 
+    0 2px 4px -1px rgba(15, 23, 42, 0.03),
+    0 12px 24px -4px rgba(15, 23, 42, 0.06),
+    0 28px 56px -12px rgba(15, 23, 42, 0.09);
+}
+
+/* ==========================================================================
    LOCKED-IN 8-STEP TYPOGRAPHY SCALE (AQI.in + Stripe + Linear Precision)
    ========================================================================== */
 .hero-giant-num {

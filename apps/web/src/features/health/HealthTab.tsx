@@ -106,7 +106,7 @@ export const HealthTab: React.FC<HealthTabProps> = ({
 
   return (
     <div className="space-y-5 max-w-[1440px] mx-auto pb-8 animate-in fade-in duration-300">
-      <section className="rounded-3xl bg-white border border-slate-200/80 shadow-xs overflow-hidden">
+      <section className="rounded-3xl card-floating-static overflow-hidden">
         <div className="px-4 sm:px-6 py-4 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">

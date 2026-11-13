@@ -165,10 +165,10 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* CARD 1: TODAY */}
         <div
-          className={`p-5 rounded-2xl shadow-xs flex flex-col justify-between transition-all duration-200 min-h-[158px] ${
+          className={`p-5 card-floating-elevation flex flex-col justify-between min-h-[158px] ${
             isTodayConfirmed
-              ? 'bg-white border border-slate-200/80 hover:border-slate-300'
-              : 'bg-amber-50/30 border border-dashed border-amber-300/90 hover:border-amber-400'
+              ? ''
+              : '!bg-amber-50/30 !border-dashed !border-amber-300/90 hover:!border-amber-400'
           }`}
         >
           <div className="flex items-center justify-between gap-2 min-w-0">
@@ -281,10 +281,10 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
 
         {/* CARD 2: YESTERDAY */}
         <div
-          className={`p-5 rounded-2xl shadow-xs flex flex-col justify-between transition-all duration-200 min-h-[158px] ${
+          className={`p-5 card-floating-elevation flex flex-col justify-between min-h-[158px] ${
             isYesterdayConfirmed
-              ? 'bg-white border border-slate-200/80 hover:border-slate-300'
-              : 'bg-amber-50/30 border border-dashed border-amber-300/90 hover:border-amber-400'
+              ? ''
+              : '!bg-amber-50/30 !border-dashed !border-amber-300/90 hover:!border-amber-400'
           }`}
         >
           <div className="flex items-center justify-between gap-2 min-w-0">
@@ -350,7 +350,7 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
         </div>
 
         {/* CARD 3: CURRENT MONTH MTD */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all duration-200 min-h-[158px]">
+        <div className="p-5 card-floating-elevation flex flex-col justify-between min-h-[158px]">
           <div className="flex items-center justify-between gap-1.5 min-w-0">
             <span className="text-slate-500 font-semibold tracking-wider text-[11px] uppercase whitespace-nowrap">
               THIS MONTH ({istNow.monthUpper})
@@ -416,7 +416,7 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
         </div>
 
         {/* CARD 4: LIFETIME TOTAL */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all duration-200 min-h-[158px]">
+        <div className="p-5 card-floating-elevation flex flex-col justify-between min-h-[158px]">
           <div className="flex items-center justify-between gap-1.5 min-w-0">
             <span className="text-slate-500 font-semibold tracking-wider text-[11px] uppercase whitespace-nowrap">
               LIFETIME TOTAL

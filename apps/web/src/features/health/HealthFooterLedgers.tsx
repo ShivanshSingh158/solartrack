@@ -42,7 +42,7 @@ export const HealthFooterLedgers: React.FC<HealthFooterLedgersProps> = ({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-5">
       {/* LEFT (50% -> 6 cols): THERMAL STRESS & MPPT WAKE DIAGNOSTIC LEDGER */}
-      <section className="lg:col-span-6 rounded-3xl bg-white border border-slate-200/80 shadow-xs p-5 flex flex-col justify-between">
+      <section className="lg:col-span-6 rounded-3xl card-floating-static p-5 flex flex-col justify-between">
         <div>
           <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-slate-100">
             <div>
@@ -151,7 +151,7 @@ export const HealthFooterLedgers: React.FC<HealthFooterLedgersProps> = ({
       </section>
 
       {/* RIGHT (50% -> 6 cols): CLOUD OUTAGE, SYNC HEALTH & OPTICS PARITY LEDGER */}
-      <section className="lg:col-span-6 rounded-3xl bg-white border border-slate-200/80 shadow-xs p-5 flex flex-col justify-between">
+      <section className="lg:col-span-6 rounded-3xl card-floating-static p-5 flex flex-col justify-between">
         <div>
           <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-slate-100">
             <div>

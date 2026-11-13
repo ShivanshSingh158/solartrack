@@ -49,7 +49,7 @@ export const PanelHygieneCard: React.FC<PanelHygieneCardProps> = ({
   const cleanScorePct = Math.max(0, Math.min(100, Math.round(100 - surfaceLossPct)));
 
   return (
-    <div className="p-5 bg-white rounded-3xl border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-3.5 relative">
+    <div className="p-5 card-floating-static flex flex-col justify-between space-y-3.5 relative">
       {/* Header: Clean Title & Outline Button — ZERO PILLS */}
       <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 gap-2">
         <div className="flex items-center space-x-2 min-w-0">

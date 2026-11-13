@@ -74,7 +74,7 @@ export const WeeklyPerformanceLedgerCard: React.FC<WeeklyPerformanceLedgerCardPr
   const maxDayKwh = Math.max(...effectiveEntries.map((e) => Number(e.realKwh) || 0), 13.5);
 
   return (
-    <div className="w-full bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 flex flex-col justify-between space-y-4">
+    <div className="w-full card-floating-static p-5 flex flex-col justify-between space-y-4">
       {/* Top Header Row */}
       <div className="flex flex-wrap items-center justify-between gap-3 pb-1 border-b border-slate-100">
         <div className="flex items-center gap-2.5">

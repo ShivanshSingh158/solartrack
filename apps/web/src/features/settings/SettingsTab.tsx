@@ -145,7 +145,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-[24px] border border-slate-100/90 shadow-[0_8px_30px_rgba(15,23,42,0.04)] overflow-hidden">
+      <div className="card-floating-static rounded-3xl overflow-hidden">
         {/* TOP COCKPIT HEADER */}
         <div className="px-5 py-4 border-b border-slate-100 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3.5">
           <div className="flex items-start sm:items-center gap-3 min-w-0">

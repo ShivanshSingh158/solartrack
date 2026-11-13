@@ -15,7 +15,7 @@ export const SolarComparisonChart: React.FC<SolarComparisonChartProps> = (props)
   return (
     <div
       id="solar-comparison-chart"
-      className="w-full bg-white rounded-3xl border border-slate-200/80 shadow-xs flex flex-col overflow-visible relative"
+      className="w-full card-floating-static flex flex-col overflow-visible relative"
     >
       <ComparisonHeaderStrip
         selectedYmd={vm.selectedYmd}
