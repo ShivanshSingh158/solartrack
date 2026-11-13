@@ -88,15 +88,15 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
             </Text>
           </View>
 
-          {/* Quick Date Capsule */}
-          <View style={styles.dateCapsule}>
-            <Text style={styles.dateCapsuleText}>Today</Text>
+          {/* Quick Date Tag */}
+          <View style={styles.dateBox}>
+            <Text style={styles.dateBoxText}>Today</Text>
           </View>
 
-          {/* Weather & Sun Status Pill */}
-          <View style={styles.weatherPill}>
+          {/* Weather & Sun Status Tag */}
+          <View style={styles.weatherBox}>
             <Sun size={13} color="#D97706" />
-            <Text style={styles.weatherPillText}>27°C Sunny</Text>
+            <Text style={styles.weatherBoxText}>27°C Sunny</Text>
           </View>
         </View>
 
@@ -140,7 +140,7 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
               <Text style={styles.metricCardLabel}>TODAY</Text>
               <Text style={styles.metricCardValue}>{data?.todayEnergy?.todayKwh ?? 2.8}</Text>
               <Text style={styles.metricCardUnit}>kWh</Text>
-              <View style={styles.metricEarningBadge}>
+              <View style={styles.metricEarningBox}>
                 <IndianRupee size={10} color="#059669" />
                 <Text style={styles.metricEarningText}>
                   {data?.todayEnergy?.todaySavingsInr ?? 21}
@@ -153,7 +153,7 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
               <Text style={[styles.metricCardLabel, styles.metricCardLabelHighlight]}>NOVEMBER</Text>
               <Text style={styles.metricCardValue}>{data?.todayEnergy?.monthKwh ?? 136.8}</Text>
               <Text style={styles.metricCardUnit}>kWh</Text>
-              <View style={styles.metricEarningBadge}>
+              <View style={styles.metricEarningBox}>
                 <IndianRupee size={10} color="#059669" />
                 <Text style={styles.metricEarningText}>
                   {(data?.todayEnergy?.monthSavingsInr ?? 1026).toLocaleString("en-IN")}
@@ -166,7 +166,7 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
               <Text style={styles.metricCardLabel}>LIFETIME</Text>
               <Text style={styles.metricCardValue}>{data?.todayEnergy?.lifetimeKwh ?? 155.1}</Text>
               <Text style={styles.metricCardUnit}>kWh</Text>
-              <View style={styles.metricEarningBadge}>
+              <View style={styles.metricEarningBox}>
                 <IndianRupee size={10} color="#059669" />
                 <Text style={styles.metricEarningText}>
                   {(data?.todayEnergy?.lifetimeSavingsInr ?? 1163).toLocaleString("en-IN")}
@@ -175,10 +175,10 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
             </View>
           </View>
 
-          {/* Inverter Reconciled Register Subtitle Pill */}
-          <View style={styles.reconciledPill}>
+          {/* Inverter Reconciled Register Subtitle Box */}
+          <View style={styles.reconciledBox}>
             <Shield size={13} color="#059669" />
-            <Text style={styles.reconciledPillText}>
+            <Text style={styles.reconciledBoxText}>
               Inverter Register Synced · 17.5 kWh recovered from Wi-Fi drop
             </Text>
           </View>
@@ -308,30 +308,30 @@ const styles = StyleSheet.create({
     color: "#0F172A",
     letterSpacing: -0.3,
   },
-  dateCapsule: {
+  dateBox: {
     backgroundColor: "#FFFFFF",
-    paddingHorizontal: 10,
+    paddingHorizontal: 9,
     paddingVertical: 4,
-    borderRadius: 999,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: "#E2E8F0",
   },
-  dateCapsuleText: {
+  dateBoxText: {
     fontSize: 11,
     fontWeight: "500",
     color: "#475569",
   },
-  weatherPill: {
+  weatherBox: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#FEF3C7",
-    paddingHorizontal: 10,
+    paddingHorizontal: 9,
     paddingVertical: 4,
-    borderRadius: 999,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: "#FDE68A",
   },
-  weatherPillText: {
+  weatherBoxText: {
     fontSize: 11,
     fontWeight: "600",
     color: "#B45309",
@@ -448,32 +448,34 @@ const styles = StyleSheet.create({
     color: "#64748B",
     marginTop: -2,
   },
-  metricEarningBadge: {
+  metricEarningBox: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 6,
     backgroundColor: "#ECFDF5",
-    paddingHorizontal: 7,
+    paddingHorizontal: 6,
     paddingVertical: 2,
-    borderRadius: 999,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#A7F3D0",
   },
   metricEarningText: {
     fontSize: 11,
     fontWeight: "600",
     color: "#059669",
   },
-  reconciledPill: {
+  reconciledBox: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#ECFDF5",
-    paddingVertical: 7,
+    paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "#A7F3D0",
     marginBottom: 16,
   },
-  reconciledPillText: {
+  reconciledBoxText: {
     fontSize: 11,
     fontWeight: "500",
     color: "#065F46",

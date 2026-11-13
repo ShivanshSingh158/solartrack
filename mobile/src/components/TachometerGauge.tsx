@@ -101,9 +101,9 @@ export const TachometerGauge: React.FC<TachometerGaugeProps> = ({
           </Text>
           <Text style={styles.heroSubLabel}>kW AC OUTPUT</Text>
 
-          <View style={styles.pillMetaRow}>
-            <View style={styles.metricPill}>
-              <Text style={styles.metricPillText}>
+          <View style={styles.metaRow}>
+            <View style={styles.metricBadge}>
+              <Text style={styles.metricBadgeText}>
                 {isNight ? "Night Standby" : `${peakFrac}% of Peak`}
               </Text>
             </View>
@@ -171,20 +171,20 @@ const styles = StyleSheet.create({
     letterSpacing: 2.5,
     marginTop: 2,
   },
-  pillMetaRow: {
+  metaRow: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 8,
   },
-  metricPill: {
+  metricBadge: {
     backgroundColor: "#FEF3C7",
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 999,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: "#FDE68A",
   },
-  metricPillText: {
+  metricBadgeText: {
     fontSize: 11,
     fontWeight: "600",
     color: "#B45309",

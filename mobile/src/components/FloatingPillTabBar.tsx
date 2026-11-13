@@ -68,9 +68,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
-    paddingVertical: 5,
+    paddingVertical: 6,
     paddingHorizontal: 8,
-    borderRadius: 999,
+    borderRadius: 18,
     borderWidth: 1,
     borderColor: "#E2E8F0",
     shadowColor: "#0F172A",
@@ -82,9 +82,9 @@ const styles = StyleSheet.create({
   tabButton: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 7,
+    paddingVertical: 8,
     paddingHorizontal: 12,
-    borderRadius: 999,
+    borderRadius: 12,
   },
   tabButtonActive: {
     backgroundColor: "#0F172A",
