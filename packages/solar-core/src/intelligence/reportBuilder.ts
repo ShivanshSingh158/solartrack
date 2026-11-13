@@ -740,6 +740,8 @@ export function computeSolarIntelligence(input: SolarIntelligenceInput): SolarIn
       confidenceLabel,
       confidenceSource,
       stickyFilmActive,
+      looseLossPct: +soilMainState.looseLoss.toFixed(2),
+      cementedLossPct: +soilMainState.cementedLoss.toFixed(2),
       lastClean: {
         ymd: lastClean.ymd,
         shortLabel: formatShortLabel(lastClean.ymd),

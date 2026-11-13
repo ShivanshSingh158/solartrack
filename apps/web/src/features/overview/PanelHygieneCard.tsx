@@ -152,6 +152,33 @@ export const PanelHygieneCard: React.FC<PanelHygieneCardProps> = ({
             AQI {aqiVal} · Light dust (-{surfaceLossPct.toFixed(1)}%)
           </span>
         </div>
+
+        <div className="py-2 flex items-center justify-between gap-2">
+          <span className="text-slate-400 font-medium">Dew &amp; Grime Bond</span>
+          <span className="font-semibold text-slate-800 tabular-nums">
+            {soiling?.statsSinceWash?.dewNightsCount
+              ? `${soiling.statsSinceWash.dewNightsCount} dew nights · ${soiling.stickyFilmActive ? 'Cemented film' : 'Loose particle layer'}`
+              : soiling?.stickyFilmActive
+              ? 'Cemented grime film'
+              : 'Dry loose particulate layer'}
+          </span>
+        </div>
+
+        <div className="py-2 flex items-center justify-between gap-2">
+          <span className="text-slate-400 font-medium">Auto-Wash Outlook</span>
+          <span className="font-semibold text-slate-800 tabular-nums">
+            {soiling?.incomingRainHold
+              ? `Rain expected ${soiling.incomingRainHold.shortLabel} (~${soiling.incomingRainHold.rainMm.toFixed(1)} mm) · Hold wash`
+              : soiling?.estimatedNextWashLabel
+              ? `Next wash ~${soiling.estimatedNextWashLabel} (before 07:30 AM)`
+              : 'Clean water rinse recommended before 07:30 AM'}
+          </span>
+        </div>
+      </div>
+
+      <div className="text-[10.5px] text-slate-400 tracking-tight flex items-center justify-between pt-0.5">
+        <span>Radiative night dew &amp; particulate physics</span>
+        <span className="text-emerald-700 font-semibold">100% Automated</span>
       </div>
 
       {/* Bottom Modal Trigger Button */}

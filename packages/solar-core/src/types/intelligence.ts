@@ -263,6 +263,8 @@ export interface SolarIntelligenceReport {
     confidenceLabel: string;
     confidenceSource: 'empirical_blended' | 'clear_verified' | 'particle_physics';
     stickyFilmActive: boolean;
+    looseLossPct?: number;
+    cementedLossPct?: number;
     lastClean: {
       ymd: string;
       shortLabel: string;

@@ -142,6 +142,9 @@ export interface CanonicalSolarSnapshot {
     daysSinceWash: number;
     lastWashYmd: string;
     stickyFilmActive: boolean;
+    looseLossPct?: number;
+    cementedLossPct?: number;
+    dewNightsCount?: number;
     hasRainHold: boolean;
     recoverableKwhPerDay: number;
     recoverableInrPerWeek: number;

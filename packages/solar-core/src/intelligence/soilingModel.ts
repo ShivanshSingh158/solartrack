@@ -209,19 +209,30 @@ export function evaluateSingleDaySoilingStep(
   const rainMm = +Math.max(dailySummaryRain, rainFromHourly).toFixed(2);
 
   // Check night/early-morning dew condensation hours (00:00..08:00 IST)
+  // Incorporates radiative sky cooling: on clear calm nights, glass surfaces emit longwave IR to space,
+  // causing T_glass to subcool 1.5°C–2.2°C below ambient air temperature (forming dew even if air RH < 88%).
   let dewGlueHours = 0;
   const hTemp = Array.isArray(day.hourlyTempC) ? day.hourlyTempC : [];
   const hDew = Array.isArray(day.hourlyDewPointC) ? day.hourlyDewPointC : [];
   const hRh = Array.isArray(day.hourlyRhPct) ? day.hourlyRhPct : [];
   const hVis = Array.isArray(day.hourlyVisibilityM) ? day.hourlyVisibilityM : [];
   const hCode = Array.isArray(day.hourlyWeatherCode) ? day.hourlyWeatherCode : [];
+  const hCloud = Array.isArray(day.hourlyCloudCover) ? day.hourlyCloudCover : [];
   for (let h = 0; h <= 8; h++) {
     const t = hTemp[h];
     const td = hDew[h];
     const rh = hRh[h];
     const vis = hVis[h];
     const wc = hCode[h];
-    const spreadOk = typeof t === 'number' && typeof td === 'number' && t - td <= SOILING_THRESHOLDS.dewSpreadMaxC;
+    const cc = typeof hCloud[h] === 'number' ? hCloud[h] : 20;
+
+    // Radiative sub-cooling model: clear night sky drops panel glass below air temp
+    const skyClearFrac = Math.max(0, Math.min(1, 1 - cc / 100));
+    const tGlass = typeof t === 'number' ? t - skyClearFrac * 1.8 : t;
+
+    const spreadOk =
+      (typeof tGlass === 'number' && typeof td === 'number' && tGlass <= td + 0.2) ||
+      (typeof t === 'number' && typeof td === 'number' && t - td <= SOILING_THRESHOLDS.dewSpreadMaxC);
     const rhOk = typeof rh === 'number' && rh >= SOILING_THRESHOLDS.dewRhMinPct;
     const fogOk = (typeof vis === 'number' && vis < SOILING_THRESHOLDS.fogVisibilityM) || wc === 45 || wc === 48;
     if (spreadOk || rhOk || fogOk) {
@@ -253,10 +264,15 @@ export function evaluateSingleDaySoilingStep(
   // Tilt projection factor cos(26.5°) = 0.895
   const tiltCos = Math.cos((Math.max(0, Math.min(60, tiltDeg)) * Math.PI) / 180);
 
+  // Array bottom-frame capillary damming factor:
+  // Below 20° tilt, frame lip holds back evaporating dew/drizzle mud creating a bottom-lip sludge band.
+  // Above 20° (e.g. 26.5°), gravity overcomes water surface tension.
+  const lipDammingFactor = tiltDeg < 20 ? 1.0 + Math.max(0, (20 - tiltDeg) * 0.02) : 1.0;
+
   // Separate Coarse Settling Dust (PM10 - PM2.5) from Sticky Fine Soot (PM2.5) and Mineral Dust
   const cCoarse = Math.max(0, pm10Avg - pm25Avg);
   const effectiveSurfaceLoad = 1.0 * cCoarse + 0.35 * pm25Avg + 0.45 * dustAvg;
-  const baseRatePct = (0.10 + (effectiveSurfaceLoad / 180) * 0.24) * tiltCos;
+  const baseRatePct = (0.10 + (effectiveSurfaceLoad / 180) * 0.24) * tiltCos * lipDammingFactor;
 
   const dewMultiplier = dewGlueHours >= 2 ? 1.65 : dewGlueHours === 1 ? 1.3 : 1.0;
 
