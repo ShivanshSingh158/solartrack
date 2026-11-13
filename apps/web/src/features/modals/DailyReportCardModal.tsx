@@ -16,6 +16,7 @@ import {
   type DailyReportData,
   type DailyReportDipCategory,
   type DailyReportGenerateInput,
+  type DailySolarPhysicsModel,
 } from '@solar-track/core';
 
 interface DailyReportCardModalProps {
@@ -25,6 +26,7 @@ interface DailyReportCardModalProps {
   reportData?: DailyReportData | null;
   // Or fallback inputs to compute on demand:
   reportInput?: DailyReportGenerateInput | null;
+  physicsModel?: DailySolarPhysicsModel | null;
   realPoints?: Array<{ minute: number; kw: number }>;
   rawSeries?: any[];
   // Fallbacks from previous props:
@@ -49,6 +51,7 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
   onClose,
   reportData: propReportData,
   reportInput,
+  physicsModel,
   realPoints: propRealPoints,
   rawSeries,
   dayYieldKwh = 10.5,
@@ -96,24 +99,34 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
       }
     }
 
-    // Build synthesized report from available props
-    const expectedYield = Math.max(0.1, +(dayYieldKwh * 1.08).toFixed(1));
+    // Build synthesized report from available props or exact physics model
+    const sunriseMin = physicsModel?.sunriseMin ?? 386;
+    const sunsetMin = physicsModel?.sunsetMin ?? 1039;
+    const expectedYield =
+      physicsModel && Number.isFinite(physicsModel.targetDailyModelKwh) && physicsModel.targetDailyModelKwh > 0.5
+        ? +physicsModel.targetDailyModelKwh.toFixed(1)
+        : Math.max(0.1, +(dayYieldKwh * 1.08).toFixed(1));
+
+    const lookupModelAtMinute = physicsModel
+      ? (m: number) => physicsModel.lookupAtMinute(m)
+      : (m: number) => {
+          if (m < sunriseMin || m > sunsetMin) return { kw: 0, cumKwh: expectedYield };
+          const norm = (m - sunriseMin) / (sunsetMin - sunriseMin);
+          const kw = Math.sin(norm * Math.PI) * peakKw;
+          return { kw: Math.max(0, kw), cumKwh: norm * expectedYield };
+        };
+
     return generateDailySolarReport({
       ymd: selectedYmd,
       todayYmd,
       nowMinutesIst: 18 * 60,
       tariffPerKwh,
       capacityKwp: systemCapacity,
-      sunriseMin: 386,
-      sunsetMin: 1039,
+      sunriseMin,
+      sunsetMin,
       realKwh: dayYieldKwh,
       expectedKwh: expectedYield,
-      lookupModelAtMinute: (m) => {
-        if (m < 386 || m > 1039) return { kw: 0, cumKwh: expectedYield };
-        const norm = (m - 386) / (1039 - 386);
-        const kw = Math.sin(norm * Math.PI) * peakKw * 1.05;
-        return { kw: Math.max(0, kw), cumKwh: norm * expectedYield };
-      },
+      lookupModelAtMinute,
       realPoints: effectiveRealPoints,
       tomorrowForecast: {
         expectedYieldKwh: tomorrowKwh,
@@ -123,7 +136,19 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
       sevenDayAvgKwh: 10.2,
       bestDayRecord: { ymd: '2026-11-08', kwh: 12.4 },
     });
-  }, [propReportData, reportInput, effectiveRealPoints, selectedYmd, todayYmd, dayYieldKwh, tariffPerKwh, systemCapacity, peakKw, tomorrowKwh]);
+  }, [
+    propReportData,
+    reportInput,
+    physicsModel,
+    effectiveRealPoints,
+    selectedYmd,
+    todayYmd,
+    dayYieldKwh,
+    tariffPerKwh,
+    systemCapacity,
+    peakKw,
+    tomorrowKwh,
+  ]);
 
   if (!isOpen) return null;
 

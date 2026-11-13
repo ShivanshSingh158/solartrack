@@ -7,6 +7,7 @@ import {
   getIstClockParts,
   shiftIstFromYmd,
   type CanonicalSolarSnapshot,
+  type DailySolarPhysicsModel,
   type IndianSolarPhaseInfo,
   type IstClockParts,
   type LiveSyncLastSyncedDay,
@@ -136,6 +137,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   const [reportSelectedYmd, setReportSelectedYmd] = useState<string>('');
   const [reportRealPoints, setReportRealPoints] = useState<Array<{ minute: number; kw: number }> | null>(null);
   const [reportYieldKwh, setReportYieldKwh] = useState<number | null>(null);
+  const [reportPhysicsModel, setReportPhysicsModel] = useState<DailySolarPhysicsModel | null>(null);
   const [isPhysicsModalOpen, setIsPhysicsModalOpen] = useState(false);
   const [livePeakStamp, setLivePeakStamp] = useState<{
     ymd: string;
@@ -617,6 +619,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             onClick={() => {
               setReportSelectedYmd(istNow.ymd);
               setReportRealPoints(null);
+              setReportPhysicsModel(todayPhysics.model);
               setReportYieldKwh(effectiveTodayYield);
               setIsReportCardOpen(true);
             }}
@@ -669,9 +672,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               isPartialCurve: snap.today.isPartialCurve,
             }}
             onNavigateToPerformance={onNavigateToPerformance}
-            onOpenDailyReport={(ymd, points, _physicsModel, dayYield) => {
+            onOpenDailyReport={(ymd, points, physicsModel, dayYield) => {
               setReportSelectedYmd(ymd || istNow.ymd);
               setReportRealPoints(points && points.length > 0 ? points : null);
+              setReportPhysicsModel(physicsModel || null);
               if (typeof dayYield === 'number') setReportYieldKwh(dayYield);
               setIsReportCardOpen(true);
             }}
@@ -724,6 +728,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         onClose={() => setIsReportCardOpen(false)}
         selectedYmd={reportSelectedYmd || istNow.ymd}
         todayYmd={istNow.ymd}
+        physicsModel={reportPhysicsModel ?? (reportSelectedYmd === istNow.ymd ? todayPhysics.model : undefined)}
         realPoints={reportRealPoints ?? undefined}
         rawSeries={reportSelectedYmd === istNow.ymd ? todayRawSeries : (reportSelectedYmd === yesterdayIst.ymd ? yesterdayRawSeries : undefined)}
         dayYieldKwh={reportYieldKwh ?? (reportSelectedYmd && reportSelectedYmd !== istNow.ymd ? (recent7DaysData.find((d) => `${istNow.year}-${String(istNow.month).padStart(2, '0')}-${String(d.day).padStart(2, '0')}` === reportSelectedYmd)?.yield ?? 11.2) : effectiveTodayYield)}
