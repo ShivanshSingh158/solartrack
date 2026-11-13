@@ -1,0 +1,17 @@
+{
+  "name": "@solar-track/core",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./time": "./src/time/istDate.ts",
+    "./physics": "./src/physics/index.ts",
+    "./calibration": "./src/calibration/index.ts",
+    "./intelligence": "./src/intelligence/index.ts",
+    "./snapshot": "./src/snapshot/index.ts",
+    "./analytics": "./src/analytics/index.ts",
+    "./formatters": "./src/formatters/solarFormatter.ts",
+    "./types": "./src/types/index.ts"
+  }
+}

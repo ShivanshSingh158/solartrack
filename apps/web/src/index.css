@@ -1,0 +1,657 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-primary: var(--font-sans);
+}
+
+body, button, input, select {
+  font-family: var(--font-sans);
+  font-feature-settings: "cv01", "ss03";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Eradicate typewriter fonts: map all numbers and any legacy font-mono to Plus Jakarta Sans tabular-nums */
+.num,
+.font-mono {
+  font-family: var(--font-sans) !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: -0.03em !important;
+}
+
+/* ==========================================================================
+   LOCKED-IN 8-STEP TYPOGRAPHY SCALE (AQI.in + Stripe + Linear Precision)
+   ========================================================================== */
+.hero-giant-num {
+  font-family: var(--font-sans);
+  font-size: 68px;
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.weather-temp-num {
+  font-family: var(--font-sans);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-primary-num {
+  font-family: var(--font-sans);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.page-title-h1 {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.card-title-h2 {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.body-subtitle {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0em;
+}
+
+.card-overline {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.micro-pill-badge {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.0;
+  height: 22px;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+@layer base {
+  :root {
+    /* ==========================================================================
+       AQI : REAL DESIGN SYSTEM FOUNDATION TOKENS
+       ========================================================================== */
+    /* Color Palette */
+    --color-text-primary: #677580;
+    --color-text-secondary: #31343d;
+    --color-text-tertiary: #3d7ab2;
+    --color-text-inverse: #b33fba;
+    --color-surface-base: #000000;
+    --color-surface-muted: #f7f7fc;
+    --color-surface-raised: #ffffff;
+    --color-surface-strong: #4ba9ff;
+    --color-border-default: #e5e7eb;
+
+    /* Legacy semantic aliases */
+    --bg-app: #f7f7fc;
+    --surface-card: #ffffff;
+    --border-subtle: #e5e7eb;
+    --primary-amber: #f59e0b;
+    --primary-blue: #3d7ab2;
+    --text-primary: #31343d;
+    --text-navy: #31343d;
+    --text-muted: #677580;
+
+    /* Typography Scale */
+    --font-family-primary: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-size-xs: 8px;
+    --font-size-sm: 9.6px;
+    --font-size-md: 12px;
+    --font-size-lg: 13.6px;
+    --font-size-base: 13.6px;
+    --font-weight-base: 500;
+    --font-line-height-base: 20.4px;
+    --font-size-xl: 14.4px;
+    --font-size-2xl: 15.2px;
+    --font-size-3xl: 16.8px;
+    --font-size-4xl: 17.6px;
+
+    /* Spacing Scale */
+    --space-1: 1.6px;
+    --space-2: 2.4px;
+    --space-3: 4px;
+    --space-4: 8px;
+    --space-5: 9.52px;
+    --space-6: 9.6px;
+    --space-7: 11.2px;
+    --space-8: 12px;
+
+    /* Shape & Depth Tokens */
+    --radius-xs: 8px;
+    --radius-sm: 12px;
+    --radius-md: 13.6px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --shadow-1: 0 0 0 0 rgba(0, 0, 0, 0), 2px 5px 35px 0px rgba(0, 0, 0, 0.07);
+    --motion-duration-instant: 150ms;
+  }
+
+  body {
+    background-color: var(--color-surface-muted);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-base);
+    line-height: var(--font-line-height-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+  }
+
+  /* Universal WCAG 2.2 AA Focus Visible Gate */
+  *:focus-visible {
+    outline: 2px solid var(--color-text-tertiary);
+    outline-offset: 2px;
+  }
+}
+
+/* ==========================================================================
+   AQI : REAL TOKEN UTILITY CLASSES (WCAG 2.2 AA Aligned)
+   ========================================================================== */
+.text-aqi-primary { color: var(--color-text-primary); }
+.text-aqi-secondary { color: var(--color-text-secondary); }
+.text-aqi-tertiary { color: var(--color-text-tertiary); }
+.text-aqi-inverse { color: var(--color-text-inverse); }
+.bg-aqi-base { background-color: var(--color-surface-base); }
+.bg-aqi-muted { background-color: var(--color-surface-muted); }
+.bg-aqi-raised { background-color: var(--color-surface-raised); }
+.bg-aqi-strong { background-color: var(--color-surface-strong); }
+.border-aqi { border-color: var(--color-border-default); }
+.shadow-aqi { box-shadow: var(--shadow-1); }
+.rounded-aqi-xs { border-radius: var(--radius-xs); }
+.rounded-aqi-sm { border-radius: var(--radius-sm); }
+.rounded-aqi-md { border-radius: var(--radius-md); }
+.rounded-aqi-lg { border-radius: var(--radius-lg); }
+.rounded-aqi-xl { border-radius: var(--radius-xl); }
+.font-aqi-xs { font-size: var(--font-size-xs); }
+.font-aqi-sm { font-size: var(--font-size-sm); }
+.font-aqi-md { font-size: var(--font-size-md); }
+.font-aqi-lg { font-size: var(--font-size-lg); }
+.font-aqi-xl { font-size: var(--font-size-xl); }
+.font-aqi-2xl { font-size: var(--font-size-2xl); }
+.font-aqi-3xl { font-size: var(--font-size-3xl); }
+.font-aqi-4xl { font-size: var(--font-size-4xl); }
+
+/* Luxurious Floating Card Design System (AQI : Real Standard) */
+.floating-card,
+.dashboard-card,
+.apple-card,
+.surface-card {
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--shadow-1);
+  padding: 20px 22px;
+  transition: all var(--motion-duration-instant) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.floating-card:hover,
+.dashboard-card:hover,
+.apple-card:hover,
+.surface-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.09), 0 0 0 1px rgba(0, 0, 0, 0.03);
+}
+
+/* Floating Chart Card (Exact AQI.in Graph Spec) */
+.aqi-graph-card {
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--shadow-1);
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Floating Interactive Tooltip */
+.floating-tooltip {
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--shadow-1);
+  padding: 10px 14px;
+}
+
+/* Hero Numbers with Modern Geometric Tabular Typography */
+.kpi-hero-number {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: #061B31;
+}
+
+.kpi-unit {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748B;
+  margin-left: 5px;
+}
+
+/* Soft Pastel AQI Pills */
+.aqi-soft-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+/* ==========================================================================
+   DYNAMIC SOLAR ATMOSPHERE STAGE GRADIENTS & ANIMATIONS (AQI.in Flagship)
+   ========================================================================== */
+
+/* 1. Atmospheric Hero Stage Gradients (Soft Luminous Pastels & Deep Storms/Night) */
+.hero-stage-sunny {
+  background: linear-gradient(135deg, #FFFDF0 0%, #FEF9C3 25%, #FDE68A 65%, #FBBF24 100%);
+  color: #451A03;
+}
+.hero-stage-partly-cloudy {
+  background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 25%, #BAE6FD 65%, #93C5FD 100%);
+  color: #064E3B;
+}
+.hero-stage-cloudy {
+  background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 28%, #E2E8F0 65%, #CBD5E1 100%);
+  color: #1E293B;
+}
+.hero-stage-hazy {
+  background: linear-gradient(135deg, #FFF8ED 0%, #FFEDD5 28%, #FED7AA 65%, #FDBA74 100%);
+  color: #431407;
+}
+.hero-stage-showers {
+  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 28%, #BAE6FD 65%, #7DD3FC 100%);
+  color: #082F49;
+}
+.hero-stage-rainy {
+  background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 28%, #7DD3FC 65%, #38BDF8 100%);
+  color: #0C4A6E;
+}
+.hero-stage-thunderstorm {
+  background: linear-gradient(135deg, #090D16 0%, #172033 30%, #1E293B 65%, #0F172A 100%);
+  color: #F8FAFC;
+}
+.hero-stage-snow {
+  background: linear-gradient(135deg, #F8FAFC 0%, #E0F2FE 28%, #CFFAFE 65%, #A5F3FC 100%);
+  color: #164E63;
+}
+.hero-stage-sunset {
+  background: linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 28%, #FECDD3 65%, #FB7185 100%);
+  color: #4C0519;
+}
+.hero-stage-night {
+  background: linear-gradient(135deg, #070B14 0%, #0F172A 35%, #1E293B 70%, #0F172A 100%);
+  color: #F8FAFC;
+}
+
+/* 2. Frosted High-Contrast State Badges */
+.stage-state-box-sunny {
+  background: rgba(254, 243, 199, 0.95);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  color: #78350F;
+  box-shadow: 0 2px 8px -1px rgba(180, 83, 9, 0.12);
+}
+.stage-state-box-partly-cloudy {
+  background: rgba(220, 252, 231, 0.95);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #065F46;
+  box-shadow: 0 2px 8px -1px rgba(5, 150, 105, 0.12);
+}
+.stage-state-box-cloudy {
+  background: rgba(241, 245, 249, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  color: #1E293B;
+  box-shadow: 0 2px 8px -1px rgba(71, 85, 105, 0.12);
+}
+.stage-state-box-hazy {
+  background: rgba(255, 237, 213, 0.95);
+  border: 1px solid rgba(234, 88, 12, 0.45);
+  color: #7C2D12;
+  box-shadow: 0 2px 8px -1px rgba(194, 65, 12, 0.12);
+}
+.stage-state-box-showers {
+  background: rgba(224, 242, 254, 0.95);
+  border: 1px solid rgba(2, 132, 199, 0.45);
+  color: #0C4A6E;
+  box-shadow: 0 2px 8px -1px rgba(3, 105, 161, 0.12);
+}
+.stage-state-box-rainy {
+  background: rgba(186, 230, 253, 0.95);
+  border: 1px solid rgba(2, 132, 199, 0.55);
+  color: #075985;
+  box-shadow: 0 2px 8px -1px rgba(3, 105, 161, 0.15);
+}
+.stage-state-box-thunderstorm {
+  background: rgba(30, 41, 59, 0.92);
+  border: 1px solid rgba(250, 204, 21, 0.5);
+  color: #FDE047;
+  box-shadow: 0 4px 16px -2px rgba(234, 179, 8, 0.25);
+}
+.stage-state-box-snow {
+  background: rgba(224, 242, 254, 0.95);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: #0369A1;
+  box-shadow: 0 2px 8px -1px rgba(2, 132, 199, 0.15);
+}
+.stage-state-box-sunset {
+  background: rgba(255, 228, 230, 0.95);
+  border: 1px solid rgba(225, 29, 72, 0.45);
+  color: #881337;
+  box-shadow: 0 2px 8px -1px rgba(190, 18, 60, 0.12);
+}
+.stage-state-box-night {
+  background: rgba(30, 41, 59, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  color: #38BDF8;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.45);
+}
+
+/* 3. Apple / AQI.in Frosted Glass Containers */
+.frosted-glass-light {
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.08);
+  color: var(--color-text-secondary);
+}
+.frosted-glass-night {
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.6);
+  color: #F8FAFC;
+}
+
+/* Backward compatibility */
+.frosted-glass {
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.08);
+  color: var(--color-text-secondary);
+}
+
+/* 3. Smooth Hardware-Accelerated Animations */
+.spin-slow {
+  transform-origin: center;
+  animation: sun-spin 26s linear infinite;
+}
+@keyframes sun-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rain-fall {
+  0% { transform: translateY(-8px) translateX(0); opacity: 0; }
+  25% { opacity: 0.9; }
+  85% { opacity: 0.9; }
+  100% { transform: translateY(32px) translateX(-10px); opacity: 0; }
+}
+.rain-drop-1 { animation: rain-fall 1.1s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.rain-drop-2 { animation: rain-fall 0.95s cubic-bezier(0.4, 0, 0.6, 1) infinite 0.25s; }
+.rain-drop-3 { animation: rain-fall 1.25s cubic-bezier(0.4, 0, 0.6, 1) infinite 0.5s; }
+.rain-drop-4 { animation: rain-fall 1.05s cubic-bezier(0.4, 0, 0.6, 1) infinite 0.75s; }
+
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+.star-1 { animation: star-twinkle 2.4s ease-in-out infinite; }
+.star-2 { animation: star-twinkle 3.1s ease-in-out infinite 0.8s; }
+.star-3 { animation: star-twinkle 2.8s ease-in-out infinite 1.5s; }
+
+/* Radar pulse pin */
+@keyframes radar-pulse {
+  0% { transform: scale(0.95); opacity: 0.85; }
+  70% { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.pulse-ring::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: radar-pulse 2s cubic-bezier(0.2, 0, 0, 1) infinite;
+}
+
+/* Cloud drift animation */
+@keyframes cloud-drift-slow {
+  0%, 100% { transform: translateX(0px); }
+  50% { transform: translateX(10px); }
+}
+.cloud-drift-1 { animation: cloud-drift-slow 6s ease-in-out infinite; }
+.cloud-drift-2 { animation: cloud-drift-slow 9s ease-in-out infinite reverse; }
+
+/* Lightning flash */
+@keyframes lightning-flash {
+  0%, 90%, 100% { opacity: 0; }
+  92%, 96% { opacity: 1; filter: drop-shadow(0 0 10px #FACC15); }
+  94%, 98% { opacity: 0.2; }
+}
+.lightning-flash { animation: lightning-flash 3.2s ease-in-out infinite; }
+
+/* Snow falling */
+@keyframes snow-fall {
+  0% { transform: translateY(-8px) translateX(0) rotate(0deg); opacity: 0; }
+  20% { opacity: 0.95; }
+  85% { opacity: 0.95; }
+  100% { transform: translateY(32px) translateX(6px) rotate(180deg); opacity: 0; }
+}
+.snow-flake-1 { animation: snow-fall 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.snow-flake-2 { animation: snow-fall 2.8s cubic-bezier(0.4, 0, 0.6, 1) infinite 0.7s; }
+.snow-flake-3 { animation: snow-fall 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite 1.4s; }
+
+/* Mist drift */
+@keyframes mist-drift {
+  0%, 100% { transform: translateX(-4px); opacity: 0.55; }
+  50% { transform: translateX(6px); opacity: 0.85; }
+}
+.mist-wave-1 { animation: mist-drift 6s ease-in-out infinite; }
+.mist-wave-2 { animation: mist-drift 9s ease-in-out infinite reverse; }
+
+/* Smooth floating celestial moon/sun */
+@keyframes moon-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(0.5deg); }
+}
+.moon-float {
+  animation: moon-float 6s ease-in-out infinite;
+}
+
+/* Pulsing lunar atmospheric glow */
+@keyframes moon-halo-pulse {
+  0%, 100% { transform: scale(0.96); opacity: 0.75; }
+  50% { transform: scale(1.04); opacity: 1; }
+}
+.moon-halo-pulse {
+  transform-origin: center;
+  animation: moon-halo-pulse 5s ease-in-out infinite;
+}
+
+/* Sun breathing glow */
+@keyframes sun-breathe {
+  0%, 100% { transform: scale(0.97); opacity: 0.85; }
+  50% { transform: scale(1.03); opacity: 1; }
+}
+.sun-breathe {
+  transform-origin: center;
+  animation: sun-breathe 4.5s ease-in-out infinite;
+}
+
+/* Extended smooth rain drops */
+.rain-drop-5 { animation: rain-fall 0.85s cubic-bezier(0.4, 0, 0.6, 1) infinite 0.15s; }
+.rain-drop-6 { animation: rain-fall 1.15s cubic-bezier(0.4, 0, 0.6, 1) infinite 0.6s; }
+
+/* Subtle shooting star */
+@keyframes shooting-star {
+  0% { transform: translateX(0) translateY(0) scale(0); opacity: 0; }
+  8% { transform: translateX(0) translateY(0) scale(1); opacity: 0.9; }
+  25% { transform: translateX(70px) translateY(40px) scale(0.2); opacity: 0; }
+  100% { transform: translateX(70px) translateY(40px) scale(0); opacity: 0; }
+}
+.shooting-star-anim {
+  animation: shooting-star 10s ease-out infinite 3s;
+}
+
+/* Leaflet Satellite Pin Bubble */
+.solar-pin-bubble {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  border: 2px solid #ffffff;
+  white-space: nowrap;
+  padding: 3px 9px;
+}
+
+.solar-rooftop-pin-container {
+  background: transparent !important;
+  border: none !important;
+}
+
+.solar-rooftop-target-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 42px;
+  height: 42px;
+  border: 2px dashed #F59E0B;
+  border-radius: 9999px;
+  animation: spin-slow 16s linear infinite;
+  pointer-events: none;
+}
+
+/* Animated Sun Pulse Halo */
+.sun-node-halo {
+  fill: rgba(245, 158, 11, 0.25);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sun-pulse 2.2s ease-out infinite;
+}
+
+@keyframes sun-pulse {
+  0% { transform: scale(0.85); opacity: 0.9; }
+  60% { transform: scale(1.9); opacity: 0; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+/* Comparison Chart Path Draw-In & Differential Fills */
+@keyframes solar-path-draw {
+  from {
+    stroke-dashoffset: var(--dash-len, 1600);
+    opacity: 0.25;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes solar-area-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes sun-corona-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes beam-shimmer {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.65; }
+}
+
+.chart-path-draw-calc {
+  animation: solar-path-draw 680ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.chart-path-draw-real {
+  animation: solar-path-draw 780ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+}
+
+.chart-area-reveal {
+  animation: solar-area-fade 520ms cubic-bezier(0.22, 1, 0.36, 1) 160ms both;
+}
+
+.sun-corona-rays {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: sun-corona-spin 36s linear infinite;
+}
+
+.sun-beam-pulse {
+  animation: beam-shimmer 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chart-path-draw-calc,
+  .chart-path-draw-real,
+  .chart-area-reveal,
+  .sun-corona-rays,
+  .sun-beam-pulse,
+  .sun-node-halo,
+  .sun-breathe,
+  .spin-slow {
+    animation: none !important;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}

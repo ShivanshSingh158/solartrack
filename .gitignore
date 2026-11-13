@@ -1,0 +1,26 @@
+# Dependencies & build artifacts
+node_modules/
+**/node_modules/
+.tmp/
+**/.tmp/
+*.tsbuildinfo
+apps/server/public/
+public/assets/
+
+# Environment & runtime secrets
+.env
+.env.*
+!.env.example
+data/secrets/
+accounts.json
+token.txt
+
+# Runtime telemetry & weather JSON caches
+data/cache/
+day_raw_cache.json
+history_cache.json
+weather_history_cache.json
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
