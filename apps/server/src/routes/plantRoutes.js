@@ -545,4 +545,6 @@ async function handlePlantRoutes(req, res, reqUrl) {
 
 module.exports = {
   handlePlantRoutes,
+  resolveFlowDataForStation,
+  resolveHardwareRegisterFields,
 };

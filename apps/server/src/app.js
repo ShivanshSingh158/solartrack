@@ -7,6 +7,7 @@ const { handlePlantRoutes } = require("./routes/plantRoutes");
 const { handleSettingsRoutes } = require("./routes/settingsRoutes");
 const { handleWeatherRoutes } = require("./routes/weatherRoutes");
 const { handleSyncRoutes } = require("./routes/syncRoutes");
+const { handleMobileApiRoutes } = require("./routes/mobileApiRoutes");
 
 const CONTENT_TYPES = {
   ".js": "application/javascript",
@@ -78,6 +79,7 @@ function serveStaticAsset(pathname, res) {
  */
 function createRequestHandler() {
   const routeHandlers = [
+    handleMobileApiRoutes,
     handleAuthRoutes,
     handlePlantRoutes,
     handleSettingsRoutes,
