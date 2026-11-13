@@ -21,9 +21,12 @@ export interface OverviewPayload {
     serverTime: string;
     stationId: string;
     plantName: string;
+    capacityKwp: number;
     dataProvenance: string;
     confidenceScore: number;
     isStale: boolean;
+    location: string;
+    lastUpdateDate: string;
   };
   systemStatus: {
     state: string;
@@ -45,6 +48,7 @@ export interface OverviewPayload {
     yesterdayKwh: number;
     monthKwh: number;
     lifetimeKwh: number;
+    todaySavingsInr: number;
     monthSavingsInr: number;
     lifetimeSavingsInr: number;
     co2PreventedKg: number;
@@ -54,10 +58,13 @@ export interface OverviewPayload {
     powerLossPct: number;
     weeklySavingsPotentialInr: number;
     actionHeadline: string;
+    actionAdvice: string;
+    bestWashTimeText: string;
     needsWash: boolean;
   };
   forecast: {
     tomorrowExpectedKwh: number;
+    tomorrowCondition: string;
     heavyLoadWindow: string;
     threeDayHorizon: Array<{
       date: string;
