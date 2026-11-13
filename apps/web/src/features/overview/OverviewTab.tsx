@@ -134,6 +134,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   const [fallbackWeatherData, setFallbackWeatherData] = useState<any>(null);
   const [isReportCardOpen, setIsReportCardOpen] = useState(false);
   const [reportSelectedYmd, setReportSelectedYmd] = useState<string>('');
+  const [reportRealPoints, setReportRealPoints] = useState<Array<{ minute: number; kw: number }> | null>(null);
+  const [reportYieldKwh, setReportYieldKwh] = useState<number | null>(null);
   const [isPhysicsModalOpen, setIsPhysicsModalOpen] = useState(false);
   const [livePeakStamp, setLivePeakStamp] = useState<{
     ymd: string;
@@ -614,6 +616,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             type="button"
             onClick={() => {
               setReportSelectedYmd(istNow.ymd);
+              setReportRealPoints(null);
+              setReportYieldKwh(effectiveTodayYield);
               setIsReportCardOpen(true);
             }}
             className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition cursor-pointer shrink-0 text-center shadow-xs inline-flex items-center justify-center gap-1.5"
@@ -665,8 +669,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               isPartialCurve: snap.today.isPartialCurve,
             }}
             onNavigateToPerformance={onNavigateToPerformance}
-            onOpenDailyReport={(ymd) => {
+            onOpenDailyReport={(ymd, points, _physicsModel, dayYield) => {
               setReportSelectedYmd(ymd || istNow.ymd);
+              setReportRealPoints(points && points.length > 0 ? points : null);
+              if (typeof dayYield === 'number') setReportYieldKwh(dayYield);
               setIsReportCardOpen(true);
             }}
           />
@@ -680,6 +686,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             onNavigateToPerformance={onNavigateToPerformance}
             onOpenDailyReport={(ymd) => {
               setReportSelectedYmd(ymd || istNow.ymd);
+              setReportRealPoints(null);
               setIsReportCardOpen(true);
             }}
           />
@@ -717,7 +724,9 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         onClose={() => setIsReportCardOpen(false)}
         selectedYmd={reportSelectedYmd || istNow.ymd}
         todayYmd={istNow.ymd}
-        dayYieldKwh={reportSelectedYmd && reportSelectedYmd !== istNow.ymd ? (recent7DaysData.find((d) => `${istNow.year}-${String(istNow.month).padStart(2, '0')}-${String(d.day).padStart(2, '0')}` === reportSelectedYmd)?.yield ?? 11.2) : effectiveTodayYield}
+        realPoints={reportRealPoints ?? undefined}
+        rawSeries={reportSelectedYmd === istNow.ymd ? todayRawSeries : (reportSelectedYmd === yesterdayIst.ymd ? yesterdayRawSeries : undefined)}
+        dayYieldKwh={reportYieldKwh ?? (reportSelectedYmd && reportSelectedYmd !== istNow.ymd ? (recent7DaysData.find((d) => `${istNow.year}-${String(istNow.month).padStart(2, '0')}-${String(d.day).padStart(2, '0')}` === reportSelectedYmd)?.yield ?? 11.2) : effectiveTodayYield)}
         tariffPerKwh={snap.config.tariffPerKwh}
         peakKw={snap.reportCard.peakKw}
         peakTime={snap.reportCard.peakTime}

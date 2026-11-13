@@ -80,20 +80,66 @@ export function generateDailySolarReport(input: DailyReportGenerateInput): Daily
     moodSentence = `Generation was noticeably below target today (${capturePct}% of model) due to thick cloud cover or electrical interruptions.`;
   }
 
-  // 2. Build 5-min step telemetry curve points and detect dips
+  // 2. Build continuous sampling for real telemetry
+  const sortedReal = [...realPoints]
+    .filter((p) => Number.isFinite(p.minute) && Number.isFinite(p.kw))
+    .sort((a, b) => a.minute - b.minute);
+
+  function sampleRealAtMinute(m: number): { kw: number; vDc?: number; iDc?: number; vGrid?: number; freqGrid?: number } {
+    if (sortedReal.length === 0) {
+      // If no discrete points are provided, estimate a smooth bell curve based on realKwh vs expectedKwh
+      if (safeRealKwh > 0 && safeExpectedKwh > 0) {
+        const exp = lookupModelAtMinute(m).kw;
+        const ratio = Math.min(1.2, safeRealKwh / safeExpectedKwh);
+        return { kw: +(exp * ratio).toFixed(3) };
+      }
+      return { kw: 0 };
+    }
+
+    if (m < sortedReal[0].minute - 15 || m > sortedReal[sortedReal.length - 1].minute + 15) {
+      return { kw: 0 };
+    }
+
+    // Find interval [idx - 1, idx]
+    let idx = sortedReal.findIndex((p) => p.minute >= m);
+    if (idx === 0) {
+      const p0 = sortedReal[0];
+      if (Math.abs(p0.minute - m) <= 10) return p0;
+      return { kw: 0 };
+    }
+    if (idx === -1) {
+      const pLast = sortedReal[sortedReal.length - 1];
+      if (Math.abs(pLast.minute - m) <= 10) return pLast;
+      return { kw: 0 };
+    }
+
+    const p0 = sortedReal[idx - 1];
+    const p1 = sortedReal[idx];
+    const gap = p1.minute - p0.minute;
+
+    if (gap > 16) {
+      // Outage gap (>16 min without data)
+      return { kw: 0 };
+    }
+
+    // Smooth linear interpolation between adjacent telemetry points
+    const t = gap > 0 ? (m - p0.minute) / gap : 0;
+    const kw = Math.max(0, p0.kw + t * (p1.kw - p0.kw));
+    return {
+      kw: +kw.toFixed(3),
+      vDc: p0.vDc,
+      iDc: p0.iDc,
+      vGrid: p0.vGrid,
+      freqGrid: p0.freqGrid,
+    };
+  }
+
   const curvePoints: DailyReportCurvePoint[] = [];
   const rawDips: Array<{
     startMin: number;
     endMin: number;
     points: Array<{ min: number; realKw: number; expectedKw: number; deficitKw: number }>;
   }> = [];
-
-  // Map real points by minute for fast lookup
-  const realMap = new Map<number, { kw: number; vDc?: number; iDc?: number; vGrid?: number; freqGrid?: number }>();
-  for (const pt of realPoints) {
-    const roundedMin = Math.round(pt.minute / 5) * 5;
-    realMap.set(roundedMin, pt);
-  }
 
   const startStep = Math.max(sunriseMin - 15, Math.floor(sunriseMin / 5) * 5);
   const endStep = Math.min(sunsetMin + 15, Math.ceil(sunsetMin / 5) * 5);
@@ -106,8 +152,8 @@ export function generateDailySolarReport(input: DailyReportGenerateInput): Daily
 
   for (let m = startStep; m <= endStep; m += 5) {
     const expected = lookupModelAtMinute(m).kw;
-    const realEntry = realMap.get(m);
-    const real = realEntry ? Math.max(0, Number(realEntry.kw) || 0) : 0;
+    const realSample = sampleRealAtMinute(m);
+    const real = realSample.kw;
 
     const deficit = Math.max(0, expected - real);
     const isDipCondition = expected >= 0.18 && real < expected * 0.82;
@@ -155,7 +201,7 @@ export function generateDailySolarReport(input: DailyReportGenerateInput): Daily
     let hasGridDrop = false;
     let hasDcDrop = false;
     for (let cm = d.startMin; cm <= d.endMin; cm += 5) {
-      const entry = realMap.get(cm);
+      const entry = sampleRealAtMinute(cm);
       if (entry) {
         if (
           (entry.vGrid !== undefined && entry.vGrid > 0 && entry.vGrid < 185) ||

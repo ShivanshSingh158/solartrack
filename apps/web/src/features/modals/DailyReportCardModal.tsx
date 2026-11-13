@@ -12,6 +12,7 @@ import {
 import {
   formatINR,
   generateDailySolarReport,
+  parseRawTelemetry,
   type DailyReportData,
   type DailyReportDipCategory,
   type DailyReportGenerateInput,
@@ -24,6 +25,8 @@ interface DailyReportCardModalProps {
   reportData?: DailyReportData | null;
   // Or fallback inputs to compute on demand:
   reportInput?: DailyReportGenerateInput | null;
+  realPoints?: Array<{ minute: number; kw: number }>;
+  rawSeries?: any[];
   // Fallbacks from previous props:
   dayYieldKwh?: number;
   tariffPerKwh?: number;
@@ -46,6 +49,8 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
   onClose,
   reportData: propReportData,
   reportInput,
+  realPoints: propRealPoints,
+  rawSeries,
   dayYieldKwh = 10.5,
   tariffPerKwh = 8.0,
   peakKw = 1.84,
@@ -65,6 +70,20 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
     realKw: number;
     expectedKw: number;
   } | null>(null);
+
+  // Resolve 5-minute real points from raw series or explicit realPoints
+  const effectiveRealPoints = useMemo<Array<{ minute: number; kw: number }>>(() => {
+    if (Array.isArray(propRealPoints) && propRealPoints.length > 0) {
+      return propRealPoints;
+    }
+    if (Array.isArray(rawSeries) && rawSeries.length > 0) {
+      const parsed = parseRawTelemetry(rawSeries, 375, 1050);
+      if (parsed.allPoints && parsed.allPoints.length > 0) {
+        return parsed.allPoints.map((pt) => ({ minute: pt.minutes, kw: pt.kw }));
+      }
+    }
+    return [];
+  }, [propRealPoints, rawSeries]);
 
   // Compute or resolve DailyReportData
   const report: DailyReportData = useMemo(() => {
@@ -95,15 +114,7 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
         const kw = Math.sin(norm * Math.PI) * peakKw * 1.05;
         return { kw: Math.max(0, kw), cumKwh: norm * expectedYield };
       },
-      realPoints: [
-        { minute: 420, kw: 0.1 },
-        { minute: 500, kw: 0.7 },
-        { minute: 600, kw: 1.4 },
-        { minute: 710, kw: peakKw },
-        { minute: 800, kw: 1.5 },
-        { minute: 900, kw: 0.8 },
-        { minute: 1000, kw: 0.2 },
-      ],
+      realPoints: effectiveRealPoints,
       tomorrowForecast: {
         expectedYieldKwh: tomorrowKwh,
         condition: 'Clear Sky & Sunshine',
@@ -112,7 +123,7 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
       sevenDayAvgKwh: 10.2,
       bestDayRecord: { ymd: '2026-11-08', kwh: 12.4 },
     });
-  }, [propReportData, reportInput, selectedYmd, todayYmd, dayYieldKwh, tariffPerKwh, systemCapacity, peakKw, tomorrowKwh]);
+  }, [propReportData, reportInput, effectiveRealPoints, selectedYmd, todayYmd, dayYieldKwh, tariffPerKwh, systemCapacity, peakKw, tomorrowKwh]);
 
   if (!isOpen) return null;
 
