@@ -18,9 +18,10 @@ import {
   IndianRupee,
   RefreshCw,
   ShieldCheck,
-  Info,
+  Server,
 } from "lucide-react-native";
 import { solarClient, UserProfile } from "../api/solarClient";
+import { AtmosphericBackground } from "../components/AtmosphericBackground";
 
 interface SettingsScreenProps {
   user: UserProfile;
@@ -30,23 +31,26 @@ interface SettingsScreenProps {
 export const SettingsScreen: React.FC<SettingsScreenProps> = ({ user, onLogout }) => {
   const [cleaningLoading, setCleaningLoading] = useState(false);
   const [alertsEnabled, setAlertsEnabled] = useState(true);
-  const [nightModeEnabled, setNightModeEnabled] = useState(false);
 
   const handleMarkCleaned = async () => {
     setCleaningLoading(true);
     const ok = await solarClient.cleanPanels();
     setCleaningLoading(false);
     if (ok) {
-      Alert.alert("✅ Panels Marked Clean", "Panel cleanliness counter has been reset. Dust tracking starts fresh from today.", [{ text: "OK" }]);
+      Alert.alert(
+        "✅ Panels Marked Clean",
+        "The dust accumulation model has been reset to 100% cleanliness starting from today.",
+        [{ text: "OK" }]
+      );
     } else {
-      Alert.alert("Error", "Could not reach the SolarTrack server. Try again later.", [{ text: "OK" }]);
+      Alert.alert("Error", "Could not reach server. Try again later.", [{ text: "OK" }]);
     }
   };
 
   const handleLogout = () => {
     Alert.alert(
       "Sign Out",
-      "Disconnect your Waaree account from SolarTrack?",
+      "Disconnect your Waaree plant session?",
       [
         { text: "Cancel", style: "cancel" },
         { text: "Sign Out", style: "destructive", onPress: onLogout },
@@ -55,207 +59,149 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ user, onLogout }
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Settings</Text>
-        <Text style={styles.headerSubtitle}>Account, plant config & preferences</Text>
-      </View>
-
-      {/* Account Info Card */}
-      <View style={styles.card}>
-        <View style={styles.cardHeaderRow}>
-          <User size={18} color="#2563eb" />
-          <Text style={styles.cardTitle}>Waaree Account</Text>
+    <AtmosphericBackground isNight={false} timeHour={12}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Plant & System Settings</Text>
+          <Text style={styles.headerSubtitle}>Solar BaaS cloud infrastructure & configurations</Text>
         </View>
 
-        <View style={styles.infoRow}>
-          <User size={14} color="#94a3b8" />
-          <Text style={styles.infoLabel}>Username</Text>
-          <Text style={styles.infoValue}>{user.username}</Text>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.infoRow}>
-          <Zap size={14} color="#94a3b8" />
-          <Text style={styles.infoLabel}>Plant</Text>
-          <Text style={styles.infoValue} numberOfLines={1}>{user.plantName}</Text>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.infoRow}>
-          <MapPin size={14} color="#94a3b8" />
-          <Text style={styles.infoLabel}>Location</Text>
-          <Text style={styles.infoValue}>Kanpur, UP, India</Text>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.infoRow}>
-          <IndianRupee size={14} color="#94a3b8" />
-          <Text style={styles.infoLabel}>Tariff</Text>
-          <Text style={styles.infoValue}>₹{user.tariffPerKwh ?? 7.35} / kWh</Text>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.infoRow}>
-          <Zap size={14} color="#94a3b8" />
-          <Text style={styles.infoLabel}>Capacity</Text>
-          <Text style={styles.infoValue}>{user.capacityKwp ?? 3.27} kWp DC · 3.00 kW AC</Text>
-        </View>
-      </View>
-
-      {/* BaaS Connection Card */}
-      <View style={styles.card}>
-        <View style={styles.cardHeaderRow}>
-          <ShieldCheck size={18} color="#059669" />
-          <Text style={styles.cardTitle}>BaaS Server Connection</Text>
-        </View>
-        <View style={styles.connectionStatus}>
-          <View style={styles.onlineDot} />
-          <Text style={styles.onlineText}>solartrack-j9wx.onrender.com</Text>
-        </View>
-        <Text style={styles.connectionSub}>
-          Headless Solar BaaS · 24/7 UptimeRobot keep-alive · 256-bit session encryption
-        </Text>
-      </View>
-
-      {/* Notifications & Preferences */}
-      <View style={styles.card}>
-        <View style={styles.cardHeaderRow}>
-          <Info size={18} color="#7c3aed" />
-          <Text style={styles.cardTitle}>Preferences</Text>
-        </View>
-
-        <View style={styles.switchRow}>
-          <View style={styles.switchLeft}>
-            <Text style={styles.switchLabel}>Generation Alerts</Text>
-            <Text style={styles.switchSub}>Notify when plant goes offline</Text>
+        {/* Account & Plant Card */}
+        <View style={styles.glassCard}>
+          <View style={styles.cardHeaderRow}>
+            <User size={16} color="#60a5fa" />
+            <Text style={styles.cardTitle}>Waaree Cloud Profile</Text>
           </View>
-          <Switch
-            value={alertsEnabled}
-            onValueChange={setAlertsEnabled}
-            trackColor={{ false: "#e2e8f0", true: "#fde68a" }}
-            thumbColor={alertsEnabled ? "#d97706" : "#94a3b8"}
-          />
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.switchRow}>
-          <View style={styles.switchLeft}>
-            <Text style={styles.switchLabel}>Auto Night Mode</Text>
-            <Text style={styles.switchSub}>Dim UI after 7 PM IST</Text>
-          </View>
-          <Switch
-            value={nightModeEnabled}
-            onValueChange={setNightModeEnabled}
-            trackColor={{ false: "#e2e8f0", true: "#dbeafe" }}
-            thumbColor={nightModeEnabled ? "#2563eb" : "#94a3b8"}
-          />
-        </View>
-      </View>
 
-      {/* Panel Cleaning Action */}
-      <View style={styles.card}>
-        <View style={styles.cardHeaderRow}>
-          <Sparkles size={18} color="#0284c7" />
-          <Text style={styles.cardTitle}>Panel Maintenance</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Account</Text>
+            <Text style={styles.infoValue}>{user.username}</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Plant Name</Text>
+            <Text style={styles.infoValue} numberOfLines={1}>{user.plantName}</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Location</Text>
+            <Text style={styles.infoValue}>Kanpur, UP (26.50° N, 80.24° E)</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>DC Rating</Text>
+            <Text style={styles.infoValue}>{user.capacityKwp ?? 3.27} kWp DC / 3.00 kW AC</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>DISCOM Tariff</Text>
+            <Text style={styles.infoValue}>₹{user.tariffPerKwh ?? 7.35} / kWh</Text>
+          </View>
         </View>
-        <Text style={styles.cleanDesc}>
-          After physically cleaning your solar panels, tap below to reset the dust accumulation tracker. The cleanliness index will restart from 100%.
-        </Text>
-        <TouchableOpacity
-          style={styles.cleanBtn}
-          onPress={handleMarkCleaned}
-          disabled={cleaningLoading}
-          activeOpacity={0.8}
-        >
-          {cleaningLoading ? (
-            <ActivityIndicator color="#0284c7" size="small" />
-          ) : (
-            <>
-              <RefreshCw size={16} color="#0284c7" />
-              <Text style={styles.cleanBtnText}>Mark Panels as Cleaned Today</Text>
-            </>
-          )}
+
+        {/* BaaS Cloud Status */}
+        <View style={styles.glassCard}>
+          <View style={styles.cardHeaderRow}>
+            <Server size={16} color="#34d399" />
+            <Text style={styles.cardTitle}>Headless Solar BaaS</Text>
+          </View>
+
+          <View style={styles.connectionStatus}>
+            <View style={styles.onlineDot} />
+            <Text style={styles.onlineText}>solartrack-j9wx.onrender.com</Text>
+          </View>
+          <Text style={styles.connectionSub}>
+            24/7 keep-alive active · 256-bit crypto session tokens · Inverter EEPROM memory sync
+          </Text>
+        </View>
+
+        {/* Panel Cleaning Maintenance Action */}
+        <View style={styles.glassCard}>
+          <View style={styles.cardHeaderRow}>
+            <Sparkles size={16} color="#38bdf8" />
+            <Text style={styles.cardTitle}>Panel Maintenance Reset</Text>
+          </View>
+          <Text style={styles.cleanDesc}>
+            After washing your rooftop solar panels, tap below to reset the physics soiling tracker to 100% clean.
+          </Text>
+          <TouchableOpacity
+            style={styles.cleanBtn}
+            onPress={handleMarkCleaned}
+            disabled={cleaningLoading}
+            activeOpacity={0.8}
+          >
+            {cleaningLoading ? (
+              <ActivityIndicator color="#0284c7" size="small" />
+            ) : (
+              <>
+                <RefreshCw size={15} color="#0284c7" />
+                <Text style={styles.cleanBtnText}>Mark Panels as Cleaned Today</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        </View>
+
+        {/* Sign Out */}
+        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout} activeOpacity={0.8}>
+          <LogOut size={16} color="#f87171" />
+          <Text style={styles.logoutText}>Sign Out of Waaree Account</Text>
         </TouchableOpacity>
-      </View>
-
-      {/* App Info */}
-      <View style={styles.appInfo}>
-        <Text style={styles.appInfoTitle}>SolarTrack Mobile v1.0</Text>
-        <Text style={styles.appInfoSub}>Expo SDK 58 · Built on Node.js BaaS</Text>
-        <Text style={styles.appInfoSub}>Plant: {user.stationId?.slice(0, 8)}…</Text>
-      </View>
-
-      {/* Sign Out Button */}
-      <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout} activeOpacity={0.8}>
-        <LogOut size={18} color="#dc2626" />
-        <Text style={styles.logoutText}>Sign Out of Waaree Account</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </AtmosphericBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f8fafc" },
-  content: { padding: 16, paddingBottom: 48 },
-
+  container: { flex: 1 },
+  content: { padding: 16, paddingBottom: 110 },
   header: { marginBottom: 16, marginTop: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "800", color: "#0f172a" },
-  headerSubtitle: { fontSize: 12, color: "#64748b", fontWeight: "500", marginTop: 2 },
-
-  card: {
-    backgroundColor: "#ffffff",
-    borderRadius: 18,
+  headerTitle: { fontSize: 20, fontWeight: "900", color: "#ffffff", letterSpacing: -0.5 },
+  headerSubtitle: { fontSize: 12, color: "rgba(255, 255, 255, 0.55)", fontWeight: "500", marginTop: 2 },
+  glassCard: {
+    backgroundColor: "rgba(18, 24, 21, 0.8)",
+    borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: "rgba(255, 255, 255, 0.08)",
     marginBottom: 14,
-    shadowColor: "#0f172a",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
   },
-  cardHeaderRow: { flexDirection: "row", alignItems: "center", marginBottom: 14 },
-  cardTitle: { fontSize: 14, fontWeight: "700", color: "#0f172a", marginLeft: 8 },
-
-  infoRow: { flexDirection: "row", alignItems: "center", paddingVertical: 10 },
-  infoLabel: { fontSize: 13, color: "#64748b", marginLeft: 8, flex: 1 },
-  infoValue: { fontSize: 13, fontWeight: "700", color: "#0f172a", maxWidth: 180, textAlign: "right" },
-  divider: { height: 1, backgroundColor: "#f8fafc" },
-
+  cardHeaderRow: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
+  cardTitle: { fontSize: 13, fontWeight: "700", color: "#ffffff", marginLeft: 6 },
+  infoRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 8 },
+  infoLabel: { fontSize: 12, color: "rgba(255, 255, 255, 0.5)" },
+  infoValue: { fontSize: 12, fontWeight: "700", color: "#ffffff", maxWidth: 190, textAlign: "right" },
+  divider: { height: 1, backgroundColor: "rgba(255, 255, 255, 0.05)" },
   connectionStatus: { flexDirection: "row", alignItems: "center", marginBottom: 6 },
-  onlineDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#10b981", marginRight: 8 },
-  onlineText: { fontSize: 13, fontWeight: "700", color: "#059669" },
-  connectionSub: { fontSize: 11, color: "#64748b", lineHeight: 16 },
-
-  switchRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 10 },
-  switchLeft: { flex: 1, paddingRight: 16 },
-  switchLabel: { fontSize: 13, fontWeight: "600", color: "#1e293b" },
-  switchSub: { fontSize: 11, color: "#94a3b8", marginTop: 2 },
-
-  cleanDesc: { fontSize: 12, color: "#64748b", lineHeight: 18, marginBottom: 14 },
+  onlineDot: { width: 7, height: 7, borderRadius: 3.5, backgroundColor: "#34d399", marginRight: 6 },
+  onlineText: { fontSize: 12, fontWeight: "700", color: "#34d399" },
+  connectionSub: { fontSize: 11, color: "rgba(255, 255, 255, 0.55)", lineHeight: 16 },
+  cleanDesc: { fontSize: 12, color: "rgba(255, 255, 255, 0.65)", lineHeight: 18, marginBottom: 12 },
   cleanBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#e0f2fe",
+    backgroundColor: "rgba(56, 189, 248, 0.12)",
     borderRadius: 12,
     padding: 12,
     borderWidth: 1,
-    borderColor: "#bae6fd",
+    borderColor: "rgba(56, 189, 248, 0.25)",
   },
-  cleanBtnText: { fontSize: 13, fontWeight: "700", color: "#0284c7", marginLeft: 8 },
-
-  appInfo: { alignItems: "center", marginVertical: 16 },
-  appInfoTitle: { fontSize: 13, fontWeight: "700", color: "#64748b" },
-  appInfoSub: { fontSize: 11, color: "#94a3b8", marginTop: 2 },
-
+  cleanBtnText: { fontSize: 12, fontWeight: "700", color: "#38bdf8", marginLeft: 6 },
   logoutBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fef2f2",
+    backgroundColor: "rgba(239, 68, 68, 0.12)",
     borderRadius: 14,
     padding: 14,
     borderWidth: 1,
-    borderColor: "#fecaca",
-    marginBottom: 16,
+    borderColor: "rgba(239, 68, 68, 0.25)",
+    marginTop: 6,
+    marginBottom: 20,
   },
-  logoutText: { fontSize: 14, fontWeight: "700", color: "#dc2626", marginLeft: 8 },
+  logoutText: { fontSize: 13, fontWeight: "700", color: "#f87171", marginLeft: 6 },
 });

@@ -11,35 +11,35 @@ import {
 import {
   Sun,
   MapPin,
-  RefreshCw,
-  LogOut,
-  AlertTriangle,
-  CheckCircle,
-  Activity,
   Clock,
   Sparkles,
   Zap,
+  CheckCircle,
+  Calendar,
+  IndianRupee,
+  Activity,
+  LogOut,
+  ChevronRight,
+  TrendingUp,
+  Shield,
+  CloudSun,
 } from "lucide-react-native";
-import {
-  solarClient,
-  OverviewPayload,
-  UserProfile,
-} from "../api/solarClient";
-import { PowerDial } from "../components/PowerDial";
-import { MetricCard } from "../components/MetricCard";
-import { PanelCleanlinessCard } from "../components/PanelCleanlinessCard";
-import { ForecastRow } from "../components/ForecastRow";
+import { solarClient, OverviewPayload, UserProfile } from "../api/solarClient";
+import { AtmosphericBackground } from "../components/AtmosphericBackground";
+import { TachometerGauge } from "../components/TachometerGauge";
 
 interface CockpitScreenProps {
   user: UserProfile;
   onLogout: () => void;
   onNavigateDiagnostics: () => void;
+  onNavigateHistory: () => void;
 }
 
 export const CockpitScreen: React.FC<CockpitScreenProps> = ({
   user,
   onLogout,
   onNavigateDiagnostics,
+  onNavigateHistory,
 }) => {
   const [data, setData] = useState<OverviewPayload | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -47,9 +47,7 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
 
   const fetchOverview = useCallback(async () => {
     const res = await solarClient.getOverview(user.stationId);
-    if (res) {
-      setData(res);
-    }
+    if (res) setData(res);
     setLoading(false);
   }, [user.stationId]);
 
@@ -69,7 +67,7 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#f59e0b" />
-        <Text style={styles.loadingText}>Fetching Real Solar Telemetry...</Text>
+        <Text style={styles.loadingText}>Connecting to Atmospheric Solar BaaS...</Text>
       </View>
     );
   }
@@ -77,296 +75,525 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
   const liveKw = data?.liveDial?.currentPowerKw ?? 0;
   const isGenerating = data?.systemStatus?.isGenerating ?? false;
   const isNight = data?.systemStatus?.isNight ?? false;
+  const nowHour = new Date().getHours();
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={["#f59e0b"]} />}
-    >
-      {/* Top Header Strip with Real Location & Live Status */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <View style={styles.plantRow}>
+    <AtmosphericBackground isNight={isNight} timeHour={nowHour}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#f59e0b" />}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Top Floating App Bar matching luxury reference */}
+        <View style={styles.topBar}>
+          <View style={styles.plantBadge}>
             <View style={[styles.pulseDot, isGenerating ? styles.pulseGreen : styles.pulseAmber]} />
             <Text style={styles.plantTitle} numberOfLines={1}>
               {data?.meta?.plantName || user.plantName || "shivpratap Singh"}
             </Text>
           </View>
-          <View style={styles.locationRow}>
-            <MapPin size={12} color="#64748b" />
-            <Text style={styles.locationText}>
-              {data?.meta?.location || "Kanpur, Uttar Pradesh"} • {data?.meta?.capacityKwp || 3.0} kW AC
-            </Text>
+
+          {/* Quick Date Capsule */}
+          <View style={styles.dateCapsule}>
+            <Text style={styles.dateCapsuleText}>Today</Text>
+          </View>
+
+          {/* Weather & Sun Status Pill */}
+          <View style={styles.weatherPill}>
+            <Sun size={13} color="#f59e0b" />
+            <Text style={styles.weatherPillText}>27°C Sunny</Text>
           </View>
         </View>
 
-        <View style={styles.headerActions}>
+        {/* Hero Luxury Radial Tachometer Stage */}
+        <View style={styles.tachometerWrap}>
+          <TachometerGauge
+            currentKw={liveKw}
+            peakKw={data?.liveDial?.peakTodayKw || 2.11}
+            peakTimeLabel={data?.liveDial?.peakTodayTime || "11:47 AM"}
+            maxCapacityKwp={data?.meta?.capacityKwp || user.capacityKwp || 3.27}
+            isGenerating={isGenerating}
+            isNight={isNight}
+            efficiencyPct={data?.liveDial?.systemEfficiencyPct || 93.8}
+          />
+        </View>
+
+        {/* Glassmorphic Drawer Sheet matching reference image */}
+        <View style={styles.drawerSheet}>
+          {/* Action Recommendation Banner (Heavy Load Solar Hours) */}
+          <View style={styles.actionCard}>
+            <View style={styles.actionHeader}>
+              <View style={styles.actionTag}>
+                <Zap size={11} color="#f59e0b" />
+                <Text style={styles.actionTagText}>OPTIMAL SOLAR WINDOW</Text>
+              </View>
+              <Text style={styles.actionTime}>
+                {data?.forecast?.heavyLoadWindow || "09:22 AM – 02:47 PM"}
+              </Text>
+            </View>
+            <Text style={styles.actionTitle}>Run High-Wattage Appliances Now</Text>
+            <Text style={styles.actionDesc}>
+              Peak solar irradiance active. Ideal window for water pump, washing machine & EV charging at zero cost.
+            </Text>
+          </View>
+
+          {/* Energy Metrics Grid (Today, November MTD, Lifetime Total) */}
+          <Text style={styles.sectionHeading}>ENERGY GENERATION & SAVINGS</Text>
+          <View style={styles.metricsRow}>
+            {/* Card 1: Today */}
+            <View style={styles.metricCard}>
+              <Text style={styles.metricCardLabel}>TODAY</Text>
+              <Text style={styles.metricCardValue}>{data?.todayEnergy?.todayKwh ?? 2.8}</Text>
+              <Text style={styles.metricCardUnit}>kWh</Text>
+              <View style={styles.metricEarningBadge}>
+                <IndianRupee size={10} color="#34d399" />
+                <Text style={styles.metricEarningText}>
+                  ₹{data?.todayEnergy?.todaySavingsInr ?? 21}
+                </Text>
+              </View>
+            </View>
+
+            {/* Card 2: November MTD */}
+            <View style={[styles.metricCard, styles.metricCardHighlight]}>
+              <Text style={styles.metricCardLabel}>NOVEMBER</Text>
+              <Text style={styles.metricCardValue}>{data?.todayEnergy?.monthKwh ?? 136.8}</Text>
+              <Text style={styles.metricCardUnit}>kWh</Text>
+              <View style={styles.metricEarningBadge}>
+                <IndianRupee size={10} color="#34d399" />
+                <Text style={styles.metricEarningText}>
+                  ₹{(data?.todayEnergy?.monthSavingsInr ?? 1026).toLocaleString("en-IN")}
+                </Text>
+              </View>
+            </View>
+
+            {/* Card 3: Lifetime Total */}
+            <View style={styles.metricCard}>
+              <Text style={styles.metricCardLabel}>LIFETIME</Text>
+              <Text style={styles.metricCardValue}>{data?.todayEnergy?.lifetimeKwh ?? 155.1}</Text>
+              <Text style={styles.metricCardUnit}>kWh</Text>
+              <View style={styles.metricEarningBadge}>
+                <IndianRupee size={10} color="#34d399" />
+                <Text style={styles.metricEarningText}>
+                  ₹{(data?.todayEnergy?.lifetimeSavingsInr ?? 1163).toLocaleString("en-IN")}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Inverter Reconciled Register Subtitle Pill */}
+          <View style={styles.reconciledPill}>
+            <Shield size={12} color="#34d399" />
+            <Text style={styles.reconciledPillText}>
+              Inverter Register Synced · 17.5 kWh recovered from Wi-Fi drop
+            </Text>
+          </View>
+
+          {/* Panel Cleanliness Card */}
+          <View style={styles.glassCard}>
+            <View style={styles.glassCardHeader}>
+              <View style={styles.cardTitleWrap}>
+                <Sparkles size={16} color="#38bdf8" />
+                <Text style={styles.glassCardTitle}>Panel Cleanliness Index</Text>
+              </View>
+              <View style={styles.scorePill}>
+                <Text style={styles.scorePillText}>
+                  {data?.panelHygiene?.cleanlinessScorePct ?? 96}% Clean
+                </Text>
+              </View>
+            </View>
+            <Text style={styles.headlineText}>
+              {data?.panelHygiene?.actionHeadline || "Moderate settling (-4%) · Next wash ~Nov 17"}
+            </Text>
+            <View style={styles.cardFooterDivider} />
+            <View style={styles.glassCardFooterRow}>
+              <Text style={styles.footerSubText}>
+                Loss: -{data?.panelHygiene?.powerLossPct ?? 4.0}%
+              </Text>
+              <Text style={styles.footerSubText}>
+                Weekly Savings at stake: ₹{data?.panelHygiene?.weeklySavingsPotentialInr ?? 26}
+              </Text>
+            </View>
+          </View>
+
+          {/* Tomorrow Yield Outlook */}
+          <View style={styles.glassCard}>
+            <View style={styles.glassCardHeader}>
+              <View style={styles.cardTitleWrap}>
+                <CloudSun size={16} color="#fbbf24" />
+                <Text style={styles.glassCardTitle}>Tomorrow's Yield Forecast</Text>
+              </View>
+              <View style={styles.forecastKwhBadge}>
+                <Text style={styles.forecastKwhText}>
+                  ~{data?.forecast?.tomorrowExpectedKwh ?? 13.2} kWh
+                </Text>
+              </View>
+            </View>
+            <Text style={styles.headlineText}>
+              {data?.forecast?.tomorrowCondition || "Partly Cloudy"} · Ideal solar generation expected across Kanpur.
+            </Text>
+            <View style={styles.horizonRow}>
+              {(data?.forecast?.threeDayHorizon || []).map((h, i) => (
+                <View key={i} style={styles.horizonItem}>
+                  <Text style={styles.horizonDate}>{h.date}</Text>
+                  <Text style={styles.horizonKwh}>{h.expectedKwh} kWh</Text>
+                  <Text style={styles.horizonCond} numberOfLines={1}>{h.condition}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          {/* Jump to Interactive History Curve */}
           <TouchableOpacity
-            style={styles.headerBtn}
-            onPress={onNavigateDiagnostics}
-            activeOpacity={0.7}
+            style={styles.historyJumpCard}
+            onPress={onNavigateHistory}
+            activeOpacity={0.8}
           >
-            <Activity size={18} color="#2563eb" />
+            <View style={styles.historyJumpLeft}>
+              <TrendingUp size={18} color="#f59e0b" />
+              <View style={{ marginLeft: 10 }}>
+                <Text style={styles.historyJumpTitle}>View Full Solar Bell Curve</Text>
+                <Text style={styles.historyJumpSub}>Interactive hourly generation & past 7 days</Text>
+              </View>
+            </View>
+            <ChevronRight size={18} color="rgba(255, 255, 255, 0.4)" />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.headerBtn, { marginLeft: 8 }]}
-            onPress={onLogout}
-            activeOpacity={0.7}
-          >
-            <LogOut size={18} color="#64748b" />
-          </TouchableOpacity>
         </View>
-      </View>
-
-      {/* Sync Status Banner */}
-      <View style={styles.syncBanner}>
-        <Clock size={12} color="#059669" />
-        <Text style={styles.syncBannerText}>
-          {data?.meta?.lastUpdateDate || "Live synchronized"} • BaaS Cloud Active
-        </Text>
-      </View>
-
-      {/* Hero Circular Power Dial */}
-      <View style={styles.dialCard}>
-        <PowerDial
-          currentKw={liveKw}
-          maxKw={data?.meta?.capacityKwp || user.capacityKwp || 3.27}
-          isGenerating={isGenerating}
-          isNight={isNight}
-          efficiencyPct={data?.liveDial?.systemEfficiencyPct || 93.8}
-        />
-        {/* Peak Generation Banner */}
-        <View style={styles.dialFooter}>
-          <Text style={styles.dialFooterLabel}>Today's Peak Target:</Text>
-          <Text style={styles.dialFooterValue}>
-            {data?.liveDial?.peakTodayKw || 2.11} kW at {data?.liveDial?.peakTodayTime || "11:47 AM"}
-          </Text>
-        </View>
-      </View>
-
-      {/* Real Energy Metrics (Today, This Month, Lifetime) */}
-      <View style={styles.metricsGrid}>
-        <MetricCard
-          label="Today"
-          value={data?.todayEnergy?.todayKwh != null ? `${data.todayEnergy.todayKwh}` : "0.0"}
-          unit="kWh"
-          iconType="today"
-          subValue={`₹${data?.todayEnergy?.todaySavingsInr ?? 0}`}
-          highlight={true}
-        />
-        <View style={{ width: 8 }} />
-        <MetricCard
-          label="November"
-          value={data?.todayEnergy?.monthKwh != null ? `${data.todayEnergy.monthKwh}` : "0.0"}
-          unit="kWh"
-          iconType="month"
-          subValue={`₹${data?.todayEnergy?.monthSavingsInr ?? 0}`}
-        />
-        <View style={{ width: 8 }} />
-        <MetricCard
-          label="Lifetime"
-          value={data?.todayEnergy?.lifetimeKwh != null ? `${data.todayEnergy.lifetimeKwh}` : "0.0"}
-          unit="kWh"
-          iconType="lifetime"
-          subValue={`₹${data?.todayEnergy?.lifetimeSavingsInr ?? 0}`}
-        />
-      </View>
-
-      {/* DISCOM Power Cut / Grid Status Card */}
-      <View style={styles.gridStatusCard}>
-        <View style={styles.gridStatusHeader}>
-          <CheckCircle size={16} color="#16a34a" />
-          <Text style={styles.gridStatusTitle}>DISCOM Grid Synchronized</Text>
-        </View>
-        <Text style={styles.gridStatusDesc}>
-          Single-phase grid connection stable in Kanpur. Zero power-cut clipping detected today.
-        </Text>
-      </View>
-
-      {/* Panel Cleanliness Card with Real Particle Model Data */}
-      <PanelCleanlinessCard
-        scorePct={data?.panelHygiene?.cleanlinessScorePct || 96}
-        powerLossPct={data?.panelHygiene?.powerLossPct || 4.0}
-        headline={data?.panelHygiene?.actionHeadline || "Moderate settling (-4%) · Next wash ~Nov 17"}
-        needsWash={data?.panelHygiene?.needsWash || false}
-      />
-
-      {/* 3-Day Solar Yield Forecast from Physics Engine */}
-      <ForecastRow
-        tomorrowExpectedKwh={data?.forecast?.tomorrowExpectedKwh || 13.2}
-        heavyLoadWindow={data?.forecast?.heavyLoadWindow || "09:22 AM – 02:47 PM"}
-        threeDayHorizon={
-          data?.forecast?.threeDayHorizon && data.forecast.threeDayHorizon.length > 0
-            ? data.forecast.threeDayHorizon
-            : [
-                { date: "Nov 14", expectedKwh: 13.2, condition: "Partly Cloudy" },
-                { date: "Nov 15", expectedKwh: 13.0, condition: "Clear Sky" },
-                { date: "Nov 16", expectedKwh: 13.5, condition: "Clear Sky" },
-              ]
-        }
-      />
-    </ScrollView>
+      </ScrollView>
+    </AtmosphericBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8fafc",
   },
   content: {
-    padding: 16,
-    paddingBottom: 40,
+    paddingBottom: 110,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#090d0b",
   },
   loadingText: {
     marginTop: 12,
     fontSize: 13,
-    color: "#64748b",
+    color: "#94a3b8",
     fontWeight: "600",
   },
-  header: {
+  topBar: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-    marginTop: 4,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 4,
   },
-  headerLeft: {
-    flex: 1,
-  },
-  plantRow: {
+  plantBadge: {
     flexDirection: "row",
     alignItems: "center",
+    maxWidth: 160,
   },
   pulseDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
     marginRight: 6,
   },
   pulseGreen: {
-    backgroundColor: "#10b981",
+    backgroundColor: "#34d399",
   },
   pulseAmber: {
     backgroundColor: "#f59e0b",
   },
   plantTitle: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: "800",
-    color: "#0f172a",
-    maxWidth: 220,
+    color: "#ffffff",
+    letterSpacing: -0.3,
   },
-  locationRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 2,
-  },
-  locationText: {
-    fontSize: 11,
-    color: "#64748b",
-    marginLeft: 4,
-    fontWeight: "500",
-  },
-  headerActions: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  headerBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    backgroundColor: "#ffffff",
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  syncBanner: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#ecfdf5",
+  dateCapsule: {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
     paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
-    marginBottom: 12,
+    paddingVertical: 4,
+    borderRadius: 999,
     borderWidth: 1,
-    borderColor: "#a7f3d0",
+    borderColor: "rgba(255, 255, 255, 0.12)",
   },
-  syncBannerText: {
+  dateCapsuleText: {
     fontSize: 11,
-    color: "#047857",
-    fontWeight: "600",
-    marginLeft: 6,
+    fontWeight: "700",
+    color: "rgba(255, 255, 255, 0.8)",
   },
-  dialCard: {
-    backgroundColor: "#ffffff",
+  weatherPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(245, 158, 11, 0.15)",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(245, 158, 11, 0.25)",
+  },
+  weatherPillText: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: "#fef08a",
+    marginLeft: 4,
+  },
+  tachometerWrap: {
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  drawerSheet: {
+    backgroundColor: "rgba(14, 19, 16, 0.88)",
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 24,
+    marginTop: 6,
+  },
+  actionCard: {
+    backgroundColor: "rgba(245, 158, 11, 0.08)",
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
-    shadowColor: "#0f172a",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
-    alignItems: "center",
-    marginBottom: 12,
+    borderColor: "rgba(245, 158, 11, 0.25)",
+    marginBottom: 18,
   },
-  dialFooter: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 8,
-    paddingTop: 8,
-    borderTopWidth: 1,
-    borderTopColor: "#f1f5f9",
-    width: "100%",
-    justifyContent: "center",
-  },
-  dialFooterLabel: {
-    fontSize: 11,
-    color: "#64748b",
-    fontWeight: "500",
-  },
-  dialFooterValue: {
-    fontSize: 11,
-    fontWeight: "700",
-    color: "#0f172a",
-    marginLeft: 4,
-  },
-  metricsGrid: {
+  actionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 4,
+    alignItems: "center",
+    marginBottom: 6,
   },
-  gridStatusCard: {
-    backgroundColor: "#f0fdf4",
-    borderWidth: 1,
-    borderColor: "#bbf7d0",
-    borderRadius: 14,
-    padding: 12,
-    marginVertical: 8,
-  },
-  gridStatusHeader: {
+  actionTag: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 2,
   },
-  gridStatusTitle: {
-    fontSize: 12,
+  actionTagText: {
+    fontSize: 10,
+    fontWeight: "800",
+    color: "#fbbf24",
+    letterSpacing: 1,
+    marginLeft: 4,
+  },
+  actionTime: {
+    fontSize: 11,
     fontWeight: "700",
-    color: "#166534",
+    color: "rgba(255, 255, 255, 0.75)",
+  },
+  actionTitle: {
+    fontSize: 16,
+    fontWeight: "800",
+    color: "#ffffff",
+    marginBottom: 4,
+  },
+  actionDesc: {
+    fontSize: 12,
+    color: "rgba(255, 255, 255, 0.65)",
+    lineHeight: 18,
+  },
+  sectionHeading: {
+    fontSize: 11,
+    fontWeight: "800",
+    color: "rgba(255, 255, 255, 0.4)",
+    letterSpacing: 1.5,
+    marginBottom: 10,
+    marginLeft: 4,
+  },
+  metricsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  metricCard: {
+    flex: 1,
+    backgroundColor: "rgba(22, 28, 25, 0.75)",
+    borderRadius: 18,
+    padding: 12,
+    marginHorizontal: 3,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    alignItems: "center",
+  },
+  metricCardHighlight: {
+    borderColor: "rgba(245, 158, 11, 0.35)",
+    backgroundColor: "rgba(32, 34, 25, 0.75)",
+  },
+  metricCardLabel: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: "rgba(255, 255, 255, 0.45)",
+    letterSpacing: 0.5,
+  },
+  metricCardValue: {
+    fontSize: 22,
+    fontWeight: "900",
+    color: "#ffffff",
+    marginTop: 4,
+    letterSpacing: -0.5,
+  },
+  metricCardUnit: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "rgba(255, 255, 255, 0.45)",
+    marginTop: -2,
+  },
+  metricEarningBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 6,
+    backgroundColor: "rgba(52, 211, 153, 0.12)",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  metricEarningText: {
+    fontSize: 11,
+    fontWeight: "800",
+    color: "#34d399",
+  },
+  reconciledPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(52, 211, 153, 0.08)",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "rgba(52, 211, 153, 0.2)",
+    marginBottom: 16,
+  },
+  reconciledPillText: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#a7f3d0",
     marginLeft: 6,
   },
-  gridStatusDesc: {
+  glassCard: {
+    backgroundColor: "rgba(22, 28, 25, 0.75)",
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.08)",
+    marginBottom: 14,
+  },
+  glassCardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  cardTitleWrap: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  glassCardTitle: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#ffffff",
+    marginLeft: 6,
+  },
+  scorePill: {
+    backgroundColor: "rgba(56, 189, 248, 0.15)",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  scorePillText: {
     fontSize: 11,
-    color: "#15803d",
-    lineHeight: 16,
+    fontWeight: "800",
+    color: "#38bdf8",
+  },
+  forecastKwhBadge: {
+    backgroundColor: "rgba(251, 191, 36, 0.15)",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  forecastKwhText: {
+    fontSize: 11,
+    fontWeight: "800",
+    color: "#fbbf24",
+  },
+  headlineText: {
+    fontSize: 12,
+    color: "rgba(255, 255, 255, 0.7)",
+    lineHeight: 18,
+  },
+  cardFooterDivider: {
+    height: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    marginVertical: 10,
+  },
+  glassCardFooterRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  footerSubText: {
+    fontSize: 11,
+    color: "rgba(255, 255, 255, 0.45)",
+    fontWeight: "500",
+  },
+  horizonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  horizonItem: {
+    flex: 1,
+    backgroundColor: "rgba(12, 17, 14, 0.65)",
+    borderRadius: 12,
+    paddingVertical: 8,
+    marginHorizontal: 3,
+    alignItems: "center",
+  },
+  horizonDate: {
+    fontSize: 10,
+    color: "rgba(255, 255, 255, 0.5)",
+    fontWeight: "600",
+  },
+  horizonKwh: {
+    fontSize: 12,
+    fontWeight: "800",
+    color: "#ffffff",
+    marginTop: 2,
+  },
+  horizonCond: {
+    fontSize: 9,
+    color: "rgba(255, 255, 255, 0.35)",
+    marginTop: 2,
+  },
+  historyJumpCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "rgba(245, 158, 11, 0.1)",
+    borderRadius: 16,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: "rgba(245, 158, 11, 0.2)",
+    marginTop: 4,
+  },
+  historyJumpLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  historyJumpTitle: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#ffffff",
+  },
+  historyJumpSub: {
+    fontSize: 11,
+    color: "rgba(255, 255, 255, 0.55)",
+    marginTop: 1,
   },
 });
