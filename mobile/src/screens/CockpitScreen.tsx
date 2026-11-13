@@ -10,15 +10,9 @@ import {
 } from "react-native";
 import {
   Sun,
-  MapPin,
-  Clock,
   Sparkles,
   Zap,
-  CheckCircle,
-  Calendar,
   IndianRupee,
-  Activity,
-  LogOut,
   ChevronRight,
   TrendingUp,
   Shield,
@@ -66,8 +60,8 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
   if (loading && !data) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#f59e0b" />
-        <Text style={styles.loadingText}>Connecting to Atmospheric Solar BaaS...</Text>
+        <ActivityIndicator size="large" color="#F59E0B" />
+        <Text style={styles.loadingText}>Connecting to Rooftop Inverter Telemetry...</Text>
       </View>
     );
   }
@@ -82,7 +76,7 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#f59e0b" />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#F59E0B" />}
         showsVerticalScrollIndicator={false}
       >
         {/* Top Floating App Bar matching luxury reference */}
@@ -101,7 +95,7 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
 
           {/* Weather & Sun Status Pill */}
           <View style={styles.weatherPill}>
-            <Sun size={13} color="#f59e0b" />
+            <Sun size={13} color="#D97706" />
             <Text style={styles.weatherPillText}>27°C Sunny</Text>
           </View>
         </View>
@@ -119,17 +113,17 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
           />
         </View>
 
-        {/* Glassmorphic Drawer Sheet matching reference image */}
+        {/* Glassmorphic White Bento Container */}
         <View style={styles.drawerSheet}>
-          {/* Action Recommendation Banner (Heavy Load Solar Hours) */}
+          {/* Action Recommendation Banner (Optimal Solar Window) */}
           <View style={styles.actionCard}>
             <View style={styles.actionHeader}>
               <View style={styles.actionTag}>
-                <Zap size={11} color="#f59e0b" />
+                <Zap size={12} color="#D97706" />
                 <Text style={styles.actionTagText}>OPTIMAL SOLAR WINDOW</Text>
               </View>
               <Text style={styles.actionTime}>
-                {data?.forecast?.heavyLoadWindow || "09:22 AM – 02:47 PM"}
+                {data?.forecast?.heavyLoadWindow || "09:12 AM – 02:37 PM"}
               </Text>
             </View>
             <Text style={styles.actionTitle}>Run High-Wattage Appliances Now</Text>
@@ -147,22 +141,22 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
               <Text style={styles.metricCardValue}>{data?.todayEnergy?.todayKwh ?? 2.8}</Text>
               <Text style={styles.metricCardUnit}>kWh</Text>
               <View style={styles.metricEarningBadge}>
-                <IndianRupee size={10} color="#34d399" />
+                <IndianRupee size={10} color="#059669" />
                 <Text style={styles.metricEarningText}>
-                  ₹{data?.todayEnergy?.todaySavingsInr ?? 21}
+                  {data?.todayEnergy?.todaySavingsInr ?? 21}
                 </Text>
               </View>
             </View>
 
             {/* Card 2: November MTD */}
             <View style={[styles.metricCard, styles.metricCardHighlight]}>
-              <Text style={styles.metricCardLabel}>NOVEMBER</Text>
+              <Text style={[styles.metricCardLabel, styles.metricCardLabelHighlight]}>NOVEMBER</Text>
               <Text style={styles.metricCardValue}>{data?.todayEnergy?.monthKwh ?? 136.8}</Text>
               <Text style={styles.metricCardUnit}>kWh</Text>
               <View style={styles.metricEarningBadge}>
-                <IndianRupee size={10} color="#34d399" />
+                <IndianRupee size={10} color="#059669" />
                 <Text style={styles.metricEarningText}>
-                  ₹{(data?.todayEnergy?.monthSavingsInr ?? 1026).toLocaleString("en-IN")}
+                  {(data?.todayEnergy?.monthSavingsInr ?? 1026).toLocaleString("en-IN")}
                 </Text>
               </View>
             </View>
@@ -173,9 +167,9 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
               <Text style={styles.metricCardValue}>{data?.todayEnergy?.lifetimeKwh ?? 155.1}</Text>
               <Text style={styles.metricCardUnit}>kWh</Text>
               <View style={styles.metricEarningBadge}>
-                <IndianRupee size={10} color="#34d399" />
+                <IndianRupee size={10} color="#059669" />
                 <Text style={styles.metricEarningText}>
-                  ₹{(data?.todayEnergy?.lifetimeSavingsInr ?? 1163).toLocaleString("en-IN")}
+                  {(data?.todayEnergy?.lifetimeSavingsInr ?? 1163).toLocaleString("en-IN")}
                 </Text>
               </View>
             </View>
@@ -183,7 +177,7 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
 
           {/* Inverter Reconciled Register Subtitle Pill */}
           <View style={styles.reconciledPill}>
-            <Shield size={12} color="#34d399" />
+            <Shield size={13} color="#059669" />
             <Text style={styles.reconciledPillText}>
               Inverter Register Synced · 17.5 kWh recovered from Wi-Fi drop
             </Text>
@@ -193,7 +187,7 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
           <View style={styles.glassCard}>
             <View style={styles.glassCardHeader}>
               <View style={styles.cardTitleWrap}>
-                <Sparkles size={16} color="#38bdf8" />
+                <Sparkles size={16} color="#0284C7" />
                 <Text style={styles.glassCardTitle}>Panel Cleanliness Index</Text>
               </View>
               <View style={styles.scorePill}>
@@ -220,17 +214,17 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
           <View style={styles.glassCard}>
             <View style={styles.glassCardHeader}>
               <View style={styles.cardTitleWrap}>
-                <CloudSun size={16} color="#fbbf24" />
+                <CloudSun size={16} color="#D97706" />
                 <Text style={styles.glassCardTitle}>Tomorrow's Yield Forecast</Text>
               </View>
               <View style={styles.forecastKwhBadge}>
                 <Text style={styles.forecastKwhText}>
-                  ~{data?.forecast?.tomorrowExpectedKwh ?? 13.2} kWh
+                  ~{data?.forecast?.tomorrowExpectedKwh ?? 12.7} kWh
                 </Text>
               </View>
             </View>
             <Text style={styles.headlineText}>
-              {data?.forecast?.tomorrowCondition || "Partly Cloudy"} · Ideal solar generation expected across Kanpur.
+              {data?.forecast?.tomorrowCondition || "Sunny - Clear Sky"} · Ideal solar generation expected across Kanpur.
             </Text>
             <View style={styles.horizonRow}>
               {(data?.forecast?.threeDayHorizon || []).map((h, i) => (
@@ -250,13 +244,13 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
             activeOpacity={0.8}
           >
             <View style={styles.historyJumpLeft}>
-              <TrendingUp size={18} color="#f59e0b" />
+              <TrendingUp size={18} color="#D97706" />
               <View style={{ marginLeft: 10 }}>
                 <Text style={styles.historyJumpTitle}>View Full Solar Bell Curve</Text>
                 <Text style={styles.historyJumpSub}>Interactive hourly generation & past 7 days</Text>
               </View>
             </View>
-            <ChevronRight size={18} color="rgba(255, 255, 255, 0.4)" />
+            <ChevronRight size={18} color="#94A3B8" />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -275,12 +269,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#090d0b",
+    backgroundColor: "#F8FAFC",
   },
   loadingText: {
     marginTop: 12,
     fontSize: 13,
-    color: "#94a3b8",
+    color: "#64748B",
     fontWeight: "600",
   },
   topBar: {
@@ -297,73 +291,78 @@ const styles = StyleSheet.create({
     maxWidth: 160,
   },
   pulseDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     marginRight: 6,
   },
   pulseGreen: {
-    backgroundColor: "#34d399",
+    backgroundColor: "#10B981",
   },
   pulseAmber: {
-    backgroundColor: "#f59e0b",
+    backgroundColor: "#F59E0B",
   },
   plantTitle: {
     fontSize: 15,
     fontWeight: "800",
-    color: "#ffffff",
+    color: "#0F172A",
     letterSpacing: -0.3,
   },
   dateCapsule: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: "#FFFFFF",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.12)",
+    borderColor: "#E2E8F0",
   },
   dateCapsuleText: {
     fontSize: 11,
     fontWeight: "700",
-    color: "rgba(255, 255, 255, 0.8)",
+    color: "#475569",
   },
   weatherPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(245, 158, 11, 0.15)",
+    backgroundColor: "#FEF3C7",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: "rgba(245, 158, 11, 0.25)",
+    borderColor: "#FDE68A",
   },
   weatherPillText: {
     fontSize: 11,
     fontWeight: "700",
-    color: "#fef08a",
+    color: "#B45309",
     marginLeft: 4,
   },
   tachometerWrap: {
-    marginTop: 4,
-    marginBottom: 8,
+    marginTop: 2,
+    marginBottom: 6,
   },
   drawerSheet: {
-    backgroundColor: "rgba(14, 19, 16, 0.88)",
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
+    borderColor: "#E2E8F0",
     paddingHorizontal: 16,
     paddingTop: 20,
     paddingBottom: 24,
     marginTop: 6,
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.03,
+    shadowRadius: 12,
+    elevation: 3,
   },
   actionCard: {
-    backgroundColor: "rgba(245, 158, 11, 0.08)",
+    backgroundColor: "#FFFBEB",
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: "rgba(245, 158, 11, 0.25)",
+    borderColor: "#FDE68A",
     marginBottom: 18,
   },
   actionHeader: {
@@ -379,31 +378,31 @@ const styles = StyleSheet.create({
   actionTagText: {
     fontSize: 10,
     fontWeight: "800",
-    color: "#fbbf24",
+    color: "#B45309",
     letterSpacing: 1,
     marginLeft: 4,
   },
   actionTime: {
     fontSize: 11,
     fontWeight: "700",
-    color: "rgba(255, 255, 255, 0.75)",
+    color: "#92400E",
   },
   actionTitle: {
     fontSize: 16,
     fontWeight: "800",
-    color: "#ffffff",
+    color: "#0F172A",
     marginBottom: 4,
   },
   actionDesc: {
     fontSize: 12,
-    color: "rgba(255, 255, 255, 0.65)",
+    color: "#475569",
     lineHeight: 18,
   },
   sectionHeading: {
     fontSize: 11,
     fontWeight: "800",
-    color: "rgba(255, 255, 255, 0.4)",
-    letterSpacing: 1.5,
+    color: "#64748B",
+    letterSpacing: 1.2,
     marginBottom: 10,
     marginLeft: 4,
   },
@@ -414,74 +413,77 @@ const styles = StyleSheet.create({
   },
   metricCard: {
     flex: 1,
-    backgroundColor: "rgba(22, 28, 25, 0.75)",
+    backgroundColor: "#F8FAFC",
     borderRadius: 18,
     padding: 12,
     marginHorizontal: 3,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
+    borderColor: "#E2E8F0",
     alignItems: "center",
   },
   metricCardHighlight: {
-    borderColor: "rgba(245, 158, 11, 0.35)",
-    backgroundColor: "rgba(32, 34, 25, 0.75)",
+    borderColor: "#FDE68A",
+    backgroundColor: "#FFFBEB",
   },
   metricCardLabel: {
     fontSize: 10,
     fontWeight: "700",
-    color: "rgba(255, 255, 255, 0.45)",
+    color: "#64748B",
     letterSpacing: 0.5,
   },
+  metricCardLabelHighlight: {
+    color: "#B45309",
+  },
   metricCardValue: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "900",
-    color: "#ffffff",
+    color: "#0F172A",
     marginTop: 4,
     letterSpacing: -0.5,
   },
   metricCardUnit: {
     fontSize: 10,
     fontWeight: "600",
-    color: "rgba(255, 255, 255, 0.45)",
+    color: "#64748B",
     marginTop: -2,
   },
   metricEarningBadge: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 6,
-    backgroundColor: "rgba(52, 211, 153, 0.12)",
-    paddingHorizontal: 6,
+    backgroundColor: "#ECFDF5",
+    paddingHorizontal: 7,
     paddingVertical: 2,
-    borderRadius: 6,
+    borderRadius: 999,
   },
   metricEarningText: {
     fontSize: 11,
     fontWeight: "800",
-    color: "#34d399",
+    color: "#059669",
   },
   reconciledPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(52, 211, 153, 0.08)",
-    paddingVertical: 6,
+    backgroundColor: "#ECFDF5",
+    paddingVertical: 7,
     paddingHorizontal: 12,
-    borderRadius: 10,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: "rgba(52, 211, 153, 0.2)",
+    borderColor: "#A7F3D0",
     marginBottom: 16,
   },
   reconciledPillText: {
     fontSize: 11,
     fontWeight: "600",
-    color: "#a7f3d0",
+    color: "#065F46",
     marginLeft: 6,
   },
   glassCard: {
-    backgroundColor: "rgba(22, 28, 25, 0.75)",
+    backgroundColor: "#F8FAFC",
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
+    borderColor: "#E2E8F0",
     marginBottom: 14,
   },
   glassCardHeader: {
@@ -497,11 +499,11 @@ const styles = StyleSheet.create({
   glassCardTitle: {
     fontSize: 13,
     fontWeight: "700",
-    color: "#ffffff",
+    color: "#0F172A",
     marginLeft: 6,
   },
   scorePill: {
-    backgroundColor: "rgba(56, 189, 248, 0.15)",
+    backgroundColor: "#E0F2FE",
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
@@ -509,10 +511,10 @@ const styles = StyleSheet.create({
   scorePillText: {
     fontSize: 11,
     fontWeight: "800",
-    color: "#38bdf8",
+    color: "#0284C7",
   },
   forecastKwhBadge: {
-    backgroundColor: "rgba(251, 191, 36, 0.15)",
+    backgroundColor: "#FEF3C7",
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
@@ -520,16 +522,16 @@ const styles = StyleSheet.create({
   forecastKwhText: {
     fontSize: 11,
     fontWeight: "800",
-    color: "#fbbf24",
+    color: "#B45309",
   },
   headlineText: {
     fontSize: 12,
-    color: "rgba(255, 255, 255, 0.7)",
+    color: "#334155",
     lineHeight: 18,
   },
   cardFooterDivider: {
     height: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    backgroundColor: "#E2E8F0",
     marginVertical: 10,
   },
   glassCardFooterRow: {
@@ -539,7 +541,7 @@ const styles = StyleSheet.create({
   },
   footerSubText: {
     fontSize: 11,
-    color: "rgba(255, 255, 255, 0.45)",
+    color: "#64748B",
     fontWeight: "500",
   },
   horizonRow: {
@@ -549,37 +551,39 @@ const styles = StyleSheet.create({
   },
   horizonItem: {
     flex: 1,
-    backgroundColor: "rgba(12, 17, 14, 0.65)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
     paddingVertical: 8,
     marginHorizontal: 3,
     alignItems: "center",
   },
   horizonDate: {
     fontSize: 10,
-    color: "rgba(255, 255, 255, 0.5)",
+    color: "#64748B",
     fontWeight: "600",
   },
   horizonKwh: {
     fontSize: 12,
     fontWeight: "800",
-    color: "#ffffff",
+    color: "#0F172A",
     marginTop: 2,
   },
   horizonCond: {
     fontSize: 9,
-    color: "rgba(255, 255, 255, 0.35)",
+    color: "#94A3B8",
     marginTop: 2,
   },
   historyJumpCard: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "rgba(245, 158, 11, 0.1)",
+    backgroundColor: "#FFFBEB",
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
-    borderColor: "rgba(245, 158, 11, 0.2)",
+    borderColor: "#FDE68A",
     marginTop: 4,
   },
   historyJumpLeft: {
@@ -589,11 +593,11 @@ const styles = StyleSheet.create({
   historyJumpTitle: {
     fontSize: 13,
     fontWeight: "700",
-    color: "#ffffff",
+    color: "#0F172A",
   },
   historyJumpSub: {
     fontSize: 11,
-    color: "rgba(255, 255, 255, 0.55)",
+    color: "#64748B",
     marginTop: 1,
   },
 });

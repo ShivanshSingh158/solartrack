@@ -7,17 +7,12 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
-  Switch,
 } from "react-native";
 import {
   Sparkles,
   LogOut,
   User,
-  MapPin,
-  Zap,
-  IndianRupee,
   RefreshCw,
-  ShieldCheck,
   Server,
 } from "lucide-react-native";
 import { solarClient, UserProfile } from "../api/solarClient";
@@ -30,7 +25,6 @@ interface SettingsScreenProps {
 
 export const SettingsScreen: React.FC<SettingsScreenProps> = ({ user, onLogout }) => {
   const [cleaningLoading, setCleaningLoading] = useState(false);
-  const [alertsEnabled, setAlertsEnabled] = useState(true);
 
   const handleMarkCleaned = async () => {
     setCleaningLoading(true);
@@ -73,7 +67,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ user, onLogout }
         {/* Account & Plant Card */}
         <View style={styles.glassCard}>
           <View style={styles.cardHeaderRow}>
-            <User size={16} color="#60a5fa" />
+            <User size={16} color="#0284C7" />
             <Text style={styles.cardTitle}>Waaree Cloud Profile</Text>
           </View>
 
@@ -106,7 +100,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ user, onLogout }
         {/* BaaS Cloud Status */}
         <View style={styles.glassCard}>
           <View style={styles.cardHeaderRow}>
-            <Server size={16} color="#34d399" />
+            <Server size={16} color="#059669" />
             <Text style={styles.cardTitle}>Headless Solar BaaS</Text>
           </View>
 
@@ -122,7 +116,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ user, onLogout }
         {/* Panel Cleaning Maintenance Action */}
         <View style={styles.glassCard}>
           <View style={styles.cardHeaderRow}>
-            <Sparkles size={16} color="#38bdf8" />
+            <Sparkles size={16} color="#0284C7" />
             <Text style={styles.cardTitle}>Panel Maintenance Reset</Text>
           </View>
           <Text style={styles.cleanDesc}>
@@ -135,10 +129,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ user, onLogout }
             activeOpacity={0.8}
           >
             {cleaningLoading ? (
-              <ActivityIndicator color="#0284c7" size="small" />
+              <ActivityIndicator color="#0284C7" size="small" />
             ) : (
               <>
-                <RefreshCw size={15} color="#0284c7" />
+                <RefreshCw size={15} color="#0284C7" />
                 <Text style={styles.cleanBtnText}>Mark Panels as Cleaned Today</Text>
               </>
             )}
@@ -147,7 +141,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ user, onLogout }
 
         {/* Sign Out */}
         <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout} activeOpacity={0.8}>
-          <LogOut size={16} color="#f87171" />
+          <LogOut size={16} color="#DC2626" />
           <Text style={styles.logoutText}>Sign Out of Waaree Account</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -159,49 +153,54 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 16, paddingBottom: 110 },
   header: { marginBottom: 16, marginTop: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "900", color: "#ffffff", letterSpacing: -0.5 },
-  headerSubtitle: { fontSize: 12, color: "rgba(255, 255, 255, 0.55)", fontWeight: "500", marginTop: 2 },
+  headerTitle: { fontSize: 20, fontWeight: "900", color: "#0F172A", letterSpacing: -0.5 },
+  headerSubtitle: { fontSize: 12, color: "#64748B", fontWeight: "500", marginTop: 2 },
   glassCard: {
-    backgroundColor: "rgba(18, 24, 21, 0.8)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
+    borderColor: "#E2E8F0",
     marginBottom: 14,
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
+    elevation: 2,
   },
   cardHeaderRow: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
-  cardTitle: { fontSize: 13, fontWeight: "700", color: "#ffffff", marginLeft: 6 },
+  cardTitle: { fontSize: 13, fontWeight: "700", color: "#0F172A", marginLeft: 6 },
   infoRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 8 },
-  infoLabel: { fontSize: 12, color: "rgba(255, 255, 255, 0.5)" },
-  infoValue: { fontSize: 12, fontWeight: "700", color: "#ffffff", maxWidth: 190, textAlign: "right" },
-  divider: { height: 1, backgroundColor: "rgba(255, 255, 255, 0.05)" },
+  infoLabel: { fontSize: 12, color: "#64748B" },
+  infoValue: { fontSize: 12, fontWeight: "700", color: "#0F172A", maxWidth: 190, textAlign: "right" },
+  divider: { height: 1, backgroundColor: "#E2E8F0" },
   connectionStatus: { flexDirection: "row", alignItems: "center", marginBottom: 6 },
-  onlineDot: { width: 7, height: 7, borderRadius: 3.5, backgroundColor: "#34d399", marginRight: 6 },
-  onlineText: { fontSize: 12, fontWeight: "700", color: "#34d399" },
-  connectionSub: { fontSize: 11, color: "rgba(255, 255, 255, 0.55)", lineHeight: 16 },
-  cleanDesc: { fontSize: 12, color: "rgba(255, 255, 255, 0.65)", lineHeight: 18, marginBottom: 12 },
+  onlineDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#10B981", marginRight: 6 },
+  onlineText: { fontSize: 12, fontWeight: "700", color: "#059669" },
+  connectionSub: { fontSize: 11, color: "#64748B", lineHeight: 16 },
+  cleanDesc: { fontSize: 12, color: "#475569", lineHeight: 18, marginBottom: 12 },
   cleanBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(56, 189, 248, 0.12)",
+    backgroundColor: "#E0F2FE",
     borderRadius: 12,
     padding: 12,
     borderWidth: 1,
-    borderColor: "rgba(56, 189, 248, 0.25)",
+    borderColor: "#BAE6FD",
   },
-  cleanBtnText: { fontSize: 12, fontWeight: "700", color: "#38bdf8", marginLeft: 6 },
+  cleanBtnText: { fontSize: 12, fontWeight: "700", color: "#0284C7", marginLeft: 6 },
   logoutBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(239, 68, 68, 0.12)",
+    backgroundColor: "#FEF2F2",
     borderRadius: 14,
     padding: 14,
     borderWidth: 1,
-    borderColor: "rgba(239, 68, 68, 0.25)",
+    borderColor: "#FECACA",
     marginTop: 6,
     marginBottom: 20,
   },
-  logoutText: { fontSize: 13, fontWeight: "700", color: "#f87171", marginLeft: 6 },
+  logoutText: { fontSize: 13, fontWeight: "700", color: "#DC2626", marginLeft: 6 },
 });

@@ -36,10 +36,10 @@ export const FloatingPillTabBar: React.FC<FloatingPillTabBarProps> = ({
               onPress={() => onSelect(id)}
               activeOpacity={0.7}
             >
-              <View style={[styles.iconWrap, isActive && styles.iconWrapActive]}>
+              <View style={styles.iconWrap}>
                 <Icon
-                  size={20}
-                  color={isActive ? "#0d140f" : "rgba(255, 255, 255, 0.45)"}
+                  size={19}
+                  color={isActive ? "#F59E0B" : "#64748B"}
                 />
               </View>
               {isActive ? (
@@ -67,40 +67,39 @@ const styles = StyleSheet.create({
   dockCapsule: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(16, 22, 18, 0.92)",
-    paddingVertical: 6,
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 5,
     paddingHorizontal: 8,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.12)",
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.5,
-    shadowRadius: 18,
-    elevation: 12,
+    borderColor: "#E2E8F0",
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 8,
   },
   tabButton: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 6,
+    paddingVertical: 7,
     paddingHorizontal: 12,
     borderRadius: 999,
   },
   tabButtonActive: {
-    backgroundColor: "#fef08a",
+    backgroundColor: "#0F172A",
   },
   iconWrap: {
-    width: 28,
-    height: 28,
+    width: 24,
+    height: 24,
     alignItems: "center",
     justifyContent: "center",
   },
-  iconWrapActive: {},
   activeLabel: {
     fontSize: 12,
     fontWeight: "800",
-    color: "#0d140f",
-    marginLeft: 4,
+    color: "#FFFFFF",
+    marginLeft: 5,
     marginRight: 2,
     letterSpacing: -0.2,
   },

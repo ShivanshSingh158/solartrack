@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg";
-import { TrendingUp, Sun, ShieldCheck, Zap } from "lucide-react-native";
+import { TrendingUp, Sun, ShieldCheck } from "lucide-react-native";
 import { solarClient, HistoryPayload, UserProfile } from "../api/solarClient";
 import { AtmosphericBackground } from "../components/AtmosphericBackground";
 
@@ -40,7 +40,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({ user }) => {
   if (loading && !data) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#f59e0b" />
+        <ActivityIndicator size="large" color="#F59E0B" />
         <Text style={styles.loadingText}>Loading Generation Telemetry...</Text>
       </View>
     );
@@ -79,7 +79,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({ user }) => {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#f59e0b" />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#F59E0B" />}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
@@ -97,70 +97,83 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({ user }) => {
             <Text style={styles.kpiLabel}>YESTERDAY</Text>
             <Text style={styles.kpiValue}>{data?.yesterdayKwh ?? 11.4} <Text style={styles.kpiUnit}>kWh</Text></Text>
           </View>
-          <View style={styles.kpiCard}>
-            <Text style={styles.kpiLabel}>PEAK POWER</Text>
-            <Text style={styles.kpiValue}>{data?.peakGenerationKw ?? 1.92} <Text style={styles.kpiUnit}>kW</Text></Text>
+          <View style={[styles.kpiCard, styles.kpiCardHighlight]}>
+            <Text style={[styles.kpiLabel, styles.kpiLabelHighlight]}>THIS MONTH</Text>
+            <Text style={styles.kpiValue}>{data?.monthKwh ?? 136.8} <Text style={styles.kpiUnit}>kWh</Text></Text>
           </View>
         </View>
 
-        {/* Today's Solar Bell Curve */}
+        {/* Today's Solar Bell Curve Card */}
         <View style={styles.glassCard}>
           <View style={styles.cardHeader}>
             <View style={styles.titleWrap}>
-              <Sun size={16} color="#fbbf24" />
-              <Text style={styles.cardTitle}>Inverter Telemetry Curve</Text>
+              <Sun size={16} color="#D97706" />
+              <Text style={styles.cardTitle}>Today's Generation Bell Curve</Text>
             </View>
-            <Text style={styles.badgeText}>06:24 AM – 05:05 PM</Text>
+            <Text style={styles.badgeText}>Real Inverter Power (kW)</Text>
           </View>
 
           <View style={styles.chartWrapper}>
             <Svg width={chartWidth} height={chartHeight}>
               <Defs>
-                <LinearGradient id="solarCurveGrad" x1="0" y1="0" x2="0" y2="1">
-                  <Stop offset="0%" stopColor="#f59e0b" stopOpacity="0.45" />
-                  <Stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
+                <LinearGradient id="curveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <Stop offset="0%" stopColor="#F59E0B" stopOpacity={0.45} />
+                  <Stop offset="100%" stopColor="#FEF3C7" stopOpacity={0.02} />
                 </LinearGradient>
               </Defs>
-              {areaD ? <Path d={areaD} fill="url(#solarCurveGrad)" /> : null}
-              {pathD ? <Path d={pathD} stroke="#fef08a" strokeWidth={2.5} fill="none" strokeLinecap="round" /> : null}
+              {areaD ? <Path d={areaD} fill="url(#curveGradient)" /> : null}
+              {pathD ? (
+                <Path
+                  d={pathD}
+                  fill="none"
+                  stroke="#F59E0B"
+                  strokeWidth={2.8}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              ) : null}
             </Svg>
+          </View>
 
-            <View style={styles.timeLabelsRow}>
-              <Text style={styles.timeLabel}>6 AM</Text>
-              <Text style={styles.timeLabel}>9 AM</Text>
-              <Text style={styles.timeLabel}>12 PM</Text>
-              <Text style={styles.timeLabel}>3 PM</Text>
-              <Text style={styles.timeLabel}>5 PM</Text>
-            </View>
+          <View style={styles.timeLabelsRow}>
+            <Text style={styles.timeLabel}>06:00 AM</Text>
+            <Text style={styles.timeLabel}>10:00 AM</Text>
+            <Text style={styles.timeLabel}>01:00 PM</Text>
+            <Text style={styles.timeLabel}>05:00 PM</Text>
           </View>
         </View>
 
-        {/* Past 7 Days Production Bars */}
+        {/* 7-Day Daily Bar Chart */}
         <View style={styles.glassCard}>
           <View style={styles.cardHeader}>
             <View style={styles.titleWrap}>
-              <TrendingUp size={16} color="#34d399" />
-              <Text style={styles.cardTitle}>Past 7 Days Production</Text>
+              <TrendingUp size={16} color="#059669" />
+              <Text style={styles.cardTitle}>Past 7 Days Output</Text>
             </View>
-            <Text style={styles.badgeText}>Daily Yield</Text>
+            <Text style={styles.badgeText}>Daily kWh</Text>
           </View>
 
           <View style={styles.barChartContainer}>
-            {past7.map((item, idx) => {
-              const barHeight = Math.max(16, (item.kwh / maxDayKwh) * 90);
-              const isToday = item.day === "Today";
+            {past7.map((day, idx) => {
+              const heightFrac = Math.min(day.kwh / maxDayKwh, 1);
+              const isToday = idx === past7.length - 1;
               return (
                 <View key={idx} style={styles.barColumn}>
-                  <Text style={styles.barValue}>{item.kwh}</Text>
+                  <Text style={styles.barValue}>{day.kwh.toFixed(1)}</Text>
                   <View style={styles.barTrack}>
                     <View
                       style={[
                         styles.barFill,
-                        { height: barHeight, backgroundColor: isToday ? "#fef08a" : "#34d399" },
+                        {
+                          height: Math.max(heightFrac * 90, 4),
+                          backgroundColor: isToday ? "#F59E0B" : "#10B981",
+                        },
                       ]}
                     />
                   </View>
-                  <Text style={[styles.barDay, isToday && styles.barDayToday]}>{item.day}</Text>
+                  <Text style={[styles.barDay, isToday && styles.barDayToday]}>
+                    {day.day}
+                  </Text>
                 </View>
               );
             })}
@@ -169,7 +182,7 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({ user }) => {
 
         {/* Hardware Register Provenance Card */}
         <View style={styles.reconciledCard}>
-          <ShieldCheck size={18} color="#34d399" />
+          <ShieldCheck size={18} color="#059669" />
           <View style={{ marginLeft: 10, flex: 1 }}>
             <Text style={styles.reconciledTitle}>Inverter EEPROM Hardware Reconciled</Text>
             <Text style={styles.reconciledDesc}>
@@ -185,36 +198,51 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({ user }) => {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 16, paddingBottom: 110 },
-  loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#090d0b" },
-  loadingText: { marginTop: 12, fontSize: 13, color: "#94a3b8", fontWeight: "600" },
+  loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#F8FAFC" },
+  loadingText: { marginTop: 12, fontSize: 13, color: "#64748B", fontWeight: "600" },
   header: { marginBottom: 16, marginTop: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "900", color: "#ffffff", letterSpacing: -0.5 },
-  headerSubtitle: { fontSize: 12, color: "rgba(255, 255, 255, 0.55)", fontWeight: "500", marginTop: 2 },
+  headerTitle: { fontSize: 20, fontWeight: "900", color: "#0F172A", letterSpacing: -0.5 },
+  headerSubtitle: { fontSize: 12, color: "#64748B", fontWeight: "500", marginTop: 2 },
   kpiRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 14 },
   kpiCard: {
     flex: 1,
-    backgroundColor: "rgba(22, 28, 25, 0.75)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 12,
     marginHorizontal: 3,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
+    borderColor: "#E2E8F0",
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    elevation: 1,
   },
-  kpiLabel: { fontSize: 9, color: "rgba(255, 255, 255, 0.45)", fontWeight: "700", letterSpacing: 0.5 },
-  kpiValue: { fontSize: 17, fontWeight: "900", color: "#ffffff", marginTop: 4 },
-  kpiUnit: { fontSize: 10, fontWeight: "600", color: "rgba(255, 255, 255, 0.45)" },
+  kpiCardHighlight: {
+    backgroundColor: "#FFFBEB",
+    borderColor: "#FDE68A",
+  },
+  kpiLabel: { fontSize: 9, color: "#64748B", fontWeight: "700", letterSpacing: 0.5 },
+  kpiLabelHighlight: { color: "#B45309" },
+  kpiValue: { fontSize: 17, fontWeight: "900", color: "#0F172A", marginTop: 4 },
+  kpiUnit: { fontSize: 10, fontWeight: "600", color: "#64748B" },
   glassCard: {
-    backgroundColor: "rgba(18, 24, 21, 0.8)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
+    borderColor: "#E2E8F0",
     marginBottom: 14,
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
+    elevation: 2,
   },
   cardHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10 },
   titleWrap: { flexDirection: "row", alignItems: "center" },
-  cardTitle: { fontSize: 13, fontWeight: "700", color: "#ffffff", marginLeft: 6 },
-  badgeText: { fontSize: 10, color: "rgba(255, 255, 255, 0.45)", fontWeight: "600" },
+  cardTitle: { fontSize: 13, fontWeight: "700", color: "#0F172A", marginLeft: 6 },
+  badgeText: { fontSize: 10, color: "#64748B", fontWeight: "600" },
   chartWrapper: { alignItems: "center", marginTop: 4 },
   timeLabelsRow: {
     flexDirection: "row",
@@ -222,7 +250,7 @@ const styles = StyleSheet.create({
     width: 300,
     marginTop: 6,
   },
-  timeLabel: { fontSize: 10, color: "rgba(255, 255, 255, 0.35)", fontWeight: "600" },
+  timeLabel: { fontSize: 10, color: "#94A3B8", fontWeight: "600" },
   barChartContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -231,20 +259,20 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   barColumn: { flex: 1, alignItems: "center", justifyContent: "flex-end" },
-  barValue: { fontSize: 10, fontWeight: "700", color: "rgba(255, 255, 255, 0.5)", marginBottom: 4 },
-  barTrack: { width: 14, height: 90, backgroundColor: "rgba(255, 255, 255, 0.06)", borderRadius: 7, justifyContent: "flex-end", overflow: "hidden" },
+  barValue: { fontSize: 10, fontWeight: "700", color: "#64748B", marginBottom: 4 },
+  barTrack: { width: 14, height: 90, backgroundColor: "#F1F5F9", borderRadius: 7, justifyContent: "flex-end", overflow: "hidden" },
   barFill: { width: 14, borderRadius: 7 },
-  barDay: { fontSize: 10, fontWeight: "600", color: "rgba(255, 255, 255, 0.4)", marginTop: 6 },
-  barDayToday: { color: "#fef08a", fontWeight: "800" },
+  barDay: { fontSize: 10, fontWeight: "600", color: "#64748B", marginTop: 6 },
+  barDayToday: { color: "#B45309", fontWeight: "800" },
   reconciledCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(52, 211, 153, 0.08)",
+    backgroundColor: "#ECFDF5",
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
-    borderColor: "rgba(52, 211, 153, 0.2)",
+    borderColor: "#A7F3D0",
   },
-  reconciledTitle: { fontSize: 12, fontWeight: "700", color: "#a7f3d0" },
-  reconciledDesc: { fontSize: 11, color: "rgba(255, 255, 255, 0.6)", marginTop: 2, lineHeight: 16 },
+  reconciledTitle: { fontSize: 12, fontWeight: "700", color: "#065F46" },
+  reconciledDesc: { fontSize: 11, color: "#047857", marginTop: 2, lineHeight: 16 },
 });

@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Svg, { Line, Defs, LinearGradient, Stop } from "react-native-svg";
-import { Zap, Moon, Sun, ArrowUpRight } from "lucide-react-native";
 
 interface TachometerGaugeProps {
   currentKw: number;
@@ -22,16 +21,16 @@ export const TachometerGauge: React.FC<TachometerGaugeProps> = ({
   isNight,
   efficiencyPct = 93.8,
 }) => {
-  const size = 300;
+  const size = 310;
   const cx = size / 2;
-  const cy = 165;
-  const radius = 125;
+  const cy = 160;
+  const radius = 126;
   const tickLength = 12;
 
-  // Arc angles: 150 deg (left bottom) to 390 deg (right bottom) -> 240 deg total sweep
+  // Arc angles: 150 deg to 390 deg -> 240 deg total sweep
   const startAngle = 150;
   const sweepAngle = 240;
-  const totalTicks = 64;
+  const totalTicks = 60;
 
   const currentFrac = Math.min(Math.max(currentKw / (maxCapacityKwp > 0 ? maxCapacityKwp : 3.27), 0), 1);
   const activeTicksCount = Math.round(currentFrac * totalTicks);
@@ -47,7 +46,7 @@ export const TachometerGauge: React.FC<TachometerGaugeProps> = ({
     const y2 = cy + radius * Math.sin(angleRad);
 
     const isActive = i <= activeTicksCount && !isNight && currentKw > 0.05;
-    const isMajor = i % 8 === 0;
+    const isMajor = i % 10 === 0;
 
     ticks.push({
       x1,
@@ -67,11 +66,11 @@ export const TachometerGauge: React.FC<TachometerGaugeProps> = ({
     <View style={styles.container}>
       {/* Svg Radial Ticks Arch */}
       <View style={styles.svgWrap}>
-        <Svg width={size} height={210}>
+        <Svg width={size} height={205}>
           <Defs>
-            <LinearGradient id="activeTickGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <Stop offset="0%" stopColor="#f59e0b" />
-              <Stop offset="100%" stopColor="#fef08a" />
+            <LinearGradient id="solarTickGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <Stop offset="0%" stopColor="#F59E0B" />
+              <Stop offset="100%" stopColor="#D97706" />
             </LinearGradient>
           </Defs>
 
@@ -84,12 +83,12 @@ export const TachometerGauge: React.FC<TachometerGaugeProps> = ({
               y2={t.y2}
               stroke={
                 t.isActive
-                  ? "#fef08a"
+                  ? "#F59E0B"
                   : t.isMajor
-                  ? "rgba(255, 255, 255, 0.22)"
-                  : "rgba(255, 255, 255, 0.09)"
+                  ? "#CBD5E1"
+                  : "#E2E8F0"
               }
-              strokeWidth={t.isActive ? (t.isMajor ? 2.5 : 2) : t.isMajor ? 2 : 1.2}
+              strokeWidth={t.isActive ? (t.isMajor ? 3 : 2.2) : t.isMajor ? 2 : 1.3}
               strokeLinecap="round"
             />
           ))}
@@ -146,33 +145,31 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   svgWrap: {
-    width: 300,
-    height: 200,
+    width: 310,
+    height: 195,
     alignItems: "center",
     justifyContent: "center",
   },
   centerReadout: {
     position: "absolute",
-    top: 55,
+    top: 50,
     alignItems: "center",
     justifyContent: "center",
   },
   heroNumber: {
-    fontSize: 54,
+    fontSize: 52,
     fontWeight: "900",
-    color: "#ffffff",
+    color: "#0F172A",
     letterSpacing: -1.5,
+    lineHeight: 56,
     includeFontPadding: false,
-    textShadowColor: "rgba(245, 158, 11, 0.4)",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 16,
   },
   heroSubLabel: {
     fontSize: 11,
     fontWeight: "700",
-    color: "rgba(255, 255, 255, 0.55)",
+    color: "#64748B",
     letterSpacing: 2,
-    marginTop: -4,
+    marginTop: 2,
   },
   pillMetaRow: {
     flexDirection: "row",
@@ -180,61 +177,66 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   metricPill: {
-    backgroundColor: "rgba(245, 158, 11, 0.16)",
+    backgroundColor: "#FEF3C7",
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: "rgba(245, 158, 11, 0.3)",
+    borderColor: "#FDE68A",
   },
   metricPillText: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: "700",
-    color: "#fbbf24",
+    color: "#B45309",
   },
   dotSeparator: {
-    color: "rgba(255, 255, 255, 0.25)",
+    color: "#94A3B8",
     marginHorizontal: 6,
     fontSize: 10,
   },
   secondaryMeta: {
     fontSize: 11,
-    color: "rgba(255, 255, 255, 0.55)",
-    fontWeight: "500",
+    color: "#64748B",
+    fontWeight: "600",
   },
   threeColRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "88%",
-    backgroundColor: "rgba(18, 24, 21, 0.65)",
+    width: "90%",
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-    borderRadius: 16,
-    paddingVertical: 10,
+    borderColor: "#E2E8F0",
+    borderRadius: 18,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     marginTop: 4,
     marginBottom: 8,
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
   },
   colItem: {
     flex: 1,
     alignItems: "center",
   },
   colLabel: {
-    fontSize: 10,
-    color: "rgba(255, 255, 255, 0.45)",
+    fontSize: 11,
+    color: "#64748B",
     fontWeight: "600",
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   colValue: {
     fontSize: 16,
     fontWeight: "800",
-    color: "#ffffff",
-    marginTop: 2,
+    color: "#0F172A",
+    marginTop: 3,
   },
   colDivider: {
     width: 1,
     height: 24,
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    backgroundColor: "#E2E8F0",
   },
 });

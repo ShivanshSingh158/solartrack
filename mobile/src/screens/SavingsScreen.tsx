@@ -7,7 +7,7 @@ import {
   RefreshControl,
   ActivityIndicator,
 } from "react-native";
-import { IndianRupee, Leaf, Zap, TrendingUp, Award, Shield } from "lucide-react-native";
+import { IndianRupee, Leaf, Zap, TrendingUp, Award } from "lucide-react-native";
 import { solarClient, SavingsPayload, UserProfile } from "../api/solarClient";
 import { AtmosphericBackground } from "../components/AtmosphericBackground";
 
@@ -39,7 +39,7 @@ export const SavingsScreen: React.FC<SavingsScreenProps> = ({ user }) => {
   if (loading && !data) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#34d399" />
+        <ActivityIndicator size="large" color="#059669" />
         <Text style={styles.loadingText}>Loading Financial & Carbon Credits...</Text>
       </View>
     );
@@ -54,7 +54,7 @@ export const SavingsScreen: React.FC<SavingsScreenProps> = ({ user }) => {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#34d399" />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#059669" />}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
@@ -66,7 +66,7 @@ export const SavingsScreen: React.FC<SavingsScreenProps> = ({ user }) => {
         <View style={styles.heroGlassCard}>
           <View style={styles.heroTopRow}>
             <View style={styles.heroIconWrap}>
-              <Award size={20} color="#34d399" />
+              <Award size={20} color="#059669" />
             </View>
             <Text style={styles.heroLabel}>LIFETIME SOLAR SAVINGS</Text>
           </View>
@@ -81,7 +81,7 @@ export const SavingsScreen: React.FC<SavingsScreenProps> = ({ user }) => {
         {/* Savings Breakdown */}
         <View style={styles.glassCard}>
           <View style={styles.cardHeaderRow}>
-            <IndianRupee size={16} color="#34d399" />
+            <IndianRupee size={16} color="#059669" />
             <Text style={styles.cardTitle}>Savings Breakdown</Text>
           </View>
 
@@ -115,30 +115,30 @@ export const SavingsScreen: React.FC<SavingsScreenProps> = ({ user }) => {
         {/* Carbon & Environmental Impact */}
         <View style={styles.glassCard}>
           <View style={styles.cardHeaderRow}>
-            <Leaf size={16} color="#34d399" />
+            <Leaf size={16} color="#059669" />
             <Text style={styles.cardTitle}>Environmental Impact</Text>
           </View>
 
           <View style={styles.envGrid}>
             <View style={styles.envItem}>
-              <View style={[styles.envIconWrap, { backgroundColor: "rgba(52, 211, 153, 0.12)" }]}>
-                <Leaf size={18} color="#34d399" />
+              <View style={[styles.envIconWrap, { backgroundColor: "#ECFDF5" }]}>
+                <Leaf size={18} color="#059669" />
               </View>
               <Text style={styles.envValue}>{(e?.co2AvoidedKg ?? 132).toLocaleString("en-IN")} kg</Text>
               <Text style={styles.envLabel}>CO₂ Prevented</Text>
             </View>
 
             <View style={styles.envItem}>
-              <View style={[styles.envIconWrap, { backgroundColor: "rgba(245, 158, 11, 0.12)" }]}>
-                <TrendingUp size={18} color="#fbbf24" />
+              <View style={[styles.envIconWrap, { backgroundColor: "#FEF3C7" }]}>
+                <TrendingUp size={18} color="#D97706" />
               </View>
               <Text style={styles.envValue}>{e?.treesEquivalent ?? 7}</Text>
               <Text style={styles.envLabel}>Trees Equivalent</Text>
             </View>
 
             <View style={styles.envItem}>
-              <View style={[styles.envIconWrap, { backgroundColor: "rgba(255, 255, 255, 0.08)" }]}>
-                <Zap size={18} color="#94a3b8" />
+              <View style={[styles.envIconWrap, { backgroundColor: "#F1F5F9" }]}>
+                <Zap size={18} color="#64748B" />
               </View>
               <Text style={styles.envValue}>{e?.coalSavedKg ?? 62} kg</Text>
               <Text style={styles.envLabel}>Coal Saved</Text>
@@ -160,61 +160,71 @@ export const SavingsScreen: React.FC<SavingsScreenProps> = ({ user }) => {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 16, paddingBottom: 110 },
-  loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#090d0b" },
-  loadingText: { marginTop: 12, fontSize: 13, color: "#94a3b8", fontWeight: "600" },
+  loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#F8FAFC" },
+  loadingText: { marginTop: 12, fontSize: 13, color: "#64748B", fontWeight: "600" },
   header: { marginBottom: 16, marginTop: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "900", color: "#ffffff", letterSpacing: -0.5 },
-  headerSubtitle: { fontSize: 12, color: "rgba(255, 255, 255, 0.55)", fontWeight: "500", marginTop: 2 },
+  headerTitle: { fontSize: 20, fontWeight: "900", color: "#0F172A", letterSpacing: -0.5 },
+  headerSubtitle: { fontSize: 12, color: "#64748B", fontWeight: "500", marginTop: 2 },
   heroGlassCard: {
-    backgroundColor: "rgba(18, 30, 23, 0.8)",
+    backgroundColor: "#ECFDF5",
     borderRadius: 22,
     padding: 20,
     marginBottom: 14,
     borderWidth: 1,
-    borderColor: "rgba(52, 211, 153, 0.25)",
+    borderColor: "#A7F3D0",
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
   },
   heroTopRow: { flexDirection: "row", alignItems: "center", marginBottom: 8 },
   heroIconWrap: {
     width: 32,
     height: 32,
     borderRadius: 9,
-    backgroundColor: "rgba(52, 211, 153, 0.15)",
+    backgroundColor: "#D1FAE5",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 8,
   },
-  heroLabel: { fontSize: 11, fontWeight: "800", color: "#34d399", letterSpacing: 1 },
-  heroValue: { fontSize: 44, fontWeight: "900", color: "#ffffff", letterSpacing: -1 },
-  heroSub: { fontSize: 12, color: "rgba(255, 255, 255, 0.6)", marginTop: 2 },
+  heroLabel: { fontSize: 11, fontWeight: "800", color: "#065F46", letterSpacing: 1 },
+  heroValue: { fontSize: 42, fontWeight: "900", color: "#065F46", letterSpacing: -1 },
+  heroSub: { fontSize: 12, color: "#047857", marginTop: 2 },
   glassCard: {
-    backgroundColor: "rgba(18, 24, 21, 0.8)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
+    borderColor: "#E2E8F0",
     marginBottom: 14,
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
+    elevation: 2,
   },
   cardHeaderRow: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
-  cardTitle: { fontSize: 13, fontWeight: "700", color: "#ffffff", marginLeft: 6 },
+  cardTitle: { fontSize: 13, fontWeight: "700", color: "#0F172A", marginLeft: 6 },
   row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 10 },
   rowLeft: { flex: 1 },
-  rowLabel: { fontSize: 13, fontWeight: "600", color: "#ffffff" },
-  rowSub: { fontSize: 10, color: "rgba(255, 255, 255, 0.45)", marginTop: 2 },
-  rowGreen: { fontSize: 18, fontWeight: "900", color: "#34d399" },
-  divider: { height: 1, backgroundColor: "rgba(255, 255, 255, 0.06)" },
+  rowLabel: { fontSize: 13, fontWeight: "600", color: "#0F172A" },
+  rowSub: { fontSize: 11, color: "#64748B", marginTop: 2 },
+  rowGreen: { fontSize: 18, fontWeight: "900", color: "#059669" },
+  divider: { height: 1, backgroundColor: "#E2E8F0" },
   envGrid: { flexDirection: "row", justifyContent: "space-between" },
   envItem: { flex: 1, alignItems: "center", padding: 6 },
   envIconWrap: { width: 42, height: 42, borderRadius: 12, alignItems: "center", justifyContent: "center", marginBottom: 6 },
-  envValue: { fontSize: 15, fontWeight: "800", color: "#ffffff" },
-  envLabel: { fontSize: 10, color: "rgba(255, 255, 255, 0.45)", fontWeight: "600", marginTop: 2 },
+  envValue: { fontSize: 15, fontWeight: "800", color: "#0F172A" },
+  envLabel: { fontSize: 10, color: "#64748B", fontWeight: "600", marginTop: 2 },
   tariffCard: {
-    backgroundColor: "rgba(30, 24, 16, 0.75)",
+    backgroundColor: "#FFFBEB",
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
-    borderColor: "rgba(245, 158, 11, 0.25)",
+    borderColor: "#FDE68A",
   },
-  tariffLabel: { fontSize: 11, fontWeight: "700", color: "#fbbf24" },
-  tariffValue: { fontSize: 24, fontWeight: "900", color: "#ffffff", marginVertical: 3 },
-  tariffSub: { fontSize: 11, color: "rgba(255, 255, 255, 0.55)" },
+  tariffLabel: { fontSize: 11, fontWeight: "700", color: "#B45309" },
+  tariffValue: { fontSize: 24, fontWeight: "900", color: "#0F172A", marginVertical: 3 },
+  tariffSub: { fontSize: 11, color: "#78350F" },
 });

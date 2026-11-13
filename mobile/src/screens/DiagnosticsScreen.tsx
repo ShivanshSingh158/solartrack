@@ -48,7 +48,7 @@ export const DiagnosticsScreen: React.FC<DiagnosticsScreenProps> = ({ user, onBa
   if (loading && !data) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#3b82f6" />
+        <ActivityIndicator size="large" color="#0284C7" />
         <Text style={styles.loadingText}>Reading Inverter Telemetries...</Text>
       </View>
     );
@@ -66,7 +66,7 @@ export const DiagnosticsScreen: React.FC<DiagnosticsScreenProps> = ({ user, onBa
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#3b82f6" />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0284C7" />}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
@@ -78,7 +78,7 @@ export const DiagnosticsScreen: React.FC<DiagnosticsScreenProps> = ({ user, onBa
         <View style={styles.glassCard}>
           <View style={styles.cardHeader}>
             <View style={styles.titleWrap}>
-              <Cpu size={16} color="#60a5fa" />
+              <Cpu size={16} color="#0284C7" />
               <Text style={styles.cardTitle}>Inverter Engine</Text>
             </View>
             <View style={styles.statusPill}>
@@ -91,7 +91,7 @@ export const DiagnosticsScreen: React.FC<DiagnosticsScreenProps> = ({ user, onBa
           <View style={styles.statsRow}>
             <View style={styles.statBox}>
               <View style={styles.statIconRow}>
-                <Thermometer size={14} color="#f97316" />
+                <Thermometer size={14} color="#EA580C" />
                 <Text style={styles.statLabel}>Internal Temp</Text>
               </View>
               <Text style={styles.statBig}>{data?.inverter?.temperatureC ?? 42.0} °C</Text>
@@ -99,7 +99,7 @@ export const DiagnosticsScreen: React.FC<DiagnosticsScreenProps> = ({ user, onBa
 
             <View style={styles.statBox}>
               <View style={styles.statIconRow}>
-                <Gauge size={14} color="#34d399" />
+                <Gauge size={14} color="#059669" />
                 <Text style={styles.statLabel}>Efficiency</Text>
               </View>
               <Text style={styles.statBig}>{data?.inverter?.efficiencyPct ?? 93.1} %</Text>
@@ -111,11 +111,11 @@ export const DiagnosticsScreen: React.FC<DiagnosticsScreenProps> = ({ user, onBa
         <View style={styles.glassCard}>
           <View style={styles.cardHeader}>
             <View style={styles.titleWrap}>
-              <Zap size={16} color="#fbbf24" />
+              <Zap size={16} color="#D97706" />
               <Text style={styles.cardTitle}>DC Solar String (PV1)</Text>
             </View>
-            <View style={[styles.statusPill, { backgroundColor: "rgba(245, 158, 11, 0.15)" }]}>
-              <Text style={[styles.statusPillText, { color: "#fbbf24" }]}>Online</Text>
+            <View style={[styles.statusPill, { backgroundColor: "#FEF3C7" }]}>
+              <Text style={[styles.statusPillText, { color: "#B45309" }]}>Online</Text>
             </View>
           </View>
 
@@ -139,11 +139,11 @@ export const DiagnosticsScreen: React.FC<DiagnosticsScreenProps> = ({ user, onBa
         <View style={styles.glassCard}>
           <View style={styles.cardHeader}>
             <View style={styles.titleWrap}>
-              <Radio size={16} color="#34d399" />
+              <Radio size={16} color="#059669" />
               <Text style={styles.cardTitle}>DISCOM AC Grid</Text>
             </View>
-            <View style={[styles.statusPill, { backgroundColor: "rgba(52, 211, 153, 0.15)" }]}>
-              <Text style={[styles.statusPillText, { color: "#34d399" }]}>Synchronized</Text>
+            <View style={[styles.statusPill, { backgroundColor: "#ECFDF5" }]}>
+              <Text style={[styles.statusPillText, { color: "#059669" }]}>Synchronized</Text>
             </View>
           </View>
 
@@ -161,7 +161,7 @@ export const DiagnosticsScreen: React.FC<DiagnosticsScreenProps> = ({ user, onBa
 
         {/* Provenance badge */}
         <View style={styles.provenanceNotice}>
-          <ShieldCheck size={14} color="#34d399" />
+          <ShieldCheck size={14} color="#059669" />
           <Text style={styles.provenanceText}>
             Direct inverter registers verified · No simulation
           </Text>
@@ -174,43 +174,50 @@ export const DiagnosticsScreen: React.FC<DiagnosticsScreenProps> = ({ user, onBa
 const styles = StyleSheet.create({
   container: { flex: 1 },
   content: { padding: 16, paddingBottom: 110 },
-  loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#090d0b" },
-  loadingText: { marginTop: 12, fontSize: 13, color: "#94a3b8", fontWeight: "600" },
+  loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#F8FAFC" },
+  loadingText: { marginTop: 12, fontSize: 13, color: "#64748B", fontWeight: "600" },
   header: { marginBottom: 16, marginTop: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "900", color: "#ffffff", letterSpacing: -0.5 },
-  headerSubtitle: { fontSize: 12, color: "rgba(255, 255, 255, 0.55)", fontWeight: "500", marginTop: 2 },
+  headerTitle: { fontSize: 20, fontWeight: "900", color: "#0F172A", letterSpacing: -0.5 },
+  headerSubtitle: { fontSize: 12, color: "#64748B", fontWeight: "500", marginTop: 2 },
   glassCard: {
-    backgroundColor: "rgba(18, 24, 21, 0.8)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
+    borderColor: "#E2E8F0",
     marginBottom: 14,
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
+    elevation: 2,
   },
   cardHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 8 },
   titleWrap: { flexDirection: "row", alignItems: "center" },
-  cardTitle: { fontSize: 13, fontWeight: "700", color: "#ffffff", marginLeft: 6 },
+  cardTitle: { fontSize: 13, fontWeight: "700", color: "#0F172A", marginLeft: 6 },
   statusPill: {
-    backgroundColor: "rgba(96, 165, 250, 0.15)",
+    backgroundColor: "#E0F2FE",
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
   },
-  statusPillText: { fontSize: 10, fontWeight: "700", color: "#60a5fa" },
-  modelText: { fontSize: 11, color: "rgba(255, 255, 255, 0.5)", marginBottom: 12 },
+  statusPillText: { fontSize: 10, fontWeight: "700", color: "#0284C7" },
+  modelText: { fontSize: 11, color: "#64748B", marginBottom: 12 },
   statsRow: { flexDirection: "row", justifyContent: "space-between" },
   statsRowThree: { flexDirection: "row", justifyContent: "space-between" },
   statBox: {
     flex: 1,
-    backgroundColor: "rgba(12, 17, 14, 0.65)",
+    backgroundColor: "#F8FAFC",
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
     padding: 10,
     marginHorizontal: 3,
   },
   statIconRow: { flexDirection: "row", alignItems: "center", marginBottom: 2 },
-  statLabel: { fontSize: 10, color: "rgba(255, 255, 255, 0.45)", fontWeight: "600", marginLeft: 4 },
-  statBig: { fontSize: 18, fontWeight: "900", color: "#ffffff", marginTop: 2 },
-  statMedium: { fontSize: 14, fontWeight: "800", color: "#ffffff", marginTop: 2 },
+  statLabel: { fontSize: 10, color: "#64748B", fontWeight: "600", marginLeft: 4 },
+  statBig: { fontSize: 18, fontWeight: "900", color: "#0F172A", marginTop: 2 },
+  statMedium: { fontSize: 14, fontWeight: "800", color: "#0F172A", marginTop: 2 },
   provenanceNotice: {
     flexDirection: "row",
     alignItems: "center",
@@ -219,7 +226,7 @@ const styles = StyleSheet.create({
   },
   provenanceText: {
     fontSize: 11,
-    color: "rgba(255, 255, 255, 0.5)",
+    color: "#64748B",
     marginLeft: 6,
     fontWeight: "500",
   },
