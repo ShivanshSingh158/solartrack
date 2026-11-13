@@ -24,6 +24,7 @@ import { SatellitePhysicsModal } from './SatellitePhysicsModal';
 import { SolarAtmosphereStage } from './SolarAtmosphereStage';
 import { SolarComparisonChart } from './SolarComparisonChart';
 import { TomorrowOutlookCard } from './TomorrowOutlookCard';
+import { WeeklyPerformanceLedgerCard } from './WeeklyPerformanceLedgerCard';
 
 export interface OverviewTabProps {
   livePower: number;
@@ -615,47 +616,58 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         onOpenPhysicsModal={() => setIsPhysicsModalOpen(true)}
       />
 
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        <SolarComparisonChart
-          stationId={stationId}
-          safeCapacity={safeCapacity}
-          tariffPerKwh={tariffPerKwh}
-          weatherData={weatherData}
-          solarPhase={solarPhase}
-          displayLiveKw={displayLiveKw}
-          todayYield={effectiveTodayYield}
-          todayCloudKwh={snap.today.cloudKwh}
-          todayBufferKwh={snap.today.bufferKwh}
-          isTodayConfirmed={isTodayConfirmed}
-          yesterdayDay={yesterdayIst.day}
-          yesterdayYield={yesterdayConfirmedYield}
-          isYesterdayConfirmed={isYesterdayConfirmed}
-          lastSyncedDay={lastSyncedDay}
-          todayRawSeries={todayRawSeries}
-          yesterdayRawSeries={yesterdayRawSeries}
-          monthlyDaysData={monthlyDaysData}
-          plantCommissioningYmd={plantCommissioningYmd}
-          location={currentLocation}
-          istClock={istNow}
-          syncMeta={syncMeta}
-          latestNewData={latestNewData}
-          isNight={isNight}
-          currentSurfaceLossPct={currentSurfaceLossPct}
-          surfaceLossByYmd={surfaceLossByYmd}
-          physicsOverrides={snap.config.physicsOverrides}
-          canonicalTodayModel={todayPhysics.model}
-          todayNowcast={snap.todayPhysics.nowcast}
-          reconciledBufferByYmd={snap.reconciledBufferByYmd}
-          dailyLedger={effectiveIntelligenceReport?.dailyLedger}
-          manualGridOffDates={manualGridOffDates}
-          todayCurveSummary={{
-            realYieldFromCurveKwh: snap.today.realYieldFromCurveKwh,
-            curveStartLabel: snap.today.curveStartLabel,
-            curveEndLabel: snap.today.curveEndLabel,
-            isPartialCurve: snap.today.isPartialCurve,
-          }}
-          onNavigateToPerformance={onNavigateToPerformance}
-        />
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <div className="lg:col-span-8 flex flex-col space-y-4">
+          <SolarComparisonChart
+            stationId={stationId}
+            safeCapacity={safeCapacity}
+            tariffPerKwh={tariffPerKwh}
+            weatherData={weatherData}
+            solarPhase={solarPhase}
+            displayLiveKw={displayLiveKw}
+            todayYield={effectiveTodayYield}
+            todayCloudKwh={snap.today.cloudKwh}
+            todayBufferKwh={snap.today.bufferKwh}
+            isTodayConfirmed={isTodayConfirmed}
+            yesterdayDay={yesterdayIst.day}
+            yesterdayYield={yesterdayConfirmedYield}
+            isYesterdayConfirmed={isYesterdayConfirmed}
+            lastSyncedDay={lastSyncedDay}
+            todayRawSeries={todayRawSeries}
+            yesterdayRawSeries={yesterdayRawSeries}
+            monthlyDaysData={monthlyDaysData}
+            plantCommissioningYmd={plantCommissioningYmd}
+            location={currentLocation}
+            istClock={istNow}
+            syncMeta={syncMeta}
+            latestNewData={latestNewData}
+            isNight={isNight}
+            currentSurfaceLossPct={currentSurfaceLossPct}
+            surfaceLossByYmd={surfaceLossByYmd}
+            physicsOverrides={snap.config.physicsOverrides}
+            canonicalTodayModel={todayPhysics.model}
+            todayNowcast={snap.todayPhysics.nowcast}
+            reconciledBufferByYmd={snap.reconciledBufferByYmd}
+            dailyLedger={effectiveIntelligenceReport?.dailyLedger}
+            manualGridOffDates={manualGridOffDates}
+            todayCurveSummary={{
+              realYieldFromCurveKwh: snap.today.realYieldFromCurveKwh,
+              curveStartLabel: snap.today.curveStartLabel,
+              curveEndLabel: snap.today.curveEndLabel,
+              isPartialCurve: snap.today.isPartialCurve,
+            }}
+            onNavigateToPerformance={onNavigateToPerformance}
+          />
+
+          <WeeklyPerformanceLedgerCard
+            dailyLedger={effectiveIntelligenceReport?.dailyLedger}
+            recent7DaysData={recent7DaysData}
+            monthlyDaysData={monthlyDaysData}
+            tariffPerKwh={tariffPerKwh}
+            istClock={istNow}
+            onNavigateToPerformance={onNavigateToPerformance}
+          />
+        </div>
 
         <div className="lg:col-span-4 flex flex-col space-y-4">
           <PanelHygieneCard
