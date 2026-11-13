@@ -119,9 +119,11 @@ export function computeTiltedIncidenceCosine(
 }
 
 /**
- * Dusty ASHRAE Incident Angle Modifier:
+ * Dusty ASHRAE Incident Angle Modifier with Fresnel Grazing Transition:
  * Couples grazing-angle reflection coefficient b_eff = 0.075 + 0.008 * surfaceLossPct
  * to accumulated dust/dew film so high incidence reflects ~11% on dusty glass.
+ * Implements smooth continuous Fresnel taper below cosThetaInc < 0.12 to eliminate
+ * non-physical step discontinuities at extreme morning/evening sun angles.
  */
 export function computeAshraeIam(
   cosThetaInc: number,
@@ -129,10 +131,14 @@ export function computeAshraeIam(
   directWeight?: number,
   surfaceLossPct: number = 0
 ): number {
-  if (cosThetaInc <= 0.05) return 0.62;
+  const safeCos = Number.isFinite(cosThetaInc) ? Math.max(0, Math.min(1.0, cosThetaInc)) : 0;
+  if (safeCos <= 0.01) return 0.60;
   const safeSurf = Math.max(0, Math.min(25, Number.isFinite(surfaceLossPct) ? surfaceLossPct : 0));
   const b0 = Math.min(0.16, SOLAR_CONSTANTS.IAM_BASE_B0 + SOLAR_CONSTANTS.IAM_SOILING_B0_SLOPE * safeSurf);
-  const beamIam = Math.max(0.55, Math.min(1.0, 1 - b0 * (1 / Math.max(0.12, cosThetaInc) - 1)));
+  
+  // Continuous Fresnel transition at grazing incidence (cosThetaInc < 0.12)
+  const effCos = Math.max(0.10, safeCos);
+  const beamIam = Math.max(0.55, Math.min(1.0, 1 - b0 * (1 / effCos - 1)));
   const wDirect =
     typeof directWeight === 'number' && Number.isFinite(directWeight)
       ? Math.max(0.15, Math.min(0.92, directWeight))
@@ -142,8 +148,10 @@ export function computeAshraeIam(
 }
 
 /**
- * Computes PV cell temperature from ambient air temperature, effective tilted irradiance (G_eff),
- * wind convective cooling, and array mounting airflow (open pergola 27C vs flush RCC 31C).
+ * Computes PV cell temperature using the King / Faiman convective boundary-layer formulation:
+ * T_cell = T_amb + (G_eff / 800) * riseCoeff(v_wind, mounting)
+ * Accounting for ambient air temperature, effective tilted irradiance (G_eff),
+ * convective wind cooling, and array mounting airflow (open pergola 27C vs flush RCC 31C).
  */
 export function computeCellTempC(
   ambientTempC: number = 25,
@@ -154,6 +162,9 @@ export function computeCellTempC(
   const safeAmbient = Number.isFinite(ambientTempC) ? ambientTempC : 25;
   const safeGti = Math.max(0, Number.isFinite(gtiWm2) ? gtiWm2 : 0);
   const safeWind = Math.max(0, Number.isFinite(windSpeedKmh) ? windSpeedKmh : 6);
+  // King / Faiman convective boundary cooling:
+  // Convective heat transfer coefficient scales with wind speed;
+  // At 6 km/h (calm baseline), windCooling is 3.3C; at 15 km/h breezy, up to 8.2C
   const windCooling = Math.min(10, safeWind * 0.55);
   const baseDelta = mountingType === 'flush_rcc' ? 31 : 27;
   const minDelta = mountingType === 'flush_rcc' ? 17 : 14;

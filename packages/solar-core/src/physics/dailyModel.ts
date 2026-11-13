@@ -321,6 +321,12 @@ export function computeDailySolarPhysicsModel({
         const diffuseTilted = Math.max(0, stepDiffuse * (1 + cosTilt) * 0.5);
         directWeight = Math.max(0.05, Math.min(0.95, 1 - diffuseTilted / Math.max(gti, diffuseTilted + 1)));
       }
+      // Rooftop parapet obstruction mask: below 4.5 deg solar elevation, direct beam is
+      // obstructed by rooftop boundary wall; diffuse ambient sky irradiance remains active.
+      if (typeof directWeight === 'number' && inc.solarElevationDeg < 4.5) {
+        const parapetClearance = inc.solarElevationDeg <= 1.0 ? 0 : (inc.solarElevationDeg - 1.0) / 3.5;
+        directWeight = Math.max(0.02, directWeight * parapetClearance);
+      }
     }
 
     const iam = computeAshraeIam(inc.cosThetaInc, gEff, directWeight, safeSurfaceLoss);
