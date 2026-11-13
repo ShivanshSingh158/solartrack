@@ -95,7 +95,7 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
   maxDateYmd,
   loadingYmd,
   cityName,
-  capSummaryLabel,
+  capSummaryLabel: _capSummaryLabel,
   dayCondition,
   radiationMjM2,
   physicsModel,
@@ -119,10 +119,10 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
   parsedReal,
   isTodayConfirmed,
   todayYield,
-  todayBufferKwh,
-  todayCurveSummary,
-  syncMeta,
-  resolvedTodayCloudKwh,
+  todayBufferKwh: _todayBufferKwh,
+  todayCurveSummary: _todayCurveSummary,
+  syncMeta: _syncMeta,
+  resolvedTodayCloudKwh: _resolvedTodayCloudKwh,
   gapRecovery,
   selectedDayEepromKwh,
   selectedReconciledTotalKwh,
@@ -153,12 +153,8 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
             </span>
           )}
         </div>
-        <p className="text-[12px] text-slate-500 font-medium mt-0.5 truncate">
-          {cityName ? `${cityName} ` : ''}{capSummaryLabel} · {dayCondition} ·{' '}
-          <span className="tabular-nums">{Number(radiationMjM2 ?? 15.3).toFixed(2)} MJ/m²</span> ·{' '}
-          <span className="tabular-nums">
-            {physicsModel.daylightText} daylight ({physicsModel.sunriseText} – {physicsModel.sunsetText})
-          </span>
+        <p className="text-[12px] text-slate-400 font-medium mt-0.5 truncate">
+          {cityName ? `${cityName} Rooftop · ` : ''}{dayCondition} · {physicsModel.sunriseText} sunrise – {physicsModel.sunsetText} sunset
         </p>
       </div>
 
@@ -265,43 +261,16 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
             isTodayConfirmed ? (
               <div className="w-full min-w-0">
                 <div className="flex items-baseline justify-between gap-2 min-w-0">
-                  <span className="text-[16px] font-extrabold text-slate-900 tabular-nums whitespace-nowrap">
-                    {todayYield.toFixed(todayBufferKwh >= 0.05 ? 2 : 1)} kWh{' '}
-                    <span className="text-[11px] font-medium text-slate-500">
-                      {todayBufferKwh >= 0.05
-                        ? 'Cloud + Buffer'
-                        : todayCurveSummary?.isPartialCurve &&
-                          todayCurveSummary.curveStartLabel &&
-                          todayCurveSummary.curveEndLabel
-                        ? 'Full Day Counter'
-                        : 'till now'}
+                  <span className="text-[17px] font-extrabold text-slate-900 tabular-nums whitespace-nowrap">
+                    {todayYield.toFixed(1)} kWh{' '}
+                    <span className="text-[11px] font-medium text-slate-400">
+                      till now
                     </span>
                   </span>
-                  <span className="text-[10.5px] font-medium text-slate-500 tabular-nums whitespace-nowrap shrink-0">
-                    {parsedReal.hasData
-                      ? `Peak ${parsedReal.peakKw.toFixed(2)} kW`
-                      : `Sync ${syncMeta?.syncedAtIstLabel || ''}`}
+                  <span className="text-[11px] font-semibold text-slate-600 tabular-nums whitespace-nowrap shrink-0">
+                    {displayLiveKw > 0 ? `${displayLiveKw.toFixed(2)} kW live` : `Peak ${parsedReal.peakKw.toFixed(2)} kW`}
                   </span>
                 </div>
-                {todayBufferKwh >= 0.05 ? (
-                  <div className="text-[10.5px] font-semibold text-amber-800/90 tabular-nums truncate mt-0.5">
-                    Cloud {resolvedTodayCloudKwh.toFixed(2)} + {todayBufferKwh.toFixed(2)} Outage Buffer
-                  </div>
-                ) : gapRecovery.eepromRecoveredKwh >= 0.1 ? (
-                  <div className="text-[10.5px] font-semibold text-teal-700 tabular-nums truncate mt-0.5">
-                    Includes +{gapRecovery.eepromRecoveredKwh.toFixed(1)} kWh EEPROM bridge in EDay
-                  </div>
-                ) : (
-                  todayCurveSummary?.isPartialCurve &&
-                  todayCurveSummary.realYieldFromCurveKwh > 0 &&
-                  todayCurveSummary.curveStartLabel &&
-                  todayCurveSummary.curveEndLabel && (
-                    <div className="text-[10.5px] font-medium text-slate-500 tabular-nums truncate mt-0.5">
-                      Curve {todayCurveSummary.realYieldFromCurveKwh.toFixed(1)} kWh (
-                      {todayCurveSummary.curveStartLabel}–{todayCurveSummary.curveEndLabel})
-                    </div>
-                  )
-                )}
               </div>
             ) : isBeforeSunrise ? (
               <>

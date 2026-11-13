@@ -19,10 +19,10 @@ interface PanelHygieneCardProps {
 export const PanelHygieneCard: React.FC<PanelHygieneCardProps> = ({
   report,
   currentSurfaceLossPct,
-  pm10Real,
-  dustReal,
+  pm10Real: _pm10Real,
+  dustReal: _dustReal,
   usAqiReal,
-  weatherAod,
+  weatherAod: _weatherAod,
   istNow,
   plantCommissioningYmd,
   isCleaningSaving,
@@ -33,11 +33,7 @@ export const PanelHygieneCard: React.FC<PanelHygieneCardProps> = ({
   const [washDateInput, setWashDateInput] = useState<string>(() => istNow.ymd);
 
   const soiling = report?.soiling ?? null;
-  const weekly = report?.weeklyComparison ?? null;
   const surfaceLossPct = soiling?.surfaceLossPct ?? currentSurfaceLossPct;
-  const avgDustVal = Math.round(soiling?.statsSinceWash.avgDust ?? soiling?.currentSnapshot.dust ?? dustReal);
-  const dewNightsCount = soiling?.statsSinceWash.dewNightsCount ?? 0;
-  const skyHazePct = soiling?.statsSinceWash.skyHazeLossPct ?? Math.round((weatherAod ?? 0.5) * 9.5);
   const actionState = soiling?.actionState ?? 'CLEAN';
   const aqiVal = Math.round(soiling?.currentSnapshot.usAqi ?? usAqiReal);
 
@@ -141,46 +137,20 @@ export const PanelHygieneCard: React.FC<PanelHygieneCardProps> = ({
         </div>
       </div>
 
-      {/* 2x2 Metric Grid (Structured, balanced, no colliding rows) */}
-      <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-[11px]">
-        <div className="p-2.5 rounded-2xl bg-slate-50/80 border border-slate-200/70">
-          <div className="text-slate-400 font-semibold uppercase text-[10px]">Rooftop Dust</div>
-          <div className="font-extrabold text-slate-800 text-[12px] mt-0.5 tabular-nums">
-            {avgDustVal} µg/m³ · Light
-          </div>
-          <div className="text-slate-400 text-[10px] mt-0.5">
-            PM10 {Math.round(soiling?.statsSinceWash.avgPm10 ?? pm10Real)} · {dewNightsCount} dew nights
-          </div>
+      {/* Clean Status Details (Apple-style spacing, zero micro-box clutter) */}
+      <div className="divide-y divide-slate-100 pt-1 border-t border-slate-100 text-[12px]">
+        <div className="py-2 flex items-center justify-between gap-2">
+          <span className="text-slate-400 font-medium">Last Clean / Rain</span>
+          <span className="font-semibold text-slate-800 tabular-nums">
+            {soiling?.lastClean?.shortLabel || 'Oct 30'} ({soiling?.lastClean?.source === 'manual' ? 'Manual' : 'Rain'}) · {soiling?.lastClean ? `${soiling.lastClean.daysAgo}d ago` : '14d ago'}
+          </span>
         </div>
 
-        <div className="p-2.5 rounded-2xl bg-slate-50/80 border border-slate-200/70">
-          <div className="text-slate-400 font-semibold uppercase text-[10px]">Airborne Smog &amp; Haze</div>
-          <div className="font-extrabold text-slate-800 text-[12px] mt-0.5 tabular-nums">
-            Mild Haze (~{skyHazePct}% loss)
-          </div>
-          <div className="text-slate-400 text-[10px] mt-0.5">AQI {aqiVal}</div>
-        </div>
-
-        <div className="p-2.5 rounded-2xl bg-slate-50/80 border border-slate-200/70">
-          <div className="text-slate-400 font-semibold uppercase text-[10px]">Last Clean / Rain</div>
-          <div className="font-extrabold text-slate-800 text-[12px] mt-0.5 truncate">
-            {soiling?.lastClean?.shortLabel || 'Oct 30'} ({soiling?.lastClean?.source === 'manual' ? 'Manual' : 'Rain'})
-          </div>
-          <div className="text-slate-400 text-[10px] mt-0.5">
-            {soiling?.lastClean ? `${soiling.lastClean.daysAgo} days ago` : '5 days ago'}
-          </div>
-        </div>
-
-        <div className="p-2.5 rounded-2xl bg-slate-50/80 border border-slate-200/70">
-          <div className="text-slate-400 font-semibold uppercase text-[10px]">7-Day Performance</div>
-          <div className="font-extrabold text-slate-800 text-[12px] mt-0.5 tabular-nums">
-            {weekly?.latestWindow ? `${weekly.latestWindow.normalizedPerfPct}% match` : '83% match'}
-          </div>
-          <div className="text-slate-400 text-[10px] mt-0.5 truncate">
-            {weekly?.latestWindow
-              ? `${weekly.latestWindow.realAvgKwh} vs ${weekly.latestWindow.modelAvgKwh} kWh/d`
-              : '11.1 vs 13.4 kWh/d'}
-          </div>
+        <div className="py-2 flex items-center justify-between gap-2">
+          <span className="text-slate-400 font-medium">Environmental Loss</span>
+          <span className="font-semibold text-slate-800 tabular-nums">
+            AQI {aqiVal} · Light dust (-{surfaceLossPct.toFixed(1)}%)
+          </span>
         </div>
       </div>
 

@@ -512,32 +512,6 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </div>
       )}
 
-      {/* Live Modbus Inverter Telemetry Pill */}
-      {snap.realElectrical && (
-        <div className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/80 text-slate-200 text-[11px] font-medium backdrop-blur-xs border border-slate-800">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              🟢 Live Solar
-            </span>
-            <span className="text-slate-400">·</span>
-            <span>
-              Solar Array: <strong className="text-white">{snap.realElectrical.dc.pv1.volt?.toFixed(1) ?? '—'}V</strong> ({snap.realElectrical.dc.pv1.current?.toFixed(1) ?? '—'}A)
-            </span>
-            <span className="text-slate-400">·</span>
-            <span>
-              Grid: <strong className="text-white">{snap.realElectrical.grid.r.volt?.toFixed(1) ?? '—'}V</strong> ({snap.realElectrical.grid.r.freqHz?.toFixed(2) ?? '50.00'}Hz)
-            </span>
-            <span className="text-slate-400">·</span>
-            <span>
-              Efficiency: <strong className="text-emerald-300">{snap.realElectrical.efficiency.etaPct !== null ? `${snap.realElectrical.efficiency.etaPct}%` : '—'}</strong>
-            </span>
-          </div>
-          <span className="text-[10px] text-slate-400 font-semibold tabular-nums">
-            Inverter Temp: {snap.realElectrical.temperatures?.invTemp ?? '42'}°C · String 2: Unused
-          </span>
-        </div>
-      )}
 
       <SolarAtmosphereStage
         plantName={snap.config.plantDisplayName || 'Solar Plant'}

@@ -336,26 +336,14 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
               </div>
 
               <div>
-                <div className={`grid grid-cols-5 text-[11px] font-semibold ${stateData.labelColor} mb-1.5 opacity-90`}>
-                  <span className="text-left">Standby</span>
-                  <span className="text-center">Low</span>
-                  <span className="text-center">Moderate</span>
-                  <span className="text-center">Optimal</span>
-                  <span className="text-right">Peak</span>
-                </div>
-
-                <div className="relative h-[8px] w-full rounded-full flex bg-slate-900/20 overflow-visible">
-                  <div className="w-1/5 h-full bg-[#64748B] rounded-l-full" />
-                  <div className="w-1/5 h-full bg-[#FACC15]" />
-                  <div className="w-1/5 h-full bg-[#F59E0B]" />
-                  <div className="w-1/5 h-full bg-[#10B981]" />
-                  <div className="w-1/5 h-full bg-[#059669] rounded-r-full" />
+                <div className="relative h-[6px] w-full rounded-full flex bg-slate-900/15 overflow-visible">
+                  <div className="w-full h-full rounded-full bg-gradient-to-r from-slate-400 via-amber-400 to-emerald-500 opacity-80" />
 
                   {showEstimatedMode && (
                     <div
                       style={{ left: `${modelSpectrumPercent}%` }}
-                      className={`absolute -top-[4px] -translate-x-1/2 w-[16px] h-[16px] rounded-full border-[2.5px] border-dashed shadow-sm transition-all duration-500 ${
-                        isDarkTheme ? 'bg-slate-900/40 border-amber-400' : 'bg-white/40 border-amber-700'
+                      className={`absolute -top-[4px] -translate-x-1/2 w-[14px] h-[14px] rounded-full border-[2px] border-dashed shadow-xs transition-all duration-500 ${
+                        isDarkTheme ? 'bg-slate-900 border-amber-400' : 'bg-white border-amber-700'
                       }`}
                       title={`Satellite estimate: ~${effectiveModelKw.toFixed(2)} kW`}
                     />
@@ -364,15 +352,15 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
                   {showHardwareLive && (
                     <div
                       style={{ left: `${spectrumPercent}%`, borderColor: '#10B981' }}
-                      className="absolute -top-[3px] -translate-x-1/2 w-[14px] h-[14px] rounded-full bg-white shadow-md transition-all duration-500 border-[3px]"
-                      title={`Waaree live: ${stateData.displayedKw.toFixed(2)} kW`}
+                      className="absolute -top-[4px] -translate-x-1/2 w-[14px] h-[14px] rounded-full bg-white shadow-xs transition-all duration-500 border-[2.5px]"
+                      title={`Live solar power: ${stateData.displayedKw.toFixed(2)} kW`}
                     />
                   )}
 
                   {!showEstimatedMode && !showHardwareLive && (
                     <div
                       style={{ left: `${spectrumPercent}%`, borderColor: stateData.needleColor }}
-                      className="absolute -top-[3px] -translate-x-1/2 w-[14px] h-[14px] rounded-full bg-white shadow-md transition-all duration-300 border-[3px]"
+                      className="absolute -top-[4px] -translate-x-1/2 w-[14px] h-[14px] rounded-full bg-white shadow-xs transition-all duration-300 border-[2.5px]"
                       title="Standby"
                     />
                   )}
@@ -384,7 +372,7 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
                     {Math.abs(capacityKwp * 10 - Math.round(capacityKwp * 10)) < 0.01
                       ? capacityKwp.toFixed(1)
                       : capacityKwp.toFixed(2)}{' '}
-                    kWp
+                    kWp Capacity
                   </span>
                 </div>
               </div>
