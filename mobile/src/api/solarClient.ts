@@ -88,6 +88,41 @@ export interface HealthPayload {
   };
 }
 
+export interface HistoryPayload {
+  errno: number;
+  todayKwh: number;
+  yesterdayKwh: number;
+  monthKwh: number;
+  lifetimeKwh: number;
+  peakGenerationKw: number;
+  past7Days: Array<{
+    day: string;
+    date: string;
+    kwh: number;
+  }>;
+  hourlyCurve: Array<{
+    time: string;
+    kw: number;
+  }>;
+}
+
+export interface SavingsPayload {
+  errno: number;
+  tariffPerKwh: number;
+  currency: string;
+  savings: {
+    todayInr: number;
+    monthInr: number;
+    lifetimeInr: number;
+    projectedAnnualInr: number;
+  };
+  environmental: {
+    co2AvoidedKg: number;
+    treesEquivalent: number;
+    coalSavedKg: number;
+  };
+}
+
 class SolarApiClient {
   private token: string | null = null;
 
@@ -109,7 +144,7 @@ class SolarApiClient {
     }
   }
 
-  async login(username: string, password: string):Promise<{ ok: boolean; user?: UserProfile; error?: string }> {
+  async login(username: string, password: string): Promise<{ ok: boolean; user?: UserProfile; error?: string }> {
     try {
       const res = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
@@ -189,6 +224,44 @@ class SolarApiClient {
       return await res.json();
     } catch {
       return null;
+    }
+  }
+
+  async getHistory(stationId?: string): Promise<HistoryPayload | null> {
+    try {
+      const query = stationId ? `?stationId=${encodeURIComponent(stationId)}` : "";
+      const res = await fetch(`${API_BASE_URL}/history${query}`, {
+        headers: this.getHeaders(),
+      });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch {
+      return null;
+    }
+  }
+
+  async getSavings(stationId?: string): Promise<SavingsPayload | null> {
+    try {
+      const query = stationId ? `?stationId=${encodeURIComponent(stationId)}` : "";
+      const res = await fetch(`${API_BASE_URL}/savings${query}`, {
+        headers: this.getHeaders(),
+      });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch {
+      return null;
+    }
+  }
+
+  async cleanPanels(): Promise<boolean> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/settings/clean-panels`, {
+        method: "POST",
+        headers: this.getHeaders(),
+      });
+      return res.ok;
+    } catch {
+      return false;
     }
   }
 }
