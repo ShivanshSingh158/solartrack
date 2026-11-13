@@ -21,20 +21,34 @@ export interface WeeklyPerformanceLedgerCardProps {
 }
 
 function getWeatherIconAndLabel(entry?: DailyPerformanceLedgerEntry | null) {
-  if (!entry) return { icon: <Sun className="w-3.5 h-3.5 text-amber-500" />, label: 'Sunny' };
+  if (!entry) return { icon: <Sun className="w-3.5 h-3.5 text-amber-500 shrink-0" />, label: 'Sunny' };
   if (entry.rainMm > 0.5) {
-    return { icon: <CloudRain className="w-3.5 h-3.5 text-blue-500" />, label: `${entry.rainMm.toFixed(1)}mm Rain` };
+    return { icon: <CloudRain className="w-3.5 h-3.5 text-blue-500 shrink-0" />, label: `${entry.rainMm.toFixed(1)}mm Rain` };
   }
   if (entry.fogHours > 1) {
-    return { icon: <CloudFog className="w-3.5 h-3.5 text-slate-400" />, label: 'Morning Fog' };
+    return { icon: <CloudFog className="w-3.5 h-3.5 text-slate-400 shrink-0" />, label: 'Morning Fog' };
   }
   if (entry.hazeOpticalLossPct > 6 || (entry.usAqiMax && entry.usAqiMax > 160)) {
-    return { icon: <CloudSun className="w-3.5 h-3.5 text-amber-600" />, label: `Haze (${entry.usAqiMax || 170} AQI)` };
+    return { icon: <CloudSun className="w-3.5 h-3.5 text-amber-600 shrink-0" />, label: `Haze · ${entry.usAqiMax || 180} AQI` };
   }
   if (entry.weatherAttenuationPct > 15) {
-    return { icon: <CloudSun className="w-3.5 h-3.5 text-amber-500" />, label: 'Partly Cloudy' };
+    return { icon: <CloudSun className="w-3.5 h-3.5 text-amber-500 shrink-0" />, label: 'Partly Cloudy' };
   }
-  return { icon: <Sun className="w-3.5 h-3.5 text-amber-500" />, label: 'Clear Sky' };
+  return { icon: <Sun className="w-3.5 h-3.5 text-amber-500 shrink-0" />, label: 'Clear Sky' };
+}
+
+const WEEKDAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function formatCardDate(ymd: string) {
+  const parts = ymd.split('-').map(Number);
+  if (parts.length === 3) {
+    const d = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], 12, 0, 0));
+    const weekday = WEEKDAY_NAMES[d.getUTCDay()] || '';
+    const month = MONTH_NAMES[d.getUTCMonth()] || '';
+    return { weekday, label: `${weekday}, ${month} ${parts[2]}` };
+  }
+  return { weekday: '', label: ymd };
 }
 
 export const WeeklyPerformanceLedgerCard: React.FC<WeeklyPerformanceLedgerCardProps> = ({
@@ -46,7 +60,6 @@ export const WeeklyPerformanceLedgerCard: React.FC<WeeklyPerformanceLedgerCardPr
   onNavigateToPerformance,
   onSelectDate,
 }) => {
-  // Extract or synthesize the past 7 days
   const effectiveEntries = React.useMemo(() => {
     if (dailyLedger && dailyLedger.length > 0) {
       return dailyLedger.slice(-7);
@@ -75,48 +88,49 @@ export const WeeklyPerformanceLedgerCard: React.FC<WeeklyPerformanceLedgerCardPr
 
   return (
     <div className="w-full card-floating-static p-5 flex flex-col justify-between space-y-4">
-      {/* Top Header Row */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-1 border-b border-slate-100">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600">
+      {/* Top Header Row - Apple Clean Typography (No heavy pills) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 shrink-0">
             <TrendingUp className="w-4 h-4" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-sm font-bold text-slate-900 tracking-tight">
                 7-Day Performance & Weather Consistency
               </h3>
-              <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
-                Inverter Verified
+              <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                Hardware Verified
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 font-medium">
+            <p className="text-[11px] text-slate-500 font-medium mt-0.5">
               Daily solar yield vs clear-sky model & environmental weather impact
             </p>
           </div>
         </div>
 
-        {/* Right side summary chips */}
-        <div className="flex items-center gap-2.5">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px]">
-            <span className="text-slate-500 font-medium">7-Day Total:</span>
-            <strong className="text-slate-900 font-bold">{total7DayKwh.toFixed(1)} kWh</strong>
+        {/* Right side stats & action - Pure Sleek Typography */}
+        <div className="flex items-center gap-4 text-xs">
+          <div className="hidden sm:flex items-baseline gap-1.5 text-slate-600">
+            <span className="text-slate-400 font-normal">7-Day Total:</span>
+            <strong className="text-slate-900 font-bold tabular-nums text-[13px]">{total7DayKwh.toFixed(1)} kWh</strong>
             <span className="text-slate-300">·</span>
-            <span className="text-emerald-600 font-bold">₹{total7DaySavingsInr.toLocaleString('en-IN')}</span>
+            <span className="text-emerald-700 font-semibold tabular-nums">₹{total7DaySavingsInr.toLocaleString('en-IN')} saved</span>
           </div>
 
           <button
             type="button"
             onClick={() => onNavigateToPerformance()}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-800 text-[11px] font-bold transition cursor-pointer"
+            className="flex items-center gap-1 text-slate-600 hover:text-slate-900 font-semibold text-xs transition cursor-pointer group"
           >
             <span>Full Period Audit</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700 group-hover:translate-x-0.5 transition-all" />
           </button>
         </div>
       </div>
 
-      {/* 7-Day Bento Grid */}
+      {/* 7-Day Sleek Bento Grid - Apple Inspired, Zero Pill Clutter */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5">
         {effectiveEntries.map((item, idx) => {
           const isToday = item.ymd === istClock.ymd;
@@ -126,79 +140,82 @@ export const WeeklyPerformanceLedgerCard: React.FC<WeeklyPerformanceLedgerCardPr
           const daySavings = Math.round(realKwh * tariffPerKwh);
           const barHeightPct = Math.min(Math.round((realKwh / maxDayKwh) * 100), 100);
           const weather = getWeatherIconAndLabel(item);
+          const dateInfo = formatCardDate(item.ymd);
 
           return (
             <div
               key={item.ymd || idx}
               onClick={() => onSelectDate ? onSelectDate(item.ymd) : onNavigateToPerformance(item.ymd)}
-              className={`p-3 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-2.5 ${
+              className={`p-3.5 rounded-2xl border transition-all duration-150 cursor-pointer flex flex-col justify-between space-y-2.5 select-none ${
                 isToday
-                  ? 'bg-amber-50/50 border-amber-300 shadow-xs'
-                  : 'bg-slate-50/70 hover:bg-white border-slate-200/70 hover:shadow-xs'
+                  ? 'bg-amber-50/30 border-amber-300 shadow-xs ring-1 ring-amber-300/40 hover:bg-amber-50/50'
+                  : 'bg-white hover:bg-slate-50/60 border-slate-200/80 hover:border-slate-300 shadow-xs hover:shadow-sm'
               }`}
             >
-              {/* Day Header */}
+              {/* Day Header - Clean date label */}
               <div className="flex items-center justify-between">
-                <span className={`text-[11px] font-bold ${isToday ? 'text-amber-900' : 'text-slate-700'}`}>
-                  {item.shortLabel || item.ymd.slice(5)}
+                <span className={`text-[11.5px] font-semibold tracking-tight ${isToday ? 'text-amber-950 font-bold' : 'text-slate-700'}`}>
+                  {dateInfo.label}
                 </span>
-                {isToday ? (
-                  <span className="px-1.5 py-0.5 rounded-md bg-amber-500 text-white text-[9px] font-black uppercase tracking-wider">
+                {isToday && (
+                  <span className="text-[10px] font-bold text-amber-600 tracking-wider uppercase">
                     Today
-                  </span>
-                ) : (
-                  <span className="text-[10px] text-slate-400 font-medium">
-                    {item.ymd.slice(8, 10)} Nov
                   </span>
                 )}
               </div>
 
-              {/* Main Metric */}
+              {/* Primary Metric & Target Attribution (Clean text & dot, NO pill capsule) */}
               <div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-xl font-black text-slate-900 tracking-tight">
+                  <span className="text-[22px] font-bold tracking-tight text-slate-900 leading-none tabular-nums">
                     {realKwh.toFixed(1)}
                   </span>
-                  <span className="text-[10px] font-semibold text-slate-500">kWh</span>
+                  <span className="text-[11px] font-medium text-slate-400">kWh</span>
                 </div>
 
-                {/* Match percentage badge */}
-                <div className="flex items-center gap-1 mt-1">
+                {/* Sleek inline status */}
+                <div className="flex items-center gap-1.5 mt-1.5 text-[11px] font-medium text-slate-500">
                   {matchPct !== null ? (
-                    <span
-                      className={`px-1.5 py-0.5 rounded-md text-[10px] font-bold ${
-                        matchPct >= 95
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : matchPct >= 80
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-amber-100 text-amber-800'
-                      }`}
-                    >
-                      {matchPct}% Model
-                    </span>
+                    <>
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                          matchPct >= 90
+                            ? 'bg-emerald-500'
+                            : matchPct >= 75
+                            ? 'bg-sky-500'
+                            : matchPct > 0
+                            ? 'bg-amber-500'
+                            : 'bg-slate-300'
+                        }`}
+                      />
+                      <span className={`font-semibold tabular-nums ${matchPct >= 90 ? 'text-emerald-700' : 'text-slate-700'}`}>
+                        {matchPct}%
+                      </span>
+                      <span className="text-slate-400 text-[10.5px]">of model</span>
+                    </>
                   ) : (
-                    <span className="text-[10px] text-slate-400 font-medium">Generating...</span>
+                    <span className="text-[10.5px] text-slate-400">Syncing...</span>
                   )}
                 </div>
               </div>
 
-              {/* Proportional Mini Bar */}
-              <div className="w-full bg-slate-200/70 h-1.5 rounded-full overflow-hidden">
+              {/* Ultra-thin 2px Progress Line */}
+              <div className="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${
-                    isToday ? 'bg-amber-500' : matchPct && matchPct >= 95 ? 'bg-emerald-500' : 'bg-slate-400'
+                    isToday ? 'bg-amber-500' : matchPct && matchPct >= 90 ? 'bg-emerald-500' : 'bg-slate-400'
                   }`}
                   style={{ width: `${barHeightPct}%` }}
                 />
               </div>
 
               {/* Weather & Earnings Footer */}
-              <div className="pt-1.5 border-t border-slate-200/60 flex items-center justify-between text-[10px]">
-                <div className="flex items-center gap-1 text-slate-600 truncate mr-1" title={weather.label}>
+              <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10.5px]">
+                <div className="flex items-center gap-1 text-slate-500 truncate mr-1" title={weather.label}>
                   {weather.icon}
                   <span className="truncate">{weather.label}</span>
                 </div>
-                <span className="font-bold text-emerald-600 shrink-0">
+                <span className="font-semibold text-slate-700 shrink-0 tabular-nums">
                   +₹{daySavings}
                 </span>
               </div>
@@ -207,15 +224,15 @@ export const WeeklyPerformanceLedgerCard: React.FC<WeeklyPerformanceLedgerCardPr
         })}
       </div>
 
-      {/* Bottom Provenance Footnote */}
+      {/* Bottom Footnote */}
       <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500">
         <div className="flex items-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-          <span>7-Day Generation Avg: <strong className="text-slate-700">{avgDailyKwh.toFixed(1)} kWh/day</strong></span>
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+          <span>7-Day Generation Avg: <strong className="text-slate-800 font-semibold">{avgDailyKwh.toFixed(1)} kWh/day</strong></span>
           <span className="text-slate-300">·</span>
           <span>Consistent with Kanpur 3.27 kWp clear-sky calibration</span>
         </div>
-        <span className="text-slate-400 text-[10px]">
+        <span className="text-slate-400 text-[10.5px]">
           Click any day to inspect hourly telemetry curve
         </span>
       </div>

@@ -94,7 +94,7 @@ export const HeaderSyncPopover: React.FC<HeaderSyncPopoverProps> = ({
   return (
     <div className="relative" ref={syncRef}>
       <div
-        className={`inline-flex items-center h-8 rounded-full border shadow-2xs transition-colors ${
+        className={`inline-flex items-center h-8 rounded-xl border shadow-2xs transition-colors ${
           isGenerating
             ? 'border-emerald-200/85 bg-emerald-50/70 text-emerald-900'
             : 'border-slate-200/85 bg-white text-slate-700'
@@ -108,7 +108,7 @@ export const HeaderSyncPopover: React.FC<HeaderSyncPopoverProps> = ({
           }}
           aria-expanded={isSyncOpen}
           aria-haspopup="dialog"
-          className="flex items-center gap-2 h-full pl-3 pr-2.5 rounded-l-full text-[11.5px] font-medium tracking-tight hover:bg-slate-100/60 transition-colors cursor-pointer whitespace-nowrap"
+          className="flex items-center gap-2 h-full pl-3 pr-2.5 rounded-l-xl text-[11.5px] font-medium tracking-tight hover:bg-slate-100/60 transition-colors cursor-pointer whitespace-nowrap"
           title={syncStatusText || 'Telemetry & Sync Details'}
         >
           <span
@@ -135,7 +135,7 @@ export const HeaderSyncPopover: React.FC<HeaderSyncPopoverProps> = ({
           onClick={onRefresh}
           disabled={isRefreshing}
           aria-label="Sync Weather and Waaree Telemetry"
-          className="flex items-center justify-center h-full pl-2 pr-2.5 rounded-r-full text-slate-500 hover:text-slate-900 hover:bg-slate-100/60 transition-colors cursor-pointer disabled:opacity-50"
+          className="flex items-center justify-center h-full pl-2 pr-2.5 rounded-r-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100/60 transition-colors cursor-pointer disabled:opacity-50"
           title="Sync Weather + Waaree now"
         >
           <RotateCw
