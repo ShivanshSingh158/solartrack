@@ -18,6 +18,7 @@ export interface WeeklyPerformanceLedgerCardProps {
   istClock: IstClockParts;
   onNavigateToPerformance: (targetYmd?: string) => void;
   onSelectDate?: (ymd: string) => void;
+  onOpenDailyReport?: (ymd: string) => void;
 }
 
 function getWeatherIconAndLabel(entry?: DailyPerformanceLedgerEntry | null) {
@@ -59,6 +60,7 @@ export const WeeklyPerformanceLedgerCard: React.FC<WeeklyPerformanceLedgerCardPr
   istClock,
   onNavigateToPerformance,
   onSelectDate,
+  onOpenDailyReport,
 }) => {
   const effectiveEntries = React.useMemo(() => {
     if (dailyLedger && dailyLedger.length > 0) {
@@ -145,7 +147,11 @@ export const WeeklyPerformanceLedgerCard: React.FC<WeeklyPerformanceLedgerCardPr
           return (
             <div
               key={item.ymd || idx}
-              onClick={() => onSelectDate ? onSelectDate(item.ymd) : onNavigateToPerformance(item.ymd)}
+              onClick={() => {
+                if (onOpenDailyReport) onOpenDailyReport(item.ymd);
+                else if (onSelectDate) onSelectDate(item.ymd);
+                else onNavigateToPerformance(item.ymd);
+              }}
               className={`p-3.5 rounded-2xl border transition-all duration-150 cursor-pointer flex flex-col justify-between space-y-2.5 select-none ${
                 isToday
                   ? 'bg-amber-50/30 border-amber-300 shadow-xs ring-1 ring-amber-300/40 hover:bg-amber-50/50'

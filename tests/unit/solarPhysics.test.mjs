@@ -108,6 +108,41 @@ describe('solar-core physics & IST clock unit invariants', () => {
     assert.equal(gridOut.status, 'GRID_OUTAGE');
   });
 
+  it('generates a deterministic daily solar report with dip detection and plain-language verdicts', () => {
+    const report = solarCore.generateDailySolarReport({
+      ymd: '2026-11-08',
+      todayYmd: '2026-11-13',
+      nowMinutesIst: 18 * 60,
+      tariffPerKwh: 8.0,
+      capacityKwp: 3.27,
+      sunriseMin: 384,
+      sunsetMin: 1043,
+      realKwh: 12.4,
+      expectedKwh: 12.8,
+      lookupModelAtMinute: (m) => ({
+        kw: m >= 384 && m <= 1043 ? Math.sin(((m - 384) / (1043 - 384)) * Math.PI) * 2.0 : 0,
+        cumKwh: 6.4,
+      }),
+      realPoints: [
+        { minute: 600, kw: 1.8, vGrid: 230, freqGrid: 50.0 },
+        { minute: 700, kw: 0.0, vGrid: 0, freqGrid: 0.0 }, // Power cut
+        { minute: 705, kw: 0.0, vGrid: 0, freqGrid: 0.0 },
+      ],
+      yesterdayKwh: 11.2,
+      sevenDayAvgKwh: 10.5,
+      bestDayRecord: { ymd: '2026-11-08', kwh: 12.4 },
+    });
+
+    assert.equal(report.isAvailable, true);
+    assert.equal(report.headline.overallVerdict, 'excellent');
+    assert.ok(report.headline.savingsInr >= 90);
+    assert.ok(report.dips.length >= 1);
+    assert.ok(report.dips.some((d) => d.category === 'grid_pause'));
+    assert.ok(report.lossBreakdown.length >= 3);
+    assert.ok(report.healthSnapshot.length >= 4);
+    assert.ok(report.tomorrowPreview.forecastKwh > 0);
+  });
+
   it('runs E2E directory location resolves cleanly inside workspace', () => {
     assert.ok(path.basename(process.cwd()) === 'waaree-dashboard' || typeof solarCore.SOLAR_CONSTANTS.DEFAULT_LAT === 'number');
   });

@@ -41,6 +41,7 @@ export const SolarComparisonChart: React.FC<SolarComparisonChartProps> = (props)
         onRequestMonthAvailability={vm.requestMonthAvailability}
         onSelectDate={vm.handleSelectDate}
         onNavigateToPerformance={props.onNavigateToPerformance}
+        onOpenDailyReport={props.onOpenDailyReport}
         hasConfirmedDayReal={vm.hasConfirmedDayReal}
         isBeforeSunrise={vm.isBeforeSunrise}
         isAfterSunset={vm.isAfterSunset}

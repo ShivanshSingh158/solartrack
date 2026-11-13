@@ -12,3 +12,4 @@ export * from './gap.ts';
 export * from './intelligence.ts';
 export * from './telemetry.ts';
 export * from './snapshot.ts';
+export * from './dailyReport.ts';

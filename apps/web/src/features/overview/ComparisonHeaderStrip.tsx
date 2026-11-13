@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  FileText,
   WifiOff,
 } from 'lucide-react';
 import {
@@ -46,6 +47,7 @@ export interface ComparisonHeaderStripProps {
   onRequestMonthAvailability: (ym: string) => void;
   onSelectDate: (ymd: string) => void;
   onNavigateToPerformance: (ymd: string) => void;
+  onOpenDailyReport?: (ymd: string) => void;
   hasConfirmedDayReal: boolean;
   isBeforeSunrise: boolean;
   isAfterSunset: boolean;
@@ -111,6 +113,7 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
   onRequestMonthAvailability,
   onSelectDate,
   onNavigateToPerformance,
+  onOpenDailyReport,
   hasConfirmedDayReal,
   isBeforeSunrise,
   isAfterSunset,
@@ -212,6 +215,16 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
             onSelectDate={onSelectDate}
           />
         </div>
+
+        <button
+          type="button"
+          onClick={() => (onOpenDailyReport ? onOpenDailyReport(selectedYmd) : undefined)}
+          className="text-[12px] font-semibold text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1 transition cursor-pointer whitespace-nowrap"
+          title="Open complete daily performance audit & dip analysis report"
+        >
+          <FileText className="w-3.5 h-3.5" />
+          <span>Daily Report</span>
+        </button>
 
         <button
           type="button"

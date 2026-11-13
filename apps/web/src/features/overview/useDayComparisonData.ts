@@ -83,6 +83,7 @@ export interface SolarComparisonChartProps {
     isPartialCurve: boolean;
   } | null;
   onNavigateToPerformance: (targetYmd?: string) => void;
+  onOpenDailyReport?: (targetYmd?: string) => void;
 }
 
 const hasNonEmptyRawSeries = (series?: RawSeries[] | null) =>

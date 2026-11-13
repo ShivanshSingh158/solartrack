@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { ZapOff } from 'lucide-react';
+import { FileText, Sparkles, ZapOff } from 'lucide-react';
 import {
   buildCanonicalSolarSnapshot,
   formatMinutes12hUpper,
@@ -133,6 +133,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   const [isIntelligenceModalOpen, setIsIntelligenceModalOpen] = useState(false);
   const [fallbackWeatherData, setFallbackWeatherData] = useState<any>(null);
   const [isReportCardOpen, setIsReportCardOpen] = useState(false);
+  const [reportSelectedYmd, setReportSelectedYmd] = useState<string>('');
   const [isPhysicsModalOpen, setIsPhysicsModalOpen] = useState(false);
   const [livePeakStamp, setLivePeakStamp] = useState<{
     ymd: string;
@@ -590,6 +591,39 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         onOpenPhysicsModal={() => setIsPhysicsModalOpen(true)}
       />
 
+      {/* Sunset Solar Report Banner - Triggered at dusk/standby */}
+      {(isPostSunset || isNight || isPreSunrise) && effectiveTodayYield > 0.05 && (
+        <div className="p-4 sm:p-4.5 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-slate-700/60 card-floating-elevation">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300">
+                  Daily Solar Audit Complete
+                </span>
+                <span className="text-[10px] text-slate-400 font-semibold">· {snap.clock.indianMediumLabel}</span>
+              </div>
+              <p className="text-xs text-slate-200 font-medium mt-0.5">
+                Today's generation ({todayOutputKwh} kWh · ₹{Math.round(effectiveTodayYield * tariffPerKwh)} saved) has concluded. Full dip analysis & hardware health report is ready.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setReportSelectedYmd(istNow.ymd);
+              setIsReportCardOpen(true);
+            }}
+            className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition cursor-pointer shrink-0 text-center shadow-xs inline-flex items-center justify-center gap-1.5"
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>View Daily Report</span>
+          </button>
+        </div>
+      )}
+
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         <div className="lg:col-span-8 flex flex-col space-y-4">
           <SolarComparisonChart
@@ -631,6 +665,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               isPartialCurve: snap.today.isPartialCurve,
             }}
             onNavigateToPerformance={onNavigateToPerformance}
+            onOpenDailyReport={(ymd) => {
+              setReportSelectedYmd(ymd || istNow.ymd);
+              setIsReportCardOpen(true);
+            }}
           />
 
           <WeeklyPerformanceLedgerCard
@@ -640,6 +678,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             tariffPerKwh={tariffPerKwh}
             istClock={istNow}
             onNavigateToPerformance={onNavigateToPerformance}
+            onOpenDailyReport={(ymd) => {
+              setReportSelectedYmd(ymd || istNow.ymd);
+              setIsReportCardOpen(true);
+            }}
           />
         </div>
 
@@ -673,17 +715,16 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       <DailyReportCardModal
         isOpen={isReportCardOpen}
         onClose={() => setIsReportCardOpen(false)}
-        dayYieldKwh={snap.reportCard.todayKwh}
+        selectedYmd={reportSelectedYmd || istNow.ymd}
+        todayYmd={istNow.ymd}
+        dayYieldKwh={reportSelectedYmd && reportSelectedYmd !== istNow.ymd ? (recent7DaysData.find((d) => `${istNow.year}-${String(istNow.month).padStart(2, '0')}-${String(d.day).padStart(2, '0')}` === reportSelectedYmd)?.yield ?? 11.2) : effectiveTodayYield}
         tariffPerKwh={snap.config.tariffPerKwh}
         peakKw={snap.reportCard.peakKw}
         peakTime={snap.reportCard.peakTime}
         activeHours={snap.tomorrow.sunshineHours.toFixed(1)}
         systemCapacity={snap.config.capacityKwp}
         tomorrowKwh={snap.reportCard.tomorrowKwh}
-        grade={snap.reportCard.grade}
-        gradeLabel={snap.reportCard.gradeLabel}
-        specificYield={snap.reportCard.specificYield}
-        dateStr={snap.clock.indianMediumLabel}
+        dateStr={reportSelectedYmd && reportSelectedYmd !== istNow.ymd ? reportSelectedYmd : snap.clock.indianMediumLabel}
       />
 
       <SolarIntelligenceModal
