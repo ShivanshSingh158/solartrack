@@ -310,4 +310,5 @@ async function handleAuthRoutes(req, res, reqUrl) {
 
 module.exports = {
   handleAuthRoutes,
+  authenticateAndUpsertAccount,
 };
