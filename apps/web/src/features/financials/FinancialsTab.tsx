@@ -187,7 +187,7 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({
 
   return (
     <div className="space-y-5 max-w-[1440px] mx-auto pb-8 animate-in fade-in duration-300">
-      <section className="rounded-3xl card-floating-static overflow-hidden">
+      <section className="rounded-3xl apple-glass-static overflow-hidden">
         <div className="px-4 sm:px-6 py-4 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -195,13 +195,13 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({
                 <Coins className="w-4 h-4 text-emerald-600 shrink-0" />
                 Savings & Payback Engine
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-[10.5px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+              <span className="px-3 py-0.5 rounded-full text-[10.5px] font-bold apple-glass-pill shadow-2xs text-emerald-800">
                 {payback.baselineSource === 'open_meteo_365d_archive'
                   ? '365-Day Satellite Solar Archive'
                   : 'Satellite Baseline'}
               </span>
               {isWhatIfModified && (
-                <span className="px-2.5 py-0.5 rounded-full text-[10.5px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                <span className="px-3 py-0.5 rounded-full text-[10.5px] font-bold apple-glass-pill shadow-2xs text-amber-900 border-amber-300">
                   Calculator Preview Active
                 </span>
               )}
@@ -216,7 +216,7 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({
             <div
               role="tablist"
               aria-label="Financial analysis views"
-              className="bg-slate-100/90 p-1 rounded-full inline-flex items-center"
+              className="apple-glass-pill p-1 rounded-full inline-flex items-center shadow-2xs"
             >
               {(
                 [

@@ -106,7 +106,7 @@ export const HealthTab: React.FC<HealthTabProps> = ({
 
   return (
     <div className="space-y-5 max-w-[1440px] mx-auto pb-8 animate-in fade-in duration-300">
-      <section className="rounded-3xl card-floating-static overflow-hidden">
+      <section className="rounded-3xl apple-glass-static overflow-hidden">
         <div className="px-4 sm:px-6 py-4 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -114,7 +114,7 @@ export const HealthTab: React.FC<HealthTabProps> = ({
                 <Wrench className="w-4 h-4 text-emerald-600 shrink-0" />
                 System Health & Telemetry Integrity
               </h2>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700">
+              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-bold apple-glass-pill shadow-2xs">
                 <span className={`w-1.5 h-1.5 rounded-full ${STATUS_DOT[report.statusLevel] || 'bg-slate-400'}`} />
                 {report.statusBadge}
               </span>
@@ -128,7 +128,7 @@ export const HealthTab: React.FC<HealthTabProps> = ({
           <div
             role="tablist"
             aria-label="System health chart views"
-            className="bg-slate-100/90 p-1 rounded-full inline-flex items-center self-start md:self-auto shrink-0"
+            className="apple-glass-pill p-1 rounded-full inline-flex items-center self-start md:self-auto shrink-0 shadow-2xs"
           >
             {(
               [

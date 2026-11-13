@@ -115,7 +115,7 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-5">
       {/* LEFT (40% -> 5 cols): SOLAR & INVERTER BREAKDOWN LEDGER */}
-      <section className="lg:col-span-5 rounded-3xl card-floating-static p-5 flex flex-col justify-between">
+      <section className="lg:col-span-5 rounded-3xl apple-glass-static p-5 sm:p-6 flex flex-col justify-between">
         <div>
           <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-slate-100">
             <div>
@@ -186,7 +186,7 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
       </section>
 
       {/* RIGHT (60% -> 7 cols): Where Did The Solar Energy Go? */}
-      <section className="lg:col-span-7 rounded-3xl card-floating-static p-5 flex flex-col justify-between">
+      <section className="lg:col-span-7 rounded-3xl apple-glass-static p-5 sm:p-6 flex flex-col justify-between">
         <div>
           <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
             <div>

@@ -710,7 +710,7 @@ export const PerformanceTab: React.FC<PerformanceTabProps> = ({
 
   return (
     <div className="space-y-0">
-      <div className="rounded-3xl card-floating-static overflow-hidden">
+      <div className="rounded-3xl apple-glass-static overflow-hidden">
         <PerformanceControlHeader
           timescale={timescale}
           onChangeTimescale={onChangeTimescale}

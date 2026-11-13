@@ -145,7 +145,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="card-floating-static rounded-3xl overflow-hidden">
+      <div className="apple-glass-static rounded-3xl overflow-hidden">
         {/* TOP COCKPIT HEADER */}
         <div className="px-5 py-4 border-b border-slate-100 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3.5">
           <div className="flex items-start sm:items-center gap-3 min-w-0">
@@ -158,11 +158,11 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   Plant Physics, Utility &amp; System Control
                 </h2>
                 {savedToast ? (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-[11px] font-bold text-emerald-700">
+                  <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-[11px] font-bold text-emerald-700">
                     <Check className="w-3 h-3" /> Saved &amp; Propagated
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-50 border border-slate-200/80 text-[11px] font-semibold text-slate-600">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full apple-glass-pill text-[11px] font-semibold text-slate-700 shadow-2xs">
                     <span className={`h-1.5 w-1.5 rounded-full ${syncMeta.sseConnected ? 'bg-emerald-500' : 'bg-amber-500'}`} />
                     {syncMeta.sseConnected ? `Live · ${syncMeta.syncedAtIstLabel || 'Synced'}` : 'Reconnecting SSE'}
                   </span>
@@ -176,7 +176,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
           <div className="flex flex-wrap items-center gap-2">
             {/* Sliding Segmented Workspace Bar */}
-            <div className="inline-flex flex-wrap items-center rounded-xl bg-slate-100 p-1 gap-0.5">
+            <div className="inline-flex flex-wrap items-center rounded-2xl apple-glass-pill p-1 gap-0.5 shadow-2xs">
               {WORKSPACE_TABS.map((t) => {
                 const active = workspaceTab === t.id;
                 return (
@@ -184,7 +184,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                     key={t.id}
                     type="button"
                     onClick={() => setWorkspaceTab(t.id)}
-                    className={`px-3 py-1.5 rounded-lg text-[12px] font-bold flex items-center gap-1.5 transition-all ${
+                    className={`px-3 py-1.5 rounded-xl text-[12px] font-bold flex items-center gap-1.5 transition-all ${
                       active
                         ? 'bg-white text-slate-900 shadow-xs'
                         : 'text-slate-500 hover:text-slate-800'
@@ -200,7 +200,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             <button
               type="button"
               onClick={handleExportJson}
-              className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-[12px] font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5"
+              className="px-3.5 py-1.5 rounded-xl apple-glass-pill text-[12px] font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1.5 shadow-2xs"
             >
               <Download className="w-3.5 h-3.5" /> Export
             </button>

@@ -190,14 +190,14 @@ export const PerformanceControlHeader: React.FC<PerformanceControlHeaderProps> =
       <div className="flex items-center justify-between gap-3">
         <div
           ref={trackRef}
-          className="relative inline-flex items-center p-1 rounded-xl bg-slate-100/85 border border-slate-200/70 select-none"
+          className="relative inline-flex items-center p-1 rounded-2xl apple-glass-pill select-none shadow-2xs"
           role="tablist"
           aria-label="Performance Timescale"
         >
           {sliderStyle.ready && (
             <div
               aria-hidden="true"
-              className="absolute top-1 bottom-1 rounded-lg bg-white shadow-xs border border-slate-200/60 pointer-events-none"
+              className="absolute top-1 bottom-1 rounded-xl bg-white shadow-xs border border-white/90 pointer-events-none"
               style={{
                 width: `${sliderStyle.width}px`,
                 transform: `translateX(${sliderStyle.left - 4}px)`,
@@ -266,7 +266,7 @@ export const PerformanceControlHeader: React.FC<PerformanceControlHeaderProps> =
         {/* Contextual Date / Week / Month / Year Stepper */}
         {timescale === 'day' && (
           <div className="flex items-center gap-1.5 flex-wrap">
-            <div ref={datePopoverRef} className="relative inline-flex items-center rounded-xl border border-slate-200/80 bg-slate-50/70 p-0.5">
+            <div ref={datePopoverRef} className="relative inline-flex items-center rounded-2xl apple-glass-pill p-0.5 shadow-2xs">
               <button
                 type="button"
                 disabled={!canGoPrevDay}

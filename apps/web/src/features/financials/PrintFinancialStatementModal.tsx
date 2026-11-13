@@ -43,12 +43,12 @@ export const PrintFinancialStatementModal: React.FC<PrintFinancialStatementModal
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 print:bg-white print:p-0"
+      className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 print:bg-white print:p-0"
       role="dialog"
       aria-modal="true"
       aria-label="Printable Solar Financial Statement"
     >
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-2xl w-full max-h-[88vh] overflow-y-auto print:shadow-none print:border-0 print:max-h-none">
+      <div className="bg-white/95 backdrop-blur-2xl rounded-3xl border border-white/80 shadow-2xl max-w-2xl w-full max-h-[88vh] overflow-y-auto print:shadow-none print:border-0 print:max-h-none">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3 sticky top-0 bg-white z-10 print:hidden">
           <div>
             <h3 className="text-sm font-bold text-slate-900">Financial Return & DISCOM Statement</h3>
