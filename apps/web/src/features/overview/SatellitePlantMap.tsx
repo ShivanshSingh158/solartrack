@@ -64,10 +64,10 @@ export const SatellitePlantMap: React.FC<SatellitePlantMapProps> = ({
   }, [coords.lat, coords.lon]);
 
   return (
-    <div className="rounded-3xl overflow-hidden relative h-full min-h-[296px] card-floating-static !bg-slate-950 border border-slate-200/90 flex flex-col isolate">
+    <div className="rounded-3xl overflow-hidden relative h-full min-h-[296px] apple-glass-static !bg-slate-950 border border-white/80 shadow-[0_10px_30px_-4px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.8)] flex flex-col isolate">
       <div className="absolute top-3 left-3 z-20 flex items-center pointer-events-none">
-        <div className="px-3 py-1 rounded-full bg-slate-950/85 backdrop-blur-md shadow-xs flex items-center space-x-1.5 pointer-events-auto border border-white/20">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+        <div className="px-3.5 py-1.5 rounded-full apple-glass-dark flex items-center space-x-2 pointer-events-auto">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399] animate-pulse" />
           <span className="font-bold text-[11px] text-white tracking-wide">Solar Satellite</span>
         </div>
       </div>
@@ -80,7 +80,7 @@ export const SatellitePlantMap: React.FC<SatellitePlantMapProps> = ({
           }
           onOpenLocationEdit?.();
         }}
-        className="absolute top-3 right-3 z-20 px-3 py-1 rounded-full bg-slate-950/85 hover:bg-slate-900 backdrop-blur-md shadow-xs flex items-center space-x-1.5 border border-white/20 hover:border-sky-400 text-white hover:text-sky-300 text-[11px] font-bold tracking-wide transition cursor-pointer select-none group"
+        className="absolute top-3 right-3 z-20 px-3.5 py-1.5 rounded-full apple-glass-dark hover:border-sky-400/60 text-white hover:text-sky-300 text-[11px] font-bold tracking-wide transition cursor-pointer select-none group flex items-center space-x-1.5"
         title="Locate array coordinates on rooftop satellite"
       >
         <Crosshair className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" strokeWidth={2} />

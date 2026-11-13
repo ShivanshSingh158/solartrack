@@ -205,18 +205,18 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col bg-white rounded-3xl shadow-2xl border border-slate-200/90 overflow-hidden card-floating-elevation">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/80 overflow-hidden">
         {/* Sticky Header */}
-        <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70 shrink-0">
+        <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between apple-glass-float shrink-0">
           <div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10B981] animate-pulse" />
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
                 End-of-Day Performance Audit
               </span>
-              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                Inverter & Weather Verified
+              <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50/80 px-2.5 py-0.5 rounded-full border border-emerald-200/60 shadow-2xs">
+                Inverter &amp; Weather Verified
               </span>
             </div>
             <h2 className="text-xl font-black text-slate-900 mt-0.5 tracking-tight flex items-center gap-2">
@@ -228,7 +228,7 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
             <button
               type="button"
               onClick={handleShare}
-              className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-white border border-slate-200/80 transition cursor-pointer"
+              className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-white border border-slate-200/80 transition cursor-pointer shadow-2xs"
               title="Share report summary"
             >
               <Share2 className="w-4 h-4" />
@@ -236,7 +236,7 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-white border border-slate-200/80 transition cursor-pointer"
+              className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-white border border-slate-200/80 transition cursor-pointer shadow-2xs"
               title="Close report"
             >
               <X className="w-4 h-4" />
@@ -245,30 +245,30 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
         </div>
 
         {/* Navigation Tabs */}
-        <div className="px-6 pt-3 pb-2 border-b border-slate-100 flex gap-2 shrink-0 bg-white">
+        <div className="px-6 py-2.5 border-b border-slate-100 flex gap-2 shrink-0 bg-slate-50/60 backdrop-blur-md">
           <button
             type="button"
             onClick={() => setActiveTab('audit')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+            className={`px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
               activeTab === 'audit'
                 ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
             }`}
           >
-            Overview & Solar Curve
+            Overview &amp; Solar Curve
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('dips')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+            className={`px-4 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'dips'
                 ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
             }`}
           >
-            <span>Dips & Anomalies</span>
+            <span>Dips &amp; Anomalies</span>
             {dips.length > 0 && (
-              <span className="px-1.5 py-0.2 bg-amber-500 text-white text-[10px] rounded-full font-bold">
+              <span className="px-1.5 py-0.2 bg-amber-500 text-white text-[10px] rounded-full font-bold shadow-xs">
                 {dips.length}
               </span>
             )}
@@ -276,13 +276,13 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('health')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+            className={`px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
               activeTab === 'health'
                 ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
             }`}
           >
-            Hardware & Health Audit
+            Hardware &amp; Grid Health
           </button>
         </div>
 
@@ -556,7 +556,7 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
                 dips.map((dip) => (
                   <div
                     key={dip.id}
-                    className="p-4.5 rounded-2xl bg-white border border-slate-200/80 space-y-2 card-floating-elevation"
+                    className="p-4.5 rounded-2xl apple-glass-card space-y-2"
                   >
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <div className="flex items-center gap-2">

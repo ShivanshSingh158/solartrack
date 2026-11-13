@@ -8,18 +8,18 @@ const CardSourceCue: React.FC<{
 }> = ({ kind, label }) => {
   const dotClass =
     kind === 'confirmed'
-      ? 'bg-emerald-500'
+      ? 'bg-emerald-500 shadow-[0_0_6px_#10B981]'
       : kind === 'estimated'
-      ? 'bg-amber-500'
+      ? 'bg-amber-500 shadow-[0_0_6px_#F59E0B]'
       : 'bg-slate-400';
   const textClass =
     kind === 'confirmed'
-      ? 'text-emerald-700'
+      ? 'text-emerald-800 bg-emerald-50/80 border-emerald-200/60'
       : kind === 'estimated'
-      ? 'text-amber-700'
-      : 'text-slate-500';
+      ? 'text-amber-900 bg-amber-50/80 border-amber-200/60'
+      : 'text-slate-600 bg-slate-50/80 border-slate-200/60';
   return (
-    <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold whitespace-nowrap shrink-0 ${textClass}`}>
+    <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10.5px] font-semibold whitespace-nowrap shrink-0 ${textClass}`}>
       <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotClass}`} />
       <span>{label}</span>
     </span>
@@ -158,10 +158,10 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* CARD 1: TODAY */}
         <div
-          className={`p-5 card-floating-elevation flex flex-col justify-between min-h-[158px] ${
+          className={`p-5 apple-glass-card rounded-2xl flex flex-col justify-between min-h-[162px] ${
             isTodayConfirmed
               ? ''
-              : '!bg-amber-50/30 !border-dashed !border-amber-300/90 hover:!border-amber-400'
+              : '!bg-amber-50/40 !border-dashed !border-amber-300/90 hover:!border-amber-400'
           }`}
         >
           <div className="flex items-center justify-between gap-2 min-w-0">
@@ -191,10 +191,12 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
             </div>
 
             <div className="mt-2.5 flex items-center gap-2.5">
-              <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div className="flex-1 h-2 rounded-full bg-slate-100/90 border border-slate-200/50 p-0.5 overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${
-                    isTodayConfirmed ? 'bg-emerald-500' : 'bg-amber-500'
+                    isTodayConfirmed
+                      ? 'bg-gradient-to-r from-emerald-400 to-emerald-500 shadow-xs'
+                      : 'bg-gradient-to-r from-amber-400 to-amber-500 shadow-xs'
                   }`}
                   style={{ width: `${todayProgressPct}%` }}
                 />
@@ -205,7 +207,7 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
             </div>
           </div>
 
-          <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-500">
+          <div className="pt-2.5 border-t border-slate-100/80 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-500">
             <span className="truncate">
               {todayHardwarePeak
                 ? `Peak ${todayHardwarePeak.peakKw.toFixed(2)} kW @ ${todayHardwarePeak.peakTimeLabel}`
@@ -219,10 +221,10 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
 
         {/* CARD 2: YESTERDAY */}
         <div
-          className={`p-5 card-floating-elevation flex flex-col justify-between min-h-[158px] ${
+          className={`p-5 apple-glass-card rounded-2xl flex flex-col justify-between min-h-[162px] ${
             isYesterdayConfirmed
               ? ''
-              : '!bg-amber-50/30 !border-dashed !border-amber-300/90 hover:!border-amber-400'
+              : '!bg-amber-50/40 !border-dashed !border-amber-300/90 hover:!border-amber-400'
           }`}
         >
           <div className="flex items-center justify-between gap-2 min-w-0">
@@ -252,9 +254,9 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
             </div>
 
             <div className="mt-2.5 flex items-center gap-2.5">
-              <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div className="flex-1 h-2 rounded-full bg-slate-100/90 border border-slate-200/50 p-0.5 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                  className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500 shadow-xs transition-all duration-500"
                   style={{ width: `${Math.min(100, Math.round((yesterdayConfirmedYield / Math.max(0.5, yesterdayEstYield)) * 100))}%` }}
                 />
               </div>
@@ -264,7 +266,7 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
             </div>
           </div>
 
-          <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-500">
+          <div className="pt-2.5 border-t border-slate-100/80 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-500">
             <span className="truncate">
               {yesterdayPeakInfo
                 ? `Peak ${yesterdayPeakInfo.peakKw.toFixed(2)} kW @ ${yesterdayPeakInfo.peakTimeLabel}`
@@ -277,7 +279,7 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
         </div>
 
         {/* CARD 3: CURRENT MONTH MTD */}
-        <div className="p-5 card-floating-elevation flex flex-col justify-between min-h-[158px]">
+        <div className="p-5 apple-glass-card rounded-2xl flex flex-col justify-between min-h-[162px]">
           <div className="flex items-center justify-between gap-1.5 min-w-0">
             <span className="text-slate-400 font-semibold tracking-wider text-[11px] uppercase whitespace-nowrap">
               THIS MONTH ({istNow.monthUpper})
@@ -300,9 +302,9 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
               </span>
             </div>
             <div className="mt-2.5 flex items-center gap-2.5">
-              <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div className="flex-1 h-2 rounded-full bg-slate-100/90 border border-slate-200/50 p-0.5 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-sky-500 transition-all duration-500"
+                  className="h-full rounded-full bg-gradient-to-r from-sky-400 to-sky-500 shadow-xs transition-all duration-500"
                   style={{ width: `${snap.month.progressPctOfMonth}%` }}
                 />
               </div>
@@ -312,7 +314,7 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
             </div>
           </div>
 
-          <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-500">
+          <div className="pt-2.5 border-t border-slate-100/80 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-500">
             <span className="truncate">Avg: {monthHeadlineAvgDaily.toFixed(1)} kWh/day</span>
             <span className="text-slate-400 font-medium text-[11px] shrink-0 tabular-nums">
               Proj ~{snap.month.projectedKwh} kWh
@@ -321,7 +323,7 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
         </div>
 
         {/* CARD 4: LIFETIME TOTAL */}
-        <div className="p-5 card-floating-elevation flex flex-col justify-between min-h-[158px]">
+        <div className="p-5 apple-glass-card rounded-2xl flex flex-col justify-between min-h-[162px]">
           <div className="flex items-center justify-between gap-1.5 min-w-0">
             <span className="text-slate-400 font-semibold tracking-wider text-[11px] uppercase whitespace-nowrap">
               LIFETIME TOTAL
@@ -347,7 +349,7 @@ export const OverviewKpiStrip: React.FC<OverviewKpiStripProps> = ({
             </div>
           </div>
 
-          <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-500">
+          <div className="pt-2.5 border-t border-slate-100/80 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-500">
             <span className="truncate">Commissioned 3.27 kWp</span>
             <span className="text-emerald-700 font-semibold text-[11px] shrink-0">
               Clean Solar Power

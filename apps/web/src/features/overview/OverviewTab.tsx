@@ -597,9 +597,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
 
       {/* Sunset Solar Report Banner - Triggered at dusk/standby */}
       {(isPostSunset || isNight || isPreSunrise) && effectiveTodayYield > 0.05 && (
-        <div className="p-4 sm:p-4.5 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-slate-700/60 card-floating-elevation">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center shrink-0">
+        <div className="p-4 sm:p-5 rounded-3xl apple-glass-dark text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-white/15 shadow-xl relative overflow-hidden">
+          <div className="absolute -left-10 -top-10 w-40 h-40 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="flex items-center gap-3.5 relative z-10">
+            <div className="w-10 h-10 rounded-2xl bg-amber-400/20 text-amber-300 flex items-center justify-center shrink-0 border border-amber-300/20 shadow-[0_0_12px_rgba(251,191,36,0.2)]">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
@@ -623,7 +624,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               setReportYieldKwh(effectiveTodayYield);
               setIsReportCardOpen(true);
             }}
-            className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition cursor-pointer shrink-0 text-center shadow-xs inline-flex items-center justify-center gap-1.5"
+            className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition cursor-pointer shrink-0 text-center shadow-xs inline-flex items-center justify-center gap-1.5 relative z-10"
           >
             <FileText className="w-3.5 h-3.5" />
             <span>View Daily Report</span>

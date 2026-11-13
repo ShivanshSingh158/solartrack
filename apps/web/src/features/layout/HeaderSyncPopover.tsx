@@ -94,10 +94,12 @@ export const HeaderSyncPopover: React.FC<HeaderSyncPopoverProps> = ({
   return (
     <div className="relative" ref={syncRef}>
       <div
-        className={`inline-flex items-center h-8 rounded-xl border shadow-2xs transition-colors ${
+        className={`inline-flex items-center h-8 rounded-full border transition-all ${
           isGenerating
-            ? 'border-emerald-200/85 bg-emerald-50/70 text-emerald-900'
-            : 'border-slate-200/85 bg-white text-slate-700'
+            ? 'border-emerald-300/80 bg-emerald-500/10 text-emerald-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_2px_8px_rgba(16,185,129,0.12)] backdrop-blur-md'
+            : isNight
+              ? 'border-slate-200/80 bg-slate-100/70 text-slate-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-md'
+              : 'border-slate-200/80 bg-white/70 text-slate-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-md'
         }`}
       >
         <button
@@ -108,34 +110,34 @@ export const HeaderSyncPopover: React.FC<HeaderSyncPopoverProps> = ({
           }}
           aria-expanded={isSyncOpen}
           aria-haspopup="dialog"
-          className="flex items-center gap-2 h-full pl-3 pr-2.5 rounded-l-xl text-[11.5px] font-medium tracking-tight hover:bg-slate-100/60 transition-colors cursor-pointer whitespace-nowrap"
+          className="flex items-center gap-2 h-full pl-3 pr-2.5 rounded-l-full text-[11.5px] font-medium tracking-tight hover:bg-black/[0.03] transition-colors cursor-pointer whitespace-nowrap"
           title={syncStatusText || 'Telemetry & Sync Details'}
         >
           <span
-            className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+            className={`w-2 h-2 rounded-full shrink-0 ${
               isRefreshing
                 ? 'bg-sky-500 animate-ping'
                 : syncMeta?.inBackoff
-                  ? 'bg-amber-500'
+                  ? 'bg-amber-500 ring-2 ring-amber-400/30'
                   : isGenerating
-                    ? 'bg-emerald-500 shadow-[0_0_6px_#10B981] animate-pulse'
+                    ? 'bg-emerald-500 shadow-[0_0_8px_#10B981] animate-pulse ring-2 ring-emerald-400/30'
                     : isNight
-                      ? 'bg-slate-400'
-                      : 'bg-amber-500'
+                      ? 'bg-slate-400 ring-1 ring-slate-300'
+                      : 'bg-amber-500 ring-2 ring-amber-400/30'
             }`}
           />
-          <span className="hidden sm:inline tabular-nums">{syncPrimaryLabel}</span>
-          <span className="sm:hidden tabular-nums">{syncMobileLabel}</span>
+          <span className="hidden sm:inline tabular-nums font-semibold">{syncPrimaryLabel}</span>
+          <span className="sm:hidden tabular-nums font-semibold">{syncMobileLabel}</span>
         </button>
 
-        <span aria-hidden="true" className="w-px h-4 bg-slate-200/90 shrink-0" />
+        <span aria-hidden="true" className="w-px h-3.5 bg-slate-300/60 shrink-0" />
 
         <button
           type="button"
           onClick={onRefresh}
           disabled={isRefreshing}
           aria-label="Sync Weather and Waaree Telemetry"
-          className="flex items-center justify-center h-full pl-2 pr-2.5 rounded-r-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100/60 transition-colors cursor-pointer disabled:opacity-50"
+          className="flex items-center justify-center h-full pl-2 pr-2.5 rounded-r-full text-slate-500 hover:text-slate-900 hover:bg-black/[0.03] transition-colors cursor-pointer disabled:opacity-50"
           title="Sync Weather + Waaree now"
         >
           <RotateCw

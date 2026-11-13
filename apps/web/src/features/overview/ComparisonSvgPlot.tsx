@@ -761,7 +761,7 @@ export const ComparisonSvgPlot: React.FC<ComparisonSvgPlotProps> = ({
 
     {hoverDetails && (
       <div
-        className="pointer-events-none absolute top-2 z-20 w-[216px] rounded-2xl bg-slate-900/95 backdrop-blur-md text-white px-3.5 py-2.5 shadow-xl border border-white/10 text-[11px]"
+        className="pointer-events-none absolute top-2 z-20 w-[220px] rounded-2xl apple-glass-dark text-white px-3.5 py-2.5 shadow-2xl border border-white/20 text-[11px]"
         style={{
           left: `${
             hoverDetails.x + 232 <= svgW

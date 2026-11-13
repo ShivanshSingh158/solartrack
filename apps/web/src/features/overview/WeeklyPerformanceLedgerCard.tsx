@@ -89,7 +89,7 @@ export const WeeklyPerformanceLedgerCard: React.FC<WeeklyPerformanceLedgerCardPr
   const maxDayKwh = Math.max(...effectiveEntries.map((e) => Number(e.realKwh) || 0), 13.5);
 
   return (
-    <div className="w-full card-floating-static p-5 flex flex-col justify-between space-y-4">
+    <div className="w-full apple-glass-static rounded-3xl p-5 sm:p-6 flex flex-col justify-between space-y-4">
       {/* Top Header Row - Apple Clean Typography (No heavy pills) */}
       <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
         <div className="flex items-center gap-3">
@@ -152,10 +152,10 @@ export const WeeklyPerformanceLedgerCard: React.FC<WeeklyPerformanceLedgerCardPr
                 else if (onSelectDate) onSelectDate(item.ymd);
                 else onNavigateToPerformance(item.ymd);
               }}
-              className={`p-3.5 rounded-2xl border transition-all duration-150 cursor-pointer flex flex-col justify-between space-y-2.5 select-none ${
+              className={`p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-2.5 select-none ${
                 isToday
-                  ? 'bg-amber-50/30 border-amber-300 shadow-xs ring-1 ring-amber-300/40 hover:bg-amber-50/50'
-                  : 'bg-white hover:bg-slate-50/60 border-slate-200/80 hover:border-slate-300 shadow-xs hover:shadow-sm'
+                  ? 'bg-amber-50/40 border-amber-300 shadow-xs ring-1 ring-amber-300/40 hover:bg-amber-50/60'
+                  : 'apple-glass-pill hover:bg-white border-slate-200/80 hover:border-slate-300 shadow-2xs hover:shadow-xs'
               }`}
             >
               {/* Day Header - Clean date label */}

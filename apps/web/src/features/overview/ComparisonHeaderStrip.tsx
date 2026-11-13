@@ -162,12 +162,12 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
       </div>
 
       <div className="flex items-center justify-between xl:justify-end gap-3 shrink-0 flex-wrap">
-        <div className="relative flex items-center rounded-xl border border-slate-200/90 bg-slate-50/70 p-0.5">
+        <div className="relative flex items-center rounded-2xl apple-glass-pill p-1 shadow-2xs">
           <button
             type="button"
             onClick={() => onStepDate(-1)}
             disabled={!canStepPrev}
-            className="p-1.5 rounded-lg text-slate-600 hover:bg-white hover:text-slate-900 disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer"
+            className="p-1.5 rounded-xl text-slate-600 hover:bg-white hover:text-slate-900 disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer"
             aria-label="Previous date"
             title={canStepPrev ? formatIndianDate(shiftYmdDays(selectedYmd, -1)) : 'Commissioning date reached'}
           >
@@ -178,7 +178,7 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
             type="button"
             data-calendar-trigger="true"
             onClick={onToggleCalendar}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-white text-[12px] font-bold text-slate-800 transition cursor-pointer tabular-nums"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl hover:bg-white/90 text-[12px] font-bold text-slate-800 transition cursor-pointer tabular-nums"
             title="Open Indian calendar picker (28 Oct 2026 – Today)"
           >
             <CalendarIcon className="w-3.5 h-3.5 text-slate-500" />
@@ -195,7 +195,7 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
             type="button"
             onClick={() => onStepDate(1)}
             disabled={!canStepNext}
-            className="p-1.5 rounded-lg text-slate-600 hover:bg-white hover:text-slate-900 disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer"
+            className="p-1.5 rounded-xl text-slate-600 hover:bg-white hover:text-slate-900 disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer"
             aria-label="Next date"
             title={canStepNext ? formatIndianDate(shiftYmdDays(selectedYmd, 1)) : 'Already at Today'}
           >
@@ -219,20 +219,20 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
         <button
           type="button"
           onClick={() => (onOpenDailyReport ? onOpenDailyReport(selectedYmd) : undefined)}
-          className="text-[12px] font-semibold text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1 transition cursor-pointer whitespace-nowrap"
+          className="text-[11.5px] font-semibold text-emerald-800 hover:text-emerald-950 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl apple-glass-pill transition cursor-pointer whitespace-nowrap shadow-2xs hover:shadow-xs"
           title="Open complete daily performance audit & dip analysis report"
         >
-          <FileText className="w-3.5 h-3.5" />
+          <FileText className="w-3.5 h-3.5 text-emerald-600" />
           <span>Daily Report</span>
         </button>
 
         <button
           type="button"
           onClick={() => onNavigateToPerformance(selectedYmd)}
-          className="text-[12px] font-semibold text-sky-700 hover:text-sky-800 inline-flex items-center gap-0.5 transition cursor-pointer whitespace-nowrap"
+          className="text-[11.5px] font-semibold text-sky-800 hover:text-sky-950 inline-flex items-center gap-1 px-3 py-1.5 rounded-2xl apple-glass-pill transition cursor-pointer whitespace-nowrap shadow-2xs hover:shadow-xs"
         >
           <span>5-Min History</span>
-          <ArrowUpRight className="w-3.5 h-3.5" />
+          <ArrowUpRight className="w-3.5 h-3.5 text-sky-600" />
         </button>
       </div>
     </div>

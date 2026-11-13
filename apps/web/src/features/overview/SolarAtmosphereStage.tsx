@@ -166,7 +166,7 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
     <div className="w-full select-none font-sans">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_310px] gap-4 min-h-[296px]">
         <div
-          className={`rounded-3xl relative overflow-hidden flex flex-col justify-between p-6 sm:p-7 card-floating-static transition-all duration-300 min-h-[296px] ${stateData.bgClass}`}
+          className={`rounded-3xl relative overflow-hidden flex flex-col justify-between p-6 sm:p-7 apple-glass-static transition-all duration-300 min-h-[296px] ${stateData.bgClass}`}
         >
           <svg
             className="absolute bottom-0 left-0 right-0 w-full h-[55px] pointer-events-none opacity-10"
@@ -265,12 +265,12 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
                   </div>
                 </div>
 
-                <div className={`flex-shrink-0 backdrop-blur-md rounded-[12px] px-[18px] py-[8px] shadow-xs text-center ${
+                <div className={`flex-shrink-0 backdrop-blur-md rounded-2xl px-4 py-2 shadow-sm text-center transition-all ${
                   isDarkTheme
-                    ? 'bg-white/10 border border-white/15'
-                    : 'bg-white/60 border border-white/80'
+                    ? 'apple-glass-dark'
+                    : 'apple-glass-pill'
                 }`}>
-                  <span className={`text-[17px] font-bold tracking-tight whitespace-nowrap ${stateData.primaryColor}`}>
+                  <span className={`text-[16px] font-bold tracking-tight whitespace-nowrap ${stateData.primaryColor}`}>
                     {stateData.cleanStatusText}
                   </span>
                 </div>
@@ -336,13 +336,13 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
               </div>
 
               <div>
-                <div className="relative h-[6px] w-full rounded-full flex bg-slate-900/15 overflow-visible">
-                  <div className="w-full h-full rounded-full bg-gradient-to-r from-slate-400 via-amber-400 to-emerald-500 opacity-80" />
+                <div className="relative h-[7px] w-full rounded-full flex bg-slate-900/10 shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] overflow-visible">
+                  <div className="w-full h-full rounded-full bg-gradient-to-r from-slate-400 via-amber-400 to-emerald-500 opacity-90" />
 
                   {showEstimatedMode && (
                     <div
                       style={{ left: `${modelSpectrumPercent}%` }}
-                      className={`absolute -top-[4px] -translate-x-1/2 w-[14px] h-[14px] rounded-full border-[2px] border-dashed shadow-xs transition-all duration-500 ${
+                      className={`absolute -top-[3.5px] -translate-x-1/2 w-[14px] h-[14px] rounded-full border-[2px] border-dashed shadow-xs transition-all duration-500 ${
                         isDarkTheme ? 'bg-slate-900 border-amber-400' : 'bg-white border-amber-700'
                       }`}
                       title={`Satellite estimate: ~${effectiveModelKw.toFixed(2)} kW`}
@@ -352,7 +352,7 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
                   {showHardwareLive && (
                     <div
                       style={{ left: `${spectrumPercent}%`, borderColor: '#10B981' }}
-                      className="absolute -top-[4px] -translate-x-1/2 w-[14px] h-[14px] rounded-full bg-white shadow-xs transition-all duration-500 border-[2.5px]"
+                      className="absolute -top-[3.5px] -translate-x-1/2 w-[14px] h-[14px] rounded-full bg-white shadow-sm transition-all duration-500 border-[2.5px] ring-2 ring-emerald-400/30"
                       title={`Live solar power: ${stateData.displayedKw.toFixed(2)} kW`}
                     />
                   )}
@@ -360,7 +360,7 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
                   {!showEstimatedMode && !showHardwareLive && (
                     <div
                       style={{ left: `${spectrumPercent}%`, borderColor: stateData.needleColor }}
-                      className="absolute -top-[4px] -translate-x-1/2 w-[14px] h-[14px] rounded-full bg-white shadow-xs transition-all duration-300 border-[2.5px]"
+                      className="absolute -top-[3.5px] -translate-x-1/2 w-[14px] h-[14px] rounded-full bg-white shadow-xs transition-all duration-300 border-[2.5px]"
                       title="Standby"
                     />
                   )}
@@ -382,10 +382,10 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
 
             <div className="md:col-span-5">
               <div
-                className={`rounded-[16px] p-[16px_18px] min-h-[156px] flex flex-col justify-between relative transition-all duration-300 ${
+                className={`rounded-2xl p-[16px_18px] min-h-[156px] flex flex-col justify-between relative transition-all duration-300 ${
                   isDarkTheme
-                    ? 'bg-slate-900/75 border border-slate-700/60 shadow-lg text-white backdrop-blur-md'
-                    : 'bg-white/90 border border-slate-200/80 shadow-xs text-slate-900 backdrop-blur-md'
+                    ? 'apple-glass-dark text-white'
+                    : 'apple-glass-card text-slate-900'
                 }`}
               >
                 <div className={`flex items-center justify-between gap-2 pb-3 border-b ${

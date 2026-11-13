@@ -180,14 +180,10 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
       <div className="relative isolate flex items-center justify-between gap-4 sm:gap-6 w-full h-[54px] sm:h-[56px] rounded-full px-5 sm:px-6 transition-all duration-300">
         <div
           aria-hidden="true"
-          className={`absolute inset-0 -z-10 overflow-hidden rounded-full transition-all duration-300 border ${
-            isScrolled ? 'bg-white/90 border-slate-200/95' : 'bg-white/95 border-slate-200/90'
-          }`}
+          className="absolute inset-0 -z-10 overflow-hidden rounded-full transition-all duration-300 apple-glass-float"
           style={{
-            backdropFilter: isScrolled ? 'blur(24px) saturate(1.9)' : 'blur(20px) saturate(1.8)',
-            WebkitBackdropFilter: isScrolled ? 'blur(24px) saturate(1.9)' : 'blur(20px) saturate(1.8)',
             boxShadow: isScrolled
-              ? 'inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 12px 36px -6px rgba(15, 23, 42, 0.14)'
+              ? 'inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 14px 40px -6px rgba(15, 23, 42, 0.12)'
               : 'inset 0 1px 0 rgba(255, 255, 255, 1), 0 8px 30px -4px rgba(15, 23, 42, 0.06)',
           }}
         />
@@ -212,7 +208,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         >
           <div
             aria-hidden="true"
-            className="absolute top-0 left-0 rounded-full bg-slate-100/90 border border-slate-200/80 shadow-2xs pointer-events-none will-change-transform"
+            className="absolute top-0 left-0 rounded-full bg-white/95 border border-white/90 shadow-[0_2px_8px_rgba(15,23,42,0.06),0_1px_2px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(255,255,255,1)] pointer-events-none will-change-transform"
             style={{
               transform: `translate3d(${indicatorStyle.left}px, ${indicatorStyle.top}px, 0)`,
               width: `${indicatorStyle.width}px`,

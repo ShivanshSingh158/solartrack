@@ -30,7 +30,7 @@ export const TomorrowOutlookCard: React.FC<TomorrowOutlookCardProps> = ({
     : `${tomorrowMinTemp.toFixed(1)}° – ${tomorrowMaxTemp.toFixed(1)}°C`;
 
   return (
-    <div className="p-5 card-floating-static flex-1 flex flex-col justify-between space-y-3.5">
+    <div className="p-5 sm:p-6 apple-glass-card rounded-3xl !bg-amber-50/20 flex-1 flex flex-col justify-between space-y-3.5">
       {/* Card Header: Plain text, no pills */}
       <div className="pb-2.5 border-b border-slate-100 flex items-center justify-between gap-2">
         <div className="flex items-center space-x-2 min-w-0">
