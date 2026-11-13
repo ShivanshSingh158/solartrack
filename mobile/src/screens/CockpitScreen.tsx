@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
   },
   plantTitle: {
     fontSize: 15,
-    fontWeight: "800",
+    fontWeight: "600",
     color: "#0F172A",
     letterSpacing: -0.3,
   },
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
   },
   dateCapsuleText: {
     fontSize: 11,
-    fontWeight: "700",
+    fontWeight: "500",
     color: "#475569",
   },
   weatherPill: {
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
   },
   weatherPillText: {
     fontSize: 11,
-    fontWeight: "700",
+    fontWeight: "600",
     color: "#B45309",
     marginLeft: 4,
   },
@@ -377,19 +377,19 @@ const styles = StyleSheet.create({
   },
   actionTagText: {
     fontSize: 10,
-    fontWeight: "800",
+    fontWeight: "600",
     color: "#B45309",
     letterSpacing: 1,
     marginLeft: 4,
   },
   actionTime: {
     fontSize: 11,
-    fontWeight: "700",
+    fontWeight: "500",
     color: "#92400E",
   },
   actionTitle: {
-    fontSize: 16,
-    fontWeight: "800",
+    fontSize: 15,
+    fontWeight: "600",
     color: "#0F172A",
     marginBottom: 4,
   },
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
   },
   sectionHeading: {
     fontSize: 11,
-    fontWeight: "800",
+    fontWeight: "600",
     color: "#64748B",
     letterSpacing: 1.2,
     marginBottom: 10,
@@ -427,23 +427,24 @@ const styles = StyleSheet.create({
   },
   metricCardLabel: {
     fontSize: 10,
-    fontWeight: "700",
+    fontWeight: "500",
     color: "#64748B",
     letterSpacing: 0.5,
   },
   metricCardLabelHighlight: {
     color: "#B45309",
+    fontWeight: "600",
   },
   metricCardValue: {
-    fontSize: 20,
-    fontWeight: "900",
+    fontSize: 22,
+    fontWeight: "400",
     color: "#0F172A",
     marginTop: 4,
     letterSpacing: -0.5,
   },
   metricCardUnit: {
     fontSize: 10,
-    fontWeight: "600",
+    fontWeight: "400",
     color: "#64748B",
     marginTop: -2,
   },
@@ -458,7 +459,7 @@ const styles = StyleSheet.create({
   },
   metricEarningText: {
     fontSize: 11,
-    fontWeight: "800",
+    fontWeight: "600",
     color: "#059669",
   },
   reconciledPill: {
@@ -474,7 +475,7 @@ const styles = StyleSheet.create({
   },
   reconciledPillText: {
     fontSize: 11,
-    fontWeight: "600",
+    fontWeight: "500",
     color: "#065F46",
     marginLeft: 6,
   },
@@ -498,7 +499,7 @@ const styles = StyleSheet.create({
   },
   glassCardTitle: {
     fontSize: 13,
-    fontWeight: "700",
+    fontWeight: "600",
     color: "#0F172A",
     marginLeft: 6,
   },
@@ -510,7 +511,7 @@ const styles = StyleSheet.create({
   },
   scorePillText: {
     fontSize: 11,
-    fontWeight: "800",
+    fontWeight: "600",
     color: "#0284C7",
   },
   forecastKwhBadge: {
@@ -521,7 +522,7 @@ const styles = StyleSheet.create({
   },
   forecastKwhText: {
     fontSize: 11,
-    fontWeight: "800",
+    fontWeight: "600",
     color: "#B45309",
   },
   headlineText: {
@@ -542,7 +543,7 @@ const styles = StyleSheet.create({
   footerSubText: {
     fontSize: 11,
     color: "#64748B",
-    fontWeight: "500",
+    fontWeight: "400",
   },
   horizonRow: {
     flexDirection: "row",
@@ -562,11 +563,11 @@ const styles = StyleSheet.create({
   horizonDate: {
     fontSize: 10,
     color: "#64748B",
-    fontWeight: "600",
+    fontWeight: "400",
   },
   horizonKwh: {
     fontSize: 12,
-    fontWeight: "800",
+    fontWeight: "500",
     color: "#0F172A",
     marginTop: 2,
   },
@@ -592,7 +593,7 @@ const styles = StyleSheet.create({
   },
   historyJumpTitle: {
     fontSize: 13,
-    fontWeight: "700",
+    fontWeight: "600",
     color: "#0F172A",
   },
   historyJumpSub: {

@@ -157,18 +157,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   heroNumber: {
-    fontSize: 52,
-    fontWeight: "900",
+    fontSize: 54,
+    fontWeight: "300",
     color: "#0F172A",
-    letterSpacing: -1.5,
-    lineHeight: 56,
+    letterSpacing: -1,
+    lineHeight: 58,
     includeFontPadding: false,
   },
   heroSubLabel: {
-    fontSize: 11,
-    fontWeight: "700",
+    fontSize: 10,
+    fontWeight: "500",
     color: "#64748B",
-    letterSpacing: 2,
+    letterSpacing: 2.5,
     marginTop: 2,
   },
   pillMetaRow: {
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
   metricPillText: {
     fontSize: 11,
-    fontWeight: "700",
+    fontWeight: "600",
     color: "#B45309",
   },
   dotSeparator: {
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   secondaryMeta: {
     fontSize: 11,
     color: "#64748B",
-    fontWeight: "600",
+    fontWeight: "500",
   },
   threeColRow: {
     flexDirection: "row",
@@ -225,14 +225,14 @@ const styles = StyleSheet.create({
   colLabel: {
     fontSize: 11,
     color: "#64748B",
-    fontWeight: "600",
+    fontWeight: "400",
     letterSpacing: 0.3,
   },
   colValue: {
     fontSize: 16,
-    fontWeight: "800",
+    fontWeight: "600",
     color: "#0F172A",
-    marginTop: 3,
+    marginTop: 2,
   },
   colDivider: {
     width: 1,
