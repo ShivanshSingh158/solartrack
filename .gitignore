@@ -15,11 +15,11 @@ data/secrets/
 accounts.json
 token.txt
 
-# Runtime telemetry & weather JSON caches
-data/cache/
-day_raw_cache.json
-history_cache.json
-weather_history_cache.json
+# Runtime telemetry & weather JSON caches (allow seed baseline caches for tests/offline demo)
+data/cache/*
+!data/cache/day_raw_cache.json
+!data/cache/history_cache.json
+!data/cache/weather_history_cache.json
 
 # OS / editor noise
 .DS_Store

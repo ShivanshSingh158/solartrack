@@ -1,0 +1,1109 @@
+{
+  "1e2b2018-5a70-43e9-96a3-f4da846ea954_month_2026_11": [
+    {
+      "data": [
+        {
+          "index": 1,
+          "value": 11.399999999999999
+        },
+        {
+          "index": 2,
+          "value": 2
+        },
+        {
+          "index": 3,
+          "value": 11.900000000000002
+        },
+        {
+          "index": 4,
+          "value": 13.399999999999999
+        },
+        {
+          "index": 5,
+          "value": 12.099999999999994
+        },
+        {
+          "index": 6,
+          "value": 10.800000000000011
+        },
+        {
+          "index": 7,
+          "value": 11.199999999999989
+        },
+        {
+          "index": 8,
+          "value": 12.400000000000006
+        },
+        {
+          "index": 9,
+          "value": 10.200000000000003
+        },
+        {
+          "index": 10,
+          "value": 0
+        },
+        {
+          "index": 11,
+          "value": 9.700000000000017
+        },
+        {
+          "index": 12,
+          "value": 11.400000000000006
+        }
+      ],
+      "variable": "generation",
+      "miniData": []
+    },
+    {
+      "data": [
+        {
+          "index": 1,
+          "value": 0
+        },
+        {
+          "index": 2,
+          "value": 0
+        },
+        {
+          "index": 3,
+          "value": 0
+        },
+        {
+          "index": 4,
+          "value": 0
+        },
+        {
+          "index": 5,
+          "value": 0
+        },
+        {
+          "index": 6,
+          "value": 0
+        },
+        {
+          "index": 7,
+          "value": 0
+        },
+        {
+          "index": 8,
+          "value": 0
+        },
+        {
+          "index": 9,
+          "value": 0
+        },
+        {
+          "index": 10,
+          "value": 0
+        },
+        {
+          "index": 11,
+          "value": 0
+        },
+        {
+          "index": 12,
+          "value": 0
+        }
+      ],
+      "variable": "feedin",
+      "miniData": []
+    },
+    {
+      "data": [
+        {
+          "index": 1,
+          "value": 0
+        },
+        {
+          "index": 2,
+          "value": 0
+        },
+        {
+          "index": 3,
+          "value": 0
+        },
+        {
+          "index": 4,
+          "value": 0
+        },
+        {
+          "index": 5,
+          "value": 0
+        },
+        {
+          "index": 6,
+          "value": 0
+        },
+        {
+          "index": 7,
+          "value": 0
+        },
+        {
+          "index": 8,
+          "value": 0
+        },
+        {
+          "index": 9,
+          "value": 0
+        },
+        {
+          "index": 10,
+          "value": 0
+        },
+        {
+          "index": 11,
+          "value": 0
+        },
+        {
+          "index": 12,
+          "value": 0
+        }
+      ],
+      "variable": "gridConsumption",
+      "miniData": []
+    },
+    {
+      "data": [
+        {
+          "index": 1,
+          "value": 0
+        },
+        {
+          "index": 2,
+          "value": 0
+        },
+        {
+          "index": 3,
+          "value": 0
+        },
+        {
+          "index": 4,
+          "value": 0
+        },
+        {
+          "index": 5,
+          "value": 0
+        },
+        {
+          "index": 6,
+          "value": 0
+        },
+        {
+          "index": 7,
+          "value": 0
+        },
+        {
+          "index": 8,
+          "value": 0
+        },
+        {
+          "index": 9,
+          "value": 0
+        },
+        {
+          "index": 10,
+          "value": 0
+        },
+        {
+          "index": 11,
+          "value": 0
+        },
+        {
+          "index": 12,
+          "value": 0
+        }
+      ],
+      "variable": "loads",
+      "miniData": []
+    }
+  ],
+  "1e2b2018-5a70-43e9-96a3-f4da846ea954_year_2026_": [
+    {
+      "variable": "generation",
+      "data": [
+        {
+          "index": 1,
+          "value": 0
+        },
+        {
+          "index": 2,
+          "value": 0
+        },
+        {
+          "index": 3,
+          "value": 0
+        },
+        {
+          "index": 4,
+          "value": 0
+        },
+        {
+          "index": 5,
+          "value": 0
+        },
+        {
+          "index": 6,
+          "value": 0
+        },
+        {
+          "index": 7,
+          "value": 0
+        },
+        {
+          "index": 8,
+          "value": 0
+        },
+        {
+          "index": 9,
+          "value": 0
+        },
+        {
+          "index": 10,
+          "value": 17.6
+        },
+        {
+          "index": 11,
+          "value": 95.4
+        },
+        {
+          "index": 12,
+          "value": 0
+        }
+      ]
+    }
+  ],
+  "1e2b2018-5a70-43e9-96a3-f4da846ea954_month_2026_10": [
+    {
+      "data": [
+        {
+          "index": 1,
+          "value": 0
+        },
+        {
+          "index": 2,
+          "value": 0
+        },
+        {
+          "index": 3,
+          "value": 0
+        },
+        {
+          "index": 4,
+          "value": 0
+        },
+        {
+          "index": 5,
+          "value": 0
+        },
+        {
+          "index": 6,
+          "value": 0
+        },
+        {
+          "index": 7,
+          "value": 0
+        },
+        {
+          "index": 8,
+          "value": 0
+        },
+        {
+          "index": 9,
+          "value": 0
+        },
+        {
+          "index": 10,
+          "value": 0
+        },
+        {
+          "index": 11,
+          "value": 0
+        },
+        {
+          "index": 12,
+          "value": 0
+        },
+        {
+          "index": 13,
+          "value": 0
+        },
+        {
+          "index": 14,
+          "value": 0
+        },
+        {
+          "index": 15,
+          "value": 0
+        },
+        {
+          "index": 16,
+          "value": 0
+        },
+        {
+          "index": 17,
+          "value": 0
+        },
+        {
+          "index": 18,
+          "value": 0
+        },
+        {
+          "index": 19,
+          "value": 0
+        },
+        {
+          "index": 20,
+          "value": 0
+        },
+        {
+          "index": 21,
+          "value": 0
+        },
+        {
+          "index": 22,
+          "value": 0
+        },
+        {
+          "index": 23,
+          "value": 0
+        },
+        {
+          "index": 24,
+          "value": 0
+        },
+        {
+          "index": 25,
+          "value": 0
+        },
+        {
+          "index": 26,
+          "value": 0
+        },
+        {
+          "index": 27,
+          "value": 0
+        },
+        {
+          "index": 28,
+          "value": 0
+        },
+        {
+          "index": 29,
+          "value": 10.8
+        },
+        {
+          "index": 30,
+          "value": 2.6999999999999993
+        },
+        {
+          "index": 31,
+          "value": 4.100000000000001
+        }
+      ],
+      "variable": "generation",
+      "miniData": []
+    },
+    {
+      "data": [
+        {
+          "index": 1,
+          "value": 0
+        },
+        {
+          "index": 2,
+          "value": 0
+        },
+        {
+          "index": 3,
+          "value": 0
+        },
+        {
+          "index": 4,
+          "value": 0
+        },
+        {
+          "index": 5,
+          "value": 0
+        },
+        {
+          "index": 6,
+          "value": 0
+        },
+        {
+          "index": 7,
+          "value": 0
+        },
+        {
+          "index": 8,
+          "value": 0
+        },
+        {
+          "index": 9,
+          "value": 0
+        },
+        {
+          "index": 10,
+          "value": 0
+        },
+        {
+          "index": 11,
+          "value": 0
+        },
+        {
+          "index": 12,
+          "value": 0
+        },
+        {
+          "index": 13,
+          "value": 0
+        },
+        {
+          "index": 14,
+          "value": 0
+        },
+        {
+          "index": 15,
+          "value": 0
+        },
+        {
+          "index": 16,
+          "value": 0
+        },
+        {
+          "index": 17,
+          "value": 0
+        },
+        {
+          "index": 18,
+          "value": 0
+        },
+        {
+          "index": 19,
+          "value": 0
+        },
+        {
+          "index": 20,
+          "value": 0
+        },
+        {
+          "index": 21,
+          "value": 0
+        },
+        {
+          "index": 22,
+          "value": 0
+        },
+        {
+          "index": 23,
+          "value": 0
+        },
+        {
+          "index": 24,
+          "value": 0
+        },
+        {
+          "index": 25,
+          "value": 0
+        },
+        {
+          "index": 26,
+          "value": 0
+        },
+        {
+          "index": 27,
+          "value": 0
+        },
+        {
+          "index": 28,
+          "value": 0
+        },
+        {
+          "index": 29,
+          "value": 0
+        },
+        {
+          "index": 30,
+          "value": 0
+        },
+        {
+          "index": 31,
+          "value": 0
+        }
+      ],
+      "variable": "feedin",
+      "miniData": []
+    },
+    {
+      "data": [
+        {
+          "index": 1,
+          "value": 0
+        },
+        {
+          "index": 2,
+          "value": 0
+        },
+        {
+          "index": 3,
+          "value": 0
+        },
+        {
+          "index": 4,
+          "value": 0
+        },
+        {
+          "index": 5,
+          "value": 0
+        },
+        {
+          "index": 6,
+          "value": 0
+        },
+        {
+          "index": 7,
+          "value": 0
+        },
+        {
+          "index": 8,
+          "value": 0
+        },
+        {
+          "index": 9,
+          "value": 0
+        },
+        {
+          "index": 10,
+          "value": 0
+        },
+        {
+          "index": 11,
+          "value": 0
+        },
+        {
+          "index": 12,
+          "value": 0
+        },
+        {
+          "index": 13,
+          "value": 0
+        },
+        {
+          "index": 14,
+          "value": 0
+        },
+        {
+          "index": 15,
+          "value": 0
+        },
+        {
+          "index": 16,
+          "value": 0
+        },
+        {
+          "index": 17,
+          "value": 0
+        },
+        {
+          "index": 18,
+          "value": 0
+        },
+        {
+          "index": 19,
+          "value": 0
+        },
+        {
+          "index": 20,
+          "value": 0
+        },
+        {
+          "index": 21,
+          "value": 0
+        },
+        {
+          "index": 22,
+          "value": 0
+        },
+        {
+          "index": 23,
+          "value": 0
+        },
+        {
+          "index": 24,
+          "value": 0
+        },
+        {
+          "index": 25,
+          "value": 0
+        },
+        {
+          "index": 26,
+          "value": 0
+        },
+        {
+          "index": 27,
+          "value": 0
+        },
+        {
+          "index": 28,
+          "value": 0
+        },
+        {
+          "index": 29,
+          "value": 0
+        },
+        {
+          "index": 30,
+          "value": 0
+        },
+        {
+          "index": 31,
+          "value": 0
+        }
+      ],
+      "variable": "gridConsumption",
+      "miniData": []
+    },
+    {
+      "data": [
+        {
+          "index": 1,
+          "value": 0
+        },
+        {
+          "index": 2,
+          "value": 0
+        },
+        {
+          "index": 3,
+          "value": 0
+        },
+        {
+          "index": 4,
+          "value": 0
+        },
+        {
+          "index": 5,
+          "value": 0
+        },
+        {
+          "index": 6,
+          "value": 0
+        },
+        {
+          "index": 7,
+          "value": 0
+        },
+        {
+          "index": 8,
+          "value": 0
+        },
+        {
+          "index": 9,
+          "value": 0
+        },
+        {
+          "index": 10,
+          "value": 0
+        },
+        {
+          "index": 11,
+          "value": 0
+        },
+        {
+          "index": 12,
+          "value": 0
+        },
+        {
+          "index": 13,
+          "value": 0
+        },
+        {
+          "index": 14,
+          "value": 0
+        },
+        {
+          "index": 15,
+          "value": 0
+        },
+        {
+          "index": 16,
+          "value": 0
+        },
+        {
+          "index": 17,
+          "value": 0
+        },
+        {
+          "index": 18,
+          "value": 0
+        },
+        {
+          "index": 19,
+          "value": 0
+        },
+        {
+          "index": 20,
+          "value": 0
+        },
+        {
+          "index": 21,
+          "value": 0
+        },
+        {
+          "index": 22,
+          "value": 0
+        },
+        {
+          "index": 23,
+          "value": 0
+        },
+        {
+          "index": 24,
+          "value": 0
+        },
+        {
+          "index": 25,
+          "value": 0
+        },
+        {
+          "index": 26,
+          "value": 0
+        },
+        {
+          "index": 27,
+          "value": 0
+        },
+        {
+          "index": 28,
+          "value": 0
+        },
+        {
+          "index": 29,
+          "value": 0
+        },
+        {
+          "index": 30,
+          "value": 0
+        },
+        {
+          "index": 31,
+          "value": 0
+        }
+      ],
+      "variable": "loads",
+      "miniData": []
+    },
+    {
+      "data": [
+        {
+          "index": 1,
+          "value": 0
+        },
+        {
+          "index": 2,
+          "value": 0
+        },
+        {
+          "index": 3,
+          "value": 0
+        },
+        {
+          "index": 4,
+          "value": 0
+        },
+        {
+          "index": 5,
+          "value": 0
+        },
+        {
+          "index": 6,
+          "value": 0
+        },
+        {
+          "index": 7,
+          "value": 0
+        },
+        {
+          "index": 8,
+          "value": 0
+        },
+        {
+          "index": 9,
+          "value": 0
+        },
+        {
+          "index": 10,
+          "value": 0
+        },
+        {
+          "index": 11,
+          "value": 0
+        },
+        {
+          "index": 12,
+          "value": 0
+        },
+        {
+          "index": 13,
+          "value": 0
+        },
+        {
+          "index": 14,
+          "value": 0
+        },
+        {
+          "index": 15,
+          "value": 0
+        },
+        {
+          "index": 16,
+          "value": 0
+        },
+        {
+          "index": 17,
+          "value": 0
+        },
+        {
+          "index": 18,
+          "value": 0
+        },
+        {
+          "index": 19,
+          "value": 0
+        },
+        {
+          "index": 20,
+          "value": 0
+        },
+        {
+          "index": 21,
+          "value": 0
+        },
+        {
+          "index": 22,
+          "value": 0
+        },
+        {
+          "index": 23,
+          "value": 0
+        },
+        {
+          "index": 24,
+          "value": 0
+        },
+        {
+          "index": 25,
+          "value": 0
+        },
+        {
+          "index": 26,
+          "value": 0
+        },
+        {
+          "index": 27,
+          "value": 0
+        },
+        {
+          "index": 28,
+          "value": 0
+        },
+        {
+          "index": 29,
+          "value": 0
+        },
+        {
+          "index": 30,
+          "value": 0
+        },
+        {
+          "index": 31,
+          "value": 0
+        }
+      ],
+      "variable": "radiation",
+      "miniData": []
+    },
+    {
+      "data": [
+        {
+          "index": 1,
+          "value": 0
+        },
+        {
+          "index": 2,
+          "value": 0
+        },
+        {
+          "index": 3,
+          "value": 0
+        },
+        {
+          "index": 4,
+          "value": 0
+        },
+        {
+          "index": 5,
+          "value": 0
+        },
+        {
+          "index": 6,
+          "value": 0
+        },
+        {
+          "index": 7,
+          "value": 0
+        },
+        {
+          "index": 8,
+          "value": 0
+        },
+        {
+          "index": 9,
+          "value": 0
+        },
+        {
+          "index": 10,
+          "value": 0
+        },
+        {
+          "index": 11,
+          "value": 0
+        },
+        {
+          "index": 12,
+          "value": 0
+        },
+        {
+          "index": 13,
+          "value": 0
+        },
+        {
+          "index": 14,
+          "value": 0
+        },
+        {
+          "index": 15,
+          "value": 0
+        },
+        {
+          "index": 16,
+          "value": 0
+        },
+        {
+          "index": 17,
+          "value": 0
+        },
+        {
+          "index": 18,
+          "value": 0
+        },
+        {
+          "index": 19,
+          "value": 0
+        },
+        {
+          "index": 20,
+          "value": 0
+        },
+        {
+          "index": 21,
+          "value": 0
+        },
+        {
+          "index": 22,
+          "value": 0
+        },
+        {
+          "index": 23,
+          "value": 0
+        },
+        {
+          "index": 24,
+          "value": 0
+        },
+        {
+          "index": 25,
+          "value": 0
+        },
+        {
+          "index": 26,
+          "value": 0
+        },
+        {
+          "index": 27,
+          "value": 0
+        },
+        {
+          "index": 28,
+          "value": 0
+        },
+        {
+          "index": 29,
+          "value": 0
+        },
+        {
+          "index": 30,
+          "value": 0
+        },
+        {
+          "index": 31,
+          "value": 0
+        }
+      ],
+      "variable": "irradiation",
+      "miniData": []
+    }
+  ],
+  "1e2b2018-5a70-43e9-96a3-f4da846ea954_year_total_2026": 144.9,
+  "1e2b2018-5a70-43e9-96a3-f4da846ea954_month_2026_11_savedYmd": "2026-11-13",
+  "1e2b2018-5a70-43e9-96a3-f4da846ea954_year_months_2026": [
+    {
+      "index": 1,
+      "value": 0
+    },
+    {
+      "index": 2,
+      "value": 0
+    },
+    {
+      "index": 3,
+      "value": 0
+    },
+    {
+      "index": 4,
+      "value": 0
+    },
+    {
+      "index": 5,
+      "value": 0
+    },
+    {
+      "index": 6,
+      "value": 0
+    },
+    {
+      "index": 7,
+      "value": 0
+    },
+    {
+      "index": 8,
+      "value": 0
+    },
+    {
+      "index": 9,
+      "value": 0
+    },
+    {
+      "index": 10,
+      "value": 17.6
+    },
+    {
+      "index": 11,
+      "value": 127.3
+    },
+    {
+      "index": 12,
+      "value": 0
+    }
+  ]
+}
