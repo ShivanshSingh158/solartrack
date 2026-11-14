@@ -2,12 +2,14 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const solarCore = require('@solar-track/core');
 
-const ROOT = path.resolve(import.meta.dirname, '..', '..');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, '..', '..');
 
 function parseClockMin(t) {
   const m = String(t || '').match(/(?:T|\s)(\d{1,2}):(\d{2})/);

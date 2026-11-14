@@ -3,10 +3,12 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
-const ROOT_DIR = path.resolve(import.meta.dirname, "..", "..");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT_DIR = path.resolve(__dirname, "..", "..");
 const REAL_DATA_DIR = path.join(ROOT_DIR, "data");
 
 let tempDataDir = null;
