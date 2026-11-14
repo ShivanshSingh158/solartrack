@@ -31,8 +31,8 @@ jobs:
       - name: Strict TypeScript validation
         run: npm run typecheck
 
-      - name: Run automated test suites (unit, integration, e2e)
-        run: npm test
-
       - name: Build production bundle
         run: npm run build
+
+      - name: Run automated test suites (unit, integration, e2e)
+        run: npm test
