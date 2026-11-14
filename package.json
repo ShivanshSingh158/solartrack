@@ -14,7 +14,7 @@
     "build": "npm --prefix apps/web run build",
     "lint": "npm --prefix apps/web run lint",
     "typecheck": "npm --prefix apps/web run typecheck && npx --prefix apps/web tsc -p packages/solar-core/tsconfig.json --noEmit",
-    "test": "node --test tests/unit/*.test.mjs tests/integration/*.test.mjs tests/e2e/*.test.mjs",
+    "test": "node --test tests/unit/solarPhysics.test.mjs tests/unit/waterFillReconciler.test.mjs tests/integration/serverApi.test.mjs tests/e2e/matrixAndCalibration.test.mjs",
     "check": "npm run lint && npm run typecheck && npm run build",
     "mobile:start": "npm --prefix mobile run start",
     "mobile:android": "npm --prefix mobile run android",
