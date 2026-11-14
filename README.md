@@ -74,6 +74,30 @@ Standard solar monitoring portals suffer from critical operational defects:
 
 ---
 
+### 🥊 Problem vs. Solution: The 3-Card Reality
+
+| Challenge / Status Quo | Legacy Solar Cloud Portals | SolarTrack Architectural Solution |
+| :--- | :--- | :--- |
+| **1. The Blackout Data Loss Trap** | Wi-Fi cuts during storms cause cloud report APIs to drop daily bars, permanently deflating monthly yield by 15–30 kWh. | **Universal Water-Fill Engine**: Reads non-volatile inverter EEPROM registers (`EMonth` / `ETotal`) and proportionally reconstructs missing intervals with zero data loss ($\Delta E = 0$). |
+| **2. The Sensor Hardware Cost Trap** | Optical dust sensors and pyranometer irradiance meters cost \$1,500+ per rooftop installation. | **Sensorless Subcooling Astrophysics**: Models dew condensation and soiling cementation using ambient humidity, particulate matter, and nocturnal radiative sky cooling equations. |
+| **3. The Cognitive Fatigue Trap** | Industrial SCADA screens spam 40 uncalibrated charts, raw modbus registers, and incomprehensible error codes. | **Apple Precision Glass & SCORA Dial**: Luxury 270° radial tachometer, daylight atmospheric gradient light-fields, and automated plain-language Daily Dip Diagnosis reports. |
+
+---
+
+### 🛡️ Core Architectural Invariants
+
+SolarTrack enforces strict mathematical and runtime guarantees across the monorepo:
+
+| Domain | Invariant Rule | Architectural Enforcement |
+| :--- | :--- | :--- |
+| **Energy Conservation** | $\sum E_{\text{logged}} + \sum E_{\text{reconstructed}} \equiv E_{\text{EEPROM}}$ | `waterFillReconciler.ts` guarantees exact mathematical equivalence to physical meter counters. |
+| **Astrophysical Purity** | Clear-sky irradiance, sun vectors, and Fresnel IAM are side-effect-free. | `solarTruthEngine.ts` maintains zero async/network calls and pure deterministic floating-point outputs. |
+| **Timezone Determinism** | Strictly anchored to Indian Standard Time (`Asia/Kolkata` / UTC+05:30). | `istDate.ts` eradicates UTC midnight crossover off-by-one errors across leap years and day comparisons. |
+| **Site Scaling Bounds** | $k_{\text{Site}}$ calibration scaling factor strictly bounded ($0.85 \le k_{\text{Site}} \le 1.15$). | `siteCalibrator.ts` prevents uncalibrated runaway irradiance overestimation. |
+| **Subcooling Limits** | Radiative sky cooling cannot produce negative Kelvin temperatures ($T_{\text{sky}} > 0$). | `soilingModel.ts` clamps nocturnal blackbody radiation to thermodynamic physical bounds. |
+
+---
+
 ## 🌌 Core Physics & Astrophysics Simulation Engine
 
 Located in [`packages/solar-core/src/physics`](packages/solar-core/src/physics), the SolarTrack physics engine evaluates real-time telemetry against deterministic astronomical and thermodynamic laws.
