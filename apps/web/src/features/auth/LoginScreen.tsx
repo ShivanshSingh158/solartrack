@@ -81,19 +81,20 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
 
   return (
     <div
-      className={`min-h-screen w-full relative flex items-center justify-center p-4 sm:p-8 lg:p-12 overflow-hidden bg-gradient-to-br ${atmosphericTheme.gradient} text-slate-900 font-sans selection:bg-amber-500/20`}
+      className={`min-h-screen w-full relative flex items-center justify-center py-8 sm:py-12 px-6 sm:px-10 lg:px-14 xl:px-20 overflow-x-hidden bg-gradient-to-br ${atmosphericTheme.gradient} text-slate-900 font-sans selection:bg-amber-500/20`}
     >
       {/* Subtle organic light diffusions (soft, non-distracting) */}
-      <div className="absolute -top-32 -left-32 w-[600px] h-[600px] bg-amber-200/20 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute -bottom-32 right-10 w-[550px] h-[550px] bg-emerald-100/30 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute -top-32 -left-32 w-[650px] h-[650px] bg-amber-200/20 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute -bottom-32 right-10 w-[600px] h-[600px] bg-emerald-100/30 rounded-full blur-[150px] pointer-events-none" />
 
-      {/* Main Container */}
-      <div className="w-full max-w-5xl relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-        {/* Left Side: Editorial Solar Intelligence Showcase */}
-        <div className="lg:col-span-7 flex flex-col justify-center space-y-6 sm:space-y-8 pr-0 lg:pr-2">
+      {/* Main Container: Explicit 55% / 45% Split Architecture */}
+      <div className="w-full max-w-[1380px] relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14 xl:gap-20">
+        
+        {/* Left Side: 55% Column */}
+        <div className="w-full lg:w-[55%] flex flex-col justify-center space-y-6 sm:space-y-7">
           {/* Brand Header */}
           <div className="flex items-center gap-3.5">
-            <SolarTrackLogo size={48} className="shadow-md rounded-2xl" />
+            <SolarTrackLogo size={50} className="shadow-md rounded-2xl" />
             <div>
               <div className="text-2xl font-bold tracking-tight text-slate-900">
                 SolarTrack
@@ -106,31 +107,31 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
 
           {/* Headline */}
           <div className="space-y-3">
-            <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-slate-900 tracking-tight leading-[1.15]">
+            <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-black text-slate-900 tracking-tight leading-[1.12]">
               Track your solar energy in real time.
             </h1>
-            <p className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-lg">
+            <p className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-xl">
               See your daily power generation, savings, and solar system performance in one simple place.
             </p>
           </div>
 
-          {/* Clean, Human-Designed Solar Curve Card */}
+          {/* Clean, Full-Width Solar Curve Card */}
           <div
-            className="rounded-2xl p-6 sm:p-7 border border-slate-200/70 bg-white/80 shadow-lg shadow-slate-200/40 backdrop-blur-md space-y-4"
+            className="w-full rounded-3xl p-6 sm:p-8 border border-slate-200/80 bg-white/85 shadow-xl shadow-slate-200/40 backdrop-blur-md space-y-5"
           >
             {/* Header: Pure Typography, Zero Pills */}
-            <div className="flex items-center justify-between text-xs text-slate-500 pb-2 border-b border-slate-100">
-              <span className="font-semibold text-slate-800">
+            <div className="flex items-center justify-between text-xs text-slate-500 pb-2.5 border-b border-slate-100">
+              <span className="font-semibold text-slate-800 text-sm">
                 Today's Solar Power
               </span>
-              <span className="text-slate-500 font-medium">
+              <span className="text-slate-500 font-medium text-xs">
                 3.3 kW System
               </span>
             </div>
 
             {/* Precision SVG Solar Curve */}
             <div className="py-2">
-              <svg viewBox="0 0 500 145" className="w-full h-36 overflow-visible" fill="none">
+              <svg viewBox="0 0 520 145" className="w-full h-38 overflow-visible" fill="none">
                 <defs>
                   {/* Generation Area Gradient */}
                   <linearGradient id="curveFillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -149,16 +150,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 </defs>
 
                 {/* Subtle Baseline Grid */}
-                <line x1="20" y1="40" x2="480" y2="40" stroke="#F1F5F9" strokeWidth="1" strokeDasharray="3 3" />
-                <line x1="20" y1="80" x2="480" y2="80" stroke="#F1F5F9" strokeWidth="1" strokeDasharray="3 3" />
-                <line x1="20" y1="120" x2="480" y2="120" stroke="#E2E8F0" strokeWidth="1" />
+                <line x1="20" y1="40" x2="500" y2="40" stroke="#F1F5F9" strokeWidth="1" strokeDasharray="3 3" />
+                <line x1="20" y1="80" x2="500" y2="80" stroke="#F1F5F9" strokeWidth="1" strokeDasharray="3 3" />
+                <line x1="20" y1="120" x2="500" y2="120" stroke="#E2E8F0" strokeWidth="1" />
 
                 {/* Vertical Solar Noon Guide */}
-                <line x1="250" y1="26" x2="250" y2="120" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="2 2" />
+                <line x1="260" y1="26" x2="260" y2="120" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="2 2" />
 
                 {/* Clear Sky Theoretical Reference Curve */}
                 <path
-                  d="M 35 120 C 100 118, 160 26, 250 26 C 340 26, 400 118, 465 120"
+                  d="M 35 120 C 110 118, 170 26, 260 26 C 350 26, 410 118, 485 120"
                   stroke="#94A3B8"
                   strokeWidth="1.2"
                   strokeDasharray="4 4"
@@ -167,68 +168,71 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
 
                 {/* Shaded Area Under Curve */}
                 <path
-                  d="M 35 120 C 100 118, 165 32, 250 32 C 335 32, 400 118, 465 120 L 465 120 L 35 120 Z"
+                  d="M 35 120 C 110 118, 175 32, 260 32 C 345 32, 410 118, 485 120 L 485 120 L 35 120 Z"
                   fill="url(#curveFillGrad)"
                 />
 
                 {/* Real-world Generation Curve */}
                 <path
-                  d="M 35 120 C 100 118, 165 32, 250 32 C 335 32, 400 118, 465 120"
+                  d="M 35 120 C 110 118, 175 32, 260 32 C 345 32, 410 118, 485 120"
                   stroke="url(#curveLineGrad)"
                   strokeWidth="2.75"
                   strokeLinecap="round"
                 />
 
                 {/* Solar Noon Apex Marker */}
-                <circle cx="250" cy="32" r="3" fill="#D97706" />
+                <circle cx="260" cy="32" r="3.5" fill="#D97706" />
 
                 {/* Clean Sun Position Orb (No pills, no ping gimmicks) */}
-                <g transform={`translate(${atmosphericTheme.sunX}, ${atmosphericTheme.sunY})`}>
+                <g transform={`translate(${atmosphericTheme.sunX * 1.04}, ${atmosphericTheme.sunY})`}>
                   <circle cx="0" cy="0" r="12" fill={atmosphericTheme.sunColor} fillOpacity="0.18" />
                   <circle cx="0" cy="0" r="6" fill="#F59E0B" stroke="#FFFFFF" strokeWidth="2" />
                 </g>
 
                 {/* Minimalist Axis Timestamps */}
-                <text x="35" y="137" fill="#94A3B8" fontSize="10" fontWeight="500" textAnchor="middle">06:27 AM</text>
-                <text x="250" y="137" fill="#64748B" fontSize="10" fontWeight="600" textAnchor="middle">Peak Noon 11:53 AM</text>
-                <text x="465" y="137" fill="#94A3B8" fontSize="10" fontWeight="500" textAnchor="middle">05:19 PM</text>
+                <text x="35" y="137" fill="#94A3B8" fontSize="10.5" fontWeight="500" textAnchor="middle">06:27 AM</text>
+                <text x="260" y="137" fill="#64748B" fontSize="11" fontWeight="600" textAnchor="middle">Peak Noon 11:53 AM</text>
+                <text x="485" y="137" fill="#94A3B8" fontSize="10.5" fontWeight="500" textAnchor="middle">05:19 PM</text>
               </svg>
             </div>
 
             {/* Calm, Understated Baseline Note */}
-            <div className="pt-2 flex items-center justify-between text-[11px] text-slate-500">
+            <div className="pt-2 flex items-center justify-between text-xs text-slate-500">
               <span>Sunlight today: 10 hrs 52 mins</span>
-              <span>Connected to Inverter</span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                Connected to Inverter
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Clean Apple-Grade Authentication Pane */}
-        <div className="lg:col-span-5 flex justify-center">
+        {/* Right Side: 45% Column */}
+        <div className="w-full lg:w-[45%] flex items-center justify-center lg:justify-end">
           <div
-            className="w-full max-w-[400px] rounded-2xl p-7 sm:p-8 bg-white/90 border border-slate-200/80 shadow-xl shadow-slate-200/50 backdrop-blur-md"
+            className="w-full max-w-[440px] rounded-3xl p-8 sm:p-10 bg-white/90 border border-slate-200/80 shadow-2xl shadow-slate-200/60 backdrop-blur-md"
           >
             {/* Header */}
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+            <div className="mb-7">
+              <h2 className="text-2xl sm:text-[26px] font-bold text-slate-900 tracking-tight">
                 Sign In
               </h2>
-              <p className="text-xs text-slate-500 font-normal mt-1">
+              <p className="text-xs sm:text-sm text-slate-500 font-normal mt-1.5">
                 Enter your details to view your solar dashboard.
               </p>
             </div>
 
             {/* Error Message */}
             {errorMessage && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+              <div className="mb-5 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
                 {errorMessage}
               </div>
             )}
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
                   Phone or Username
                 </label>
                 <div className="relative">
@@ -239,14 +243,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                     placeholder="Enter phone or username"
                     required
                     autoFocus
-                    className="w-full bg-slate-50/70 border border-slate-200 focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none transition pr-10"
+                    className="w-full bg-slate-50/70 border border-slate-200 focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none transition pr-10"
                   />
-                  <User className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <User className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
                   Password
                 </label>
                 <div className="relative">
@@ -256,13 +260,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
                     required
-                    className="w-full bg-slate-50/70 border border-slate-200 focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none transition pr-10"
+                    className="w-full bg-slate-50/70 border border-slate-200 focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none transition pr-10"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
                     tabIndex={-1}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1 transition"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1 transition"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -273,7 +277,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-2 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-sm tracking-tight transition duration-150 shadow-sm hover:shadow disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 group"
+                className="w-full mt-2 py-3 px-5 rounded-2xl bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-bold text-sm tracking-tight transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 group"
               >
                 {isLoading ? (
                   <>
@@ -290,12 +294,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             </form>
 
             {/* Clean Footer Note */}
-            <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-center text-xs text-slate-400 gap-1.5">
+            <div className="mt-7 pt-5 border-t border-slate-100 flex items-center justify-center text-xs text-slate-400 gap-1.5">
               <Lock className="w-3.5 h-3.5 text-slate-400" />
               <span>Encrypted &amp; Secure</span>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
