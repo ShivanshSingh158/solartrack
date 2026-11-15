@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   ArrowRight,
   Eye,
   EyeOff,
   Lock,
   User,
+  ShieldCheck,
+  Trash2,
 } from 'lucide-react';
 import { ApiService } from '../../shared/api/solarApi';
 import { SolarTrackLogo } from '../../shared/components/SolarTrackLogo';
@@ -13,12 +15,42 @@ interface LoginScreenProps {
   onLoginSuccess: (user?: any) => void;
 }
 
+interface SavedProfile {
+  username: string;
+  password?: string;
+  displayName?: string;
+  savedAt: number;
+}
+
+const SAVED_PROFILE_STORAGE_KEY = 'solartrack_saved_profile';
+
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
+  const [savedProfile, setSavedProfile] = useState<SavedProfile | null>(null);
+  const [isQuickMode, setIsQuickMode] = useState<boolean>(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Load saved profile on device mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(SAVED_PROFILE_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.username && parsed.password) {
+          setSavedProfile(parsed);
+          setUsername(parsed.username);
+          setPassword(parsed.password);
+          setIsQuickMode(true);
+        }
+      }
+    } catch {
+      // Ignore storage read errors
+    }
+  }, []);
 
   // Dynamic subtle atmospheric background according to hour of day
   const atmosphericTheme = useMemo(() => {
@@ -55,17 +87,29 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
     };
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const executeLogin = async (userToSubmit: string, passToSubmit: string) => {
     setErrorMessage(null);
     setIsLoading(true);
 
     try {
       const res = await ApiService.login({
-        username: username.trim(),
-        password: password.trim(),
+        username: userToSubmit.trim(),
+        password: passToSubmit.trim(),
       });
       if (res && res.authenticated) {
+        if (rememberMe) {
+          try {
+            const profileToStore: SavedProfile = {
+              username: userToSubmit.trim(),
+              password: passToSubmit.trim(),
+              displayName: res.user?.username || userToSubmit.trim(),
+              savedAt: Date.now(),
+            };
+            localStorage.setItem(SAVED_PROFILE_STORAGE_KEY, JSON.stringify(profileToStore));
+          } catch {
+            // Storage quota/private mode ignore
+          }
+        }
         onLoginSuccess(res.user);
       } else {
         setErrorMessage(
@@ -77,6 +121,25 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleManualSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await executeLogin(username, password);
+  };
+
+  const handleQuickLogin = async () => {
+    if (!savedProfile || !savedProfile.password) return;
+    await executeLogin(savedProfile.username, savedProfile.password);
+  };
+
+  const handleRemoveSavedProfile = () => {
+    try {
+      localStorage.removeItem(SAVED_PROFILE_STORAGE_KEY);
+    } catch {}
+    setSavedProfile(null);
+    setIsQuickMode(false);
+    setPassword('');
   };
 
   return (
@@ -212,86 +275,188 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           <div
             className="w-full max-w-[440px] rounded-3xl p-8 sm:p-10 bg-white/90 border border-slate-200/80 shadow-2xl shadow-slate-200/60 backdrop-blur-md"
           >
-            {/* Header */}
-            <div className="mb-7">
-              <h2 className="text-2xl sm:text-[26px] font-bold text-slate-900 tracking-tight">
-                Sign In
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 font-normal mt-1.5">
-                Enter your details to view your solar dashboard.
-              </p>
-            </div>
-
-            {/* Error Message */}
-            {errorMessage && (
-              <div className="mb-5 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
-                {errorMessage}
-              </div>
-            )}
-
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Phone or Username
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter phone or username"
-                    required
-                    autoFocus
-                    className="w-full bg-slate-50/70 border border-slate-200 focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none transition pr-10"
-                  />
-                  <User className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+            {isQuickMode && savedProfile ? (
+              /* Quick Sign In Mode (Saved on PC) */
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-2xl sm:text-[26px] font-bold text-slate-900 tracking-tight">
+                    Welcome back
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-500 font-normal mt-1.5">
+                    Saved profile on this computer
+                  </p>
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter password"
-                    required
-                    className="w-full bg-slate-50/70 border border-slate-200 focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none transition pr-10"
-                  />
+                {/* Error Message */}
+                {errorMessage && (
+                  <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+                    {errorMessage}
+                  </div>
+                )}
+
+                {/* Profile Card */}
+                <div className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/80 flex items-center gap-3.5">
+                  <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-700 font-bold text-lg shrink-0">
+                    {savedProfile.username.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-bold text-slate-900 text-sm truncate">
+                      {savedProfile.username}
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium mt-0.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span>Ready to connect</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 1-Click Sign In Button */}
+                <button
+                  type="button"
+                  onClick={handleQuickLogin}
+                  disabled={isLoading}
+                  className="w-full py-3.5 px-5 rounded-2xl bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-bold text-sm tracking-tight transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 group"
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>Signing in...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>1-Click Sign In</span>
+                      <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-white group-hover:translate-x-0.5 transition" />
+                    </>
+                  )}
+                </button>
+
+                {/* Actions */}
+                <div className="pt-2 flex items-center justify-between text-xs text-slate-500">
                   <button
                     type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    tabIndex={-1}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1 transition"
+                    onClick={() => setIsQuickMode(false)}
+                    className="font-semibold text-slate-700 hover:text-slate-900 hover:underline cursor-pointer"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    Use another account
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleRemoveSavedProfile}
+                    className="flex items-center gap-1 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                    title="Forget saved account on this PC"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Forget</span>
                   </button>
                 </div>
               </div>
+            ) : (
+              /* Manual Credentials Form */
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-2xl sm:text-[26px] font-bold text-slate-900 tracking-tight">
+                    Sign In
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-500 font-normal mt-1.5">
+                    Enter your details to view your solar dashboard.
+                  </p>
+                </div>
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full mt-2 py-3 px-5 rounded-2xl bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-bold text-sm tracking-tight transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 group"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Signing in...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Sign In</span>
-                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-white group-hover:translate-x-0.5 transition" />
-                  </>
+                {/* Error Message */}
+                {errorMessage && (
+                  <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+                    {errorMessage}
+                  </div>
                 )}
-              </button>
-            </form>
+
+                {/* Form */}
+                <form onSubmit={handleManualSubmit} className="space-y-4 sm:space-y-5">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Phone or Username
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Enter phone or username"
+                        required
+                        autoFocus
+                        className="w-full bg-slate-50/70 border border-slate-200 focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none transition pr-10"
+                      />
+                      <User className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter password"
+                        required
+                        className="w-full bg-slate-50/70 border border-slate-200 focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none transition pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        tabIndex={-1}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1 transition"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Save Profile Checkbox */}
+                  <div className="flex items-center justify-between text-xs pt-0.5">
+                    <label className="flex items-center gap-2 cursor-pointer select-none text-slate-600 font-medium">
+                      <input
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                        className="w-4 h-4 text-slate-900 border-slate-300 rounded focus:ring-amber-500 focus:ring-2 cursor-pointer"
+                      />
+                      <span>Save profile on this PC</span>
+                    </label>
+
+                    {savedProfile && (
+                      <button
+                        type="button"
+                        onClick={() => setIsQuickMode(true)}
+                        className="font-semibold text-amber-700 hover:text-amber-800 hover:underline cursor-pointer"
+                      >
+                        Back to saved
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full mt-2 py-3 px-5 rounded-2xl bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-bold text-sm tracking-tight transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2 group"
+                  >
+                    {isLoading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Signing in...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Sign In</span>
+                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-white group-hover:translate-x-0.5 transition" />
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
+            )}
 
             {/* Clean Footer Note */}
             <div className="mt-7 pt-5 border-t border-slate-100 flex items-center justify-center text-xs text-slate-400 gap-1.5">
