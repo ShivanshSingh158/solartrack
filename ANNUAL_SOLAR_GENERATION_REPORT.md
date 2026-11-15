@@ -240,6 +240,69 @@ Under national PM Surya Ghar guidelines, subsidy is capped at **one claim per el
 
 ---
 
+## Part 8: The Landlord-Tenant Solar Monetization Model (Selling at ₹8.00 / Unit)
+
+### The Business Architecture
+- **Property Status:** Tenanted Property with Sub-Meter Billing.
+- **Tenant Billing Rate:** Flat **₹8.00 / unit (kWh)** (covering energy, duty, and fixed infrastructure overheads).
+- **Annual Tenant Consumption (from actual bill data):** **8,116 Units (kWh)**.
+- **Annual Cash Collected Directly from Tenants:**  
+  $$8,116 \text{ units} \times ₹8.00/\text{unit} = \mathbf{₹64,928 / \text{year}}$$
+
+---
+
+### Before Solar vs After Solar (Dual 6.27 kW System)
+
+```
+┌────────────────────────────────────────────────────────┬───────────────────┬───────────────────────┐
+│ Financial Stream                                       │ Before Solar      │ With Dual 6.27 kW     │
+├────────────────────────────────────────────────────────┼───────────────────┼───────────────────────┤
+│ Cash Collected from Tenants (8,116 units @ ₹8/u)       │ +₹64,928          │ +₹64,928              │
+│ Total Electricity Billed by KESCO                      │ -₹60,067          │ -₹4,776 (Fixed - APPC)│
+├────────────────────────────────────────────────────────┼───────────────────┼───────────────────────┤
+│ LANDLORD NET ANNUAL CASH IN HAND                       │ +₹4,861 / year    │ +₹60,152 / YEAR       │
+│ Monthly Passive Landlord Income                        │ ~₹405 / month     │ ~₹5,013 / MONTH       │
+├────────────────────────────────────────────────────────┼───────────────────┼───────────────────────┤
+│ Incremental Cash Flow Added by Solar Setup             │ Baseline          │ +₹55,291 / YEAR       │
+└────────────────────────────────────────────────────────┴───────────────────┴───────────────────────┘
+```
+
+---
+
+### Month-by-Month Tenant Cash Flow vs KESCO Bill (Dual 6.27 kW)
+
+| Month | Tenant Consumption | Tenant Pays You (@ ₹8/unit) | Your KESCO Energy Bill | Net Monthly Landlord Cash Pocketed |
+| :--- | :---: | :---: | :---: | :---: |
+| **November** | 450 kWh | **₹3,600** | ₹0.00 *(Banked +266 u)* | **₹3,600** |
+| **December** | 390 kWh | **₹3,120** | ₹0.00 *(Banked +255 u)* | **₹3,120** |
+| **January** | 580 kWh | **₹4,640** | ₹0.00 *(Banked +104 u)* | **₹4,640** |
+| **February** | 509 kWh | **₹4,072** | ₹0.00 *(Banked +245 u)* | **₹4,072** |
+| **March** | 404 kWh | **₹3,232** | ₹0.00 *(Banked +437 u)* | **₹3,232** |
+| **April** | 627 kWh | **₹5,016** | ₹0.00 *(Banked +179 u)* | **₹5,016** |
+| **May** *(Summer)*| 862 kWh | **₹6,896** | ₹0.00 *(Absorbed by Bank)* | **₹6,896** |
+| **June** *(Peak)* | 1,127 kWh | **₹9,016** | ₹0.00 *(Absorbed by Bank)* | **₹9,016** |
+| **July** | 664 kWh | **₹5,312** | ₹0.00 *(Banked +24 u)* | **₹5,312** |
+| **August** | 985 kWh | **₹7,880** | ₹0.00 *(Absorbed by Bank)* | **₹7,880** |
+| **September** | 851 kWh | **₹6,808** | ₹0.00 *(Absorbed by Bank)* | **₹6,808** |
+| **October** | 667 kWh | **₹5,336** | ₹0.00 *(Banked +66 u)* | **₹5,336** |
+| **ANNUAL TOTAL** | **8,116 kWh** | **₹64,928 INFLOW** | **₹0.00 Energy Bill** | **~₹60,152 NET PROFIT** |
+
+*(Note: Net Profit accounts for KESCO annual fixed demand charges of ₹5,940 offset by ₹1,164 surplus energy credit).*
+
+---
+
+### Tenant-Funded Payback Timeline
+
+Because your tenants continue paying ₹8.00 per unit while solar drives your DISCOM bill to zero, **your tenants effectively pay off your solar equipment**:
+
+- **Scenario A: Dual Subsidies Claimed (Net Out-of-Pocket = ₹1,54,000):**
+  $$\text{Payback Period} = \frac{₹1,54,000}{₹60,152/\text{year}} = \mathbf{2.56 \text{ Years (2 Years and 6 Months)!}}$$
+  
+- **Scenario B: Single Subsidy Claimed (Net Out-of-Pocket = ₹2,62,000):**
+  $$\text{Payback Period} = \frac{₹2,62,000}{₹60,152/\text{year}} = \mathbf{4.35 \text{ Years (4 Years and 4 Months)!}}$$
+
+---
+
 ## Final Recommendation: Sizing vs Summer Spike Conclusion
 
 1. **Regarding the Summer Spike:** Your spike was not an anomaly or billing error; it was the direct mathematical result of air conditioning loads colliding with the tier-4 tariff trap (>500 units at ₹7.35/unit).
