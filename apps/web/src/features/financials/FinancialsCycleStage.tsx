@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { PieChart } from '@mui/x-charts/PieChart';
 import {
   formatINR,
   type DiscomCycleBreakdown,
@@ -50,34 +51,141 @@ export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
   const confBarPct = Math.min(100, (discom.confirmedInr / projTarget) * 100);
   const pendBarPct = Math.min(100 - confBarPct, (discom.pendingInr / projTarget) * 100);
 
+  const remainingUnitsKwh = Math.max(0, discom.projectedCycleUnitsKwh - discom.confirmedUnitsKwh - discom.pendingUnitsKwh);
+  const remainingInr = Math.max(0, discom.projectedCycleInr - discom.confirmedInr - discom.pendingInr);
+
+  const pieSeriesData = useMemo(() => {
+    return [
+      {
+        id: 'confirmed',
+        value: Math.max(0.1, Number(discom.confirmedUnitsKwh.toFixed(1))),
+        label: 'Confirmed Credit',
+        color: '#107C41',
+      },
+      ...(discom.pendingUnitsKwh > 0.05
+        ? [
+            {
+              id: 'pending',
+              value: Number(discom.pendingUnitsKwh.toFixed(1)),
+              label: 'Pending Sync Buffer',
+              color: '#F59E0B',
+            },
+          ]
+        : []),
+      ...(remainingUnitsKwh > 0.05
+        ? [
+            {
+              id: 'remaining',
+              value: Number(remainingUnitsKwh.toFixed(1)),
+              label: 'Projected Remainder',
+              color: '#CBD5E1',
+            },
+          ]
+        : []),
+    ];
+  }, [discom.confirmedUnitsKwh, discom.pendingUnitsKwh, remainingUnitsKwh]);
+
   return (
     <div className="px-4 sm:px-6 pt-3 pb-4">
-      <div className="pb-3 space-y-2">
-        <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-medium text-slate-600">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-xs bg-[#107C41]" />
-              Confirmed Credit:{' '}
-              <strong className="text-slate-900 tabular-nums">{discom.confirmedFormatted}</strong> (
-              {discom.confirmedUnitsKwh.toFixed(1)} kWh)
-            </span>
-            {discom.pendingInr > 0 && (
-              <span className="inline-flex items-center gap-1.5 text-amber-700">
-                <span className="w-2.5 h-2.5 rounded-xs bg-amber-500" />
-                Pending Sync / Live Est.:{' '}
-                <strong className="tabular-nums">+{formatINR(discom.pendingInr)}</strong> (
-                {discom.pendingUnitsKwh.toFixed(1)} kWh)
-              </span>
-            )}
-          </div>
-          <span className="text-[11px] font-bold text-slate-900 tabular-nums">
-            {discom.cyclePeriodText} · Cycle Proj: {formatINR(discom.projectedCycleInr)}
-          </span>
-        </div>
+      {/* Executive Billing & Energy Allocation Donut Hub */}
+      <div className="mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-slate-50/80 via-emerald-50/20 to-amber-50/20 border border-slate-200/70 shadow-2xs">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+          {/* Donut Chart */}
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="relative w-[130px] h-[130px] flex items-center justify-center shrink-0">
+              <PieChart
+                series={[
+                  {
+                    data: pieSeriesData,
+                    innerRadius: 42,
+                    outerRadius: 60,
+                    paddingAngle: 3,
+                    cornerRadius: 4,
+                  },
+                ]}
+                width={130}
+                height={130}
+                margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                hideLegend
+              />
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                <span className="text-[12px] font-extrabold text-slate-900 tabular-nums leading-none">
+                  {formatINR(discom.projectedCycleInr)}
+                </span>
+                <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">
+                  Cycle Proj
+                </span>
+              </div>
+            </div>
 
-        <div className="h-2.5 w-full rounded-full overflow-hidden flex bg-slate-100">
-          {confBarPct > 0 && <div style={{ width: `${confBarPct}%` }} className="bg-[#107C41]" />}
-          {pendBarPct > 0 && <div style={{ width: `${pendBarPct}%` }} className="bg-amber-400" />}
+            <div className="space-y-1">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                DISCOM Energy Distribution
+              </div>
+              <div className="text-[13px] font-extrabold text-slate-900">
+                {discom.cyclePeriodText}
+              </div>
+              <div className="text-[11px] font-medium text-slate-500">
+                {discom.daysElapsedInCycle} of {discom.cycleTotalDays} days elapsed ({discom.daysRemainingInCycle} days left)
+              </div>
+            </div>
+          </div>
+
+          {/* Allocation Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full lg:w-auto flex-1 text-[11.5px]">
+            {/* Confirmed Credit */}
+            <div className="p-2.5 rounded-xl bg-white/95 border border-slate-200/70 shadow-2xs">
+              <div className="flex items-center justify-between gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <span className="flex items-center gap-1 text-[#107C41]">
+                  <span className="w-2 h-2 rounded-full bg-[#107C41]" />
+                  Confirmed Credit
+                </span>
+                <span className="tabular-nums font-semibold text-slate-500">{confBarPct.toFixed(0)}%</span>
+              </div>
+              <div className="text-[15px] font-extrabold text-slate-900 mt-0.5 tabular-nums">
+                {discom.confirmedFormatted}
+              </div>
+              <div className="text-[10.5px] font-medium text-slate-500 tabular-nums">
+                {discom.confirmedUnitsKwh.toFixed(1)} kWh verified
+              </div>
+            </div>
+
+            {/* Pending Sync Buffer */}
+            <div className="p-2.5 rounded-xl bg-white/95 border border-slate-200/70 shadow-2xs">
+              <div className="flex items-center justify-between gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <span className="flex items-center gap-1 text-amber-700">
+                  <span className="w-2 h-2 rounded-full bg-amber-500" />
+                  Pending / Buffer
+                </span>
+                <span className="tabular-nums font-semibold text-slate-500">{pendBarPct.toFixed(0)}%</span>
+              </div>
+              <div className="text-[15px] font-extrabold text-amber-900 mt-0.5 tabular-nums">
+                +{formatINR(discom.pendingInr)}
+              </div>
+              <div className="text-[10.5px] font-medium text-slate-500 tabular-nums">
+                {discom.pendingUnitsKwh.toFixed(1)} kWh live est.
+              </div>
+            </div>
+
+            {/* Cycle Remainder Proj */}
+            <div className="p-2.5 rounded-xl bg-white/95 border border-slate-200/70 shadow-2xs">
+              <div className="flex items-center justify-between gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <span className="flex items-center gap-1 text-slate-600">
+                  <span className="w-2 h-2 rounded-full bg-slate-300" />
+                  Remaining Proj
+                </span>
+                <span className="tabular-nums font-semibold text-slate-500">
+                  {(100 - confBarPct - pendBarPct).toFixed(0)}%
+                </span>
+              </div>
+              <div className="text-[15px] font-extrabold text-slate-700 mt-0.5 tabular-nums">
+                ~{formatINR(remainingInr)}
+              </div>
+              <div className="text-[10.5px] font-medium text-slate-500 tabular-nums">
+                ~{remainingUnitsKwh.toFixed(1)} kWh over {discom.daysRemainingInCycle}d
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

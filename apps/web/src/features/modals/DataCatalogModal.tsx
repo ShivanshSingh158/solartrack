@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { X, Database, Sun, Radio, Gauge, CheckCircle2, Clock, Sparkles, AlertCircle } from 'lucide-react';
+import { Dialog, DialogBackdrop, DialogContent, DialogTitle } from '@ui-sdk/react/dialog';
 import type { ChannelAuditState, TelemetryChannelAuditRow } from '@solar-track/core';
 
 interface DataCatalogModalProps {
@@ -89,23 +90,23 @@ export const DataCatalogModal: React.FC<DataCatalogModalProps> = ({
     return { live, derived, unpublished };
   }, [channels]);
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/45 backdrop-blur-2xs">
-      <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-7 border border-slate-200 shadow-2xl max-h-[85vh] flex flex-col">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-100">
-              <Database className="w-4 h-4 text-emerald-600" />
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogBackdrop className="fixed inset-0 z-50 bg-slate-900/45 backdrop-blur-2xs animate-in fade-in duration-200" />
+      <DialogContent className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+        <div className="pointer-events-auto bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-7 border border-slate-200 shadow-2xl max-h-[85vh] flex flex-col">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div className="flex items-center space-x-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-100">
+                <Database className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div>
+                <DialogTitle className="text-base font-bold text-slate-900">Raw Inverter Register Audit</DialogTitle>
+                <p className="text-xs text-slate-500">
+                  {plantLabel} · {counts.live} live · {counts.derived} derived/standby · {counts.unpublished} unpublished by dongle
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-base font-bold text-slate-900">Raw Inverter Register Audit</h3>
-              <p className="text-xs text-slate-500">
-                {plantLabel} · {counts.live} live · {counts.derived} derived/standby · {counts.unpublished} unpublished by dongle
-              </p>
-            </div>
-          </div>
           <button
             type="button"
             onClick={onClose}
@@ -174,7 +175,8 @@ export const DataCatalogModal: React.FC<DataCatalogModalProps> = ({
             Close Audit
           </button>
         </div>
-      </div>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

@@ -7,6 +7,7 @@ import {
   RotateCcw,
   SlidersHorizontal,
 } from 'lucide-react';
+import { Tabs, TabsList, TabsTab } from '@ui-sdk/react/tabs';
 import {
   computeDiscomCycleBreakdown,
   formatINR,
@@ -213,35 +214,38 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
-            <div
-              role="tablist"
-              aria-label="Financial analysis views"
-              className="apple-glass-pill p-1 rounded-full inline-flex items-center shadow-2xs"
+            <Tabs
+              value={stageView}
+              onValueChange={(val) => {
+                if (val) setStageView(val as FinancialsStageView);
+              }}
             >
-              {(
-                [
-                  { id: 'payback', label: 'Investment Payback' },
-                  { id: 'cycle', label: 'Bill Credits' },
-                  { id: 'pnl', label: 'Daily Cash Flow' },
-                ] as const
-              ).map((tab) => {
-                const active = stageView === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    onClick={() => setStageView(tab.id)}
-                    className={`px-3 py-1.5 rounded-full text-[11.5px] font-bold transition cursor-pointer whitespace-nowrap ${
-                      active ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
+              <TabsList
+                aria-label="Financial analysis views"
+                className="apple-glass-pill p-1 rounded-full inline-flex items-center shadow-2xs"
+              >
+                {(
+                  [
+                    { id: 'payback', label: 'Investment Payback' },
+                    { id: 'cycle', label: 'Bill Credits' },
+                    { id: 'pnl', label: 'Daily Cash Flow' },
+                  ] as const
+                ).map((tab) => {
+                  const active = stageView === tab.id;
+                  return (
+                    <TabsTab
+                      key={tab.id}
+                      value={tab.id}
+                      className={`px-3 py-1.5 rounded-full text-[11.5px] font-bold transition cursor-pointer whitespace-nowrap ${
+                        active ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                      }`}
+                    >
+                      {tab.label}
+                    </TabsTab>
+                  );
+                })}
+              </TabsList>
+            </Tabs>
 
             <button
               type="button"

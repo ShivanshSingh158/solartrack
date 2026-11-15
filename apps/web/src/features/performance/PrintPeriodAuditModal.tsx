@@ -1,5 +1,6 @@
 import React from 'react';
 import { Printer, ShieldCheck, X } from 'lucide-react';
+import { Dialog, DialogBackdrop, DialogContent, DialogTitle } from '@ui-sdk/react/dialog';
 import { SOLAR_CONSTANTS, type TimescaleMode } from '@solar-track/core';
 
 export interface PrintPeriodAuditModalProps {
@@ -44,34 +45,29 @@ export const PrintPeriodAuditModal: React.FC<PrintPeriodAuditModalProps> = ({
   co2FactorKgPerKwh = SOLAR_CONSTANTS.CO2_KG_PER_KWH,
   rows,
 }) => {
-  if (!isOpen) return null;
-
   const estimatedSavingsInr = Math.round(realKwh * tariffPerKwh);
   const co2AvoidedKg = +(realKwh * co2FactorKgPerKwh).toFixed(1);
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Print Period Performance Audit"
-    >
-      <div className="bg-white/95 backdrop-blur-2xl rounded-3xl border border-white/80 shadow-2xl max-w-2xl w-full max-h-[88vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-        {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700">
-              <ShieldCheck className="w-4.5 h-4.5" />
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogBackdrop className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm print:hidden animate-in fade-in duration-200" />
+      <DialogContent className="fixed inset-0 z-50 flex items-center justify-center p-4 print:bg-white print:p-0 pointer-events-none">
+        <div className="pointer-events-auto bg-white/95 backdrop-blur-2xl rounded-3xl border border-white/80 shadow-2xl max-w-2xl w-full max-h-[88vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150 print:shadow-none print:border-0 print:max-h-none">
+          {/* Modal Header */}
+          <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between gap-3 print:hidden">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700">
+                <ShieldCheck className="w-4.5 h-4.5" />
+              </div>
+              <div>
+                <DialogTitle className="text-[15px] font-bold text-slate-900">
+                  Verified Period Performance Audit
+                </DialogTitle>
+                <p className="text-[11px] font-medium text-slate-500">
+                  {plantTitle} · {locationName} · {capacityKwp.toFixed(2)} kWp
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-[15px] font-bold text-slate-900">
-                Verified Period Performance Audit
-              </h3>
-              <p className="text-[11px] font-medium text-slate-500">
-                {plantTitle} · {locationName} · {capacityKwp.toFixed(2)} kWp
-              </p>
-            </div>
-          </div>
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -181,7 +177,8 @@ export const PrintPeriodAuditModal: React.FC<PrintPeriodAuditModalProps> = ({
             <span>Generated via SolarTrack Telemetry Engine</span>
           </div>
         </div>
-      </div>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Link2, ShieldCheck } from 'lucide-react';
+import { Dialog, DialogBackdrop, DialogContent, DialogTitle } from '@ui-sdk/react/dialog';
 import { ApiService } from '../../shared/api/solarApi';
 
 interface AddAccountModalProps {
@@ -51,25 +52,28 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-2xs">
-      <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 border border-gray-200 shadow-xl relative animate-in fade-in duration-200">
-        <div className="flex items-center justify-between pb-4 border-b border-gray-100">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm font-bold">
-              <Link2 className="w-4 h-4 text-emerald-600" />
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogBackdrop className="fixed inset-0 z-50 bg-gray-900/40 backdrop-blur-2xs animate-in fade-in duration-200" />
+      <DialogContent className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+        <div className="pointer-events-auto bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 border border-gray-200 shadow-xl relative animate-in fade-in duration-200">
+          <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+            <div className="flex items-center space-x-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm font-bold">
+                <Link2 className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div>
+                <DialogTitle className="text-base font-bold text-gray-900">Link Waaree Account</DialogTitle>
+                <p className="text-xs text-gray-400">Combine multiple inverters into one fleet</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-base font-bold text-gray-900">Link Waaree Account</h3>
-              <p className="text-xs text-gray-400">Combine multiple inverters into one fleet</p>
-            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg transition"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg transition"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
 
         {alert && (
           <div
@@ -143,7 +147,8 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
             </button>
           </div>
         </form>
-      </div>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

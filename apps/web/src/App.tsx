@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { ConfigProvider, type ThemeConfig } from 'antd';
 import {
   auditRawChannelsFromTelemetry,
   getIstClockParts,
@@ -24,6 +25,53 @@ import { useLiveTelemetry } from './app/hooks/useLiveTelemetry';
 import { ApiService } from './shared/api/solarApi';
 
 const VALID_TABS: readonly TabType[] = ['home', 'performance', 'health', 'savings', 'settings'];
+
+const appleGlassTheme: ThemeConfig = {
+  token: {
+    fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    colorPrimary: '#059669',
+    colorSuccess: '#10B981',
+    colorWarning: '#F59E0B',
+    colorError: '#EF4444',
+    colorInfo: '#0284C7',
+    borderRadius: 16,
+    borderRadiusLG: 24,
+    borderRadiusSM: 10,
+    colorTextBase: '#0f172a',
+    colorTextSecondary: '#475569',
+    colorBorder: 'rgba(226, 232, 240, 0.85)',
+    colorBgContainer: 'rgba(255, 255, 255, 0.88)',
+  },
+  components: {
+    Table: {
+      headerBg: 'rgba(248, 250, 252, 0.90)',
+      headerColor: '#64748b',
+      headerSplitColor: 'transparent',
+      rowHoverBg: 'rgba(241, 245, 249, 0.70)',
+      borderRadius: 20,
+    },
+    Slider: {
+      colorPrimary: '#059669',
+      colorPrimaryBorder: '#059669',
+      handleColor: '#059669',
+      trackBg: '#059669',
+      trackHoverBg: '#047857',
+      dotBorderColor: '#059669',
+      dotActiveBorderColor: '#047857',
+    },
+    InputNumber: {
+      borderRadius: 12,
+      activeBorderColor: '#059669',
+      hoverBorderColor: '#10B981',
+    },
+    Tag: {
+      borderRadiusSM: 9999,
+    },
+    Badge: {
+      indicatorHeight: 8,
+    },
+  },
+};
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>(() => {
@@ -168,7 +216,8 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col antialiased bg-transparent text-[#0F172A] w-full">
+    <ConfigProvider theme={appleGlassTheme}>
+      <div className="min-h-screen flex flex-col antialiased bg-transparent text-[#0F172A] w-full">
       <TopHeader
         title={telemetry.headerTitle}
         subtitle={telemetry.headerSubtitle}
@@ -446,7 +495,8 @@ export const App: React.FC = () => {
         specificYield={telemetry.canonicalSnapshot.reportCard.specificYield}
         dateStr={telemetry.canonicalSnapshot.clock.indianMediumLabel}
       />
-    </div>
+      </div>
+    </ConfigProvider>
   );
 };
 

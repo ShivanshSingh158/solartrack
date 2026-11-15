@@ -1,4 +1,5 @@
 import React from 'react';
+import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import type { CanonicalSolarSnapshot, SystemHealthReport } from '@solar-track/core';
 
 interface HealthKpiStripProps {
@@ -14,6 +15,7 @@ interface HealthKpiCol {
   primaryUnit?: string;
   rightMeta?: string;
   subtitle: string;
+  gauge?: React.ReactNode;
 }
 
 const DOT_CLASS: Record<HealthKpiCol['accentDot'], string> = {
@@ -70,6 +72,27 @@ export const HealthKpiStrip: React.FC<HealthKpiStripProps> = ({ report, canonica
       thermalAndElectrical.dcKw !== null && thermalAndElectrical.acKw !== null && !truth.isNight && !truth.isStale
         ? `${thermalAndElectrical.dcKw.toFixed(2)} DC → ${thermalAndElectrical.acKw.toFixed(2)} AC (${conversion.liveLoadPct ?? 0}% load)`
         : `Peak AC today ${conversion.peakAcKw.toFixed(2)} kW`,
+    gauge:
+      !truth.isNight && !truth.isStale && etaVal !== null ? (
+        <Gauge
+          value={etaVal}
+          valueMin={80}
+          valueMax={100}
+          startAngle={-100}
+          endAngle={100}
+          innerRadius="70%"
+          outerRadius="100%"
+          width={38}
+          height={32}
+          sx={{
+            [`& .${gaugeClasses.valueArc}`]: {
+              fill: etaVal >= 95 ? '#059669' : etaVal >= 90 ? '#d97706' : '#e11d48',
+            },
+            [`& .${gaugeClasses.referenceArc}`]: { fill: '#e2e8f0' },
+            [`& .${gaugeClasses.valueText}`]: { display: 'none' },
+          }}
+        />
+      ) : undefined,
   };
 
   const col2: HealthKpiCol = {
@@ -113,6 +136,27 @@ export const HealthKpiStrip: React.FC<HealthKpiStripProps> = ({ report, canonica
       logger.healedCoveragePct !== null && logger.healedDropCount > 0
         ? `Healed curve: ${logger.healedCoveragePct}% (+${logger.healedDropCount} interp)`
         : logger.daylightSyncNote,
+    gauge:
+      logger.rawDeliveryPct !== null && logger.status !== 'OFFLINE' ? (
+        <Gauge
+          value={logger.rawDeliveryPct}
+          valueMin={0}
+          valueMax={100}
+          startAngle={-100}
+          endAngle={100}
+          innerRadius="70%"
+          outerRadius="100%"
+          width={38}
+          height={32}
+          sx={{
+            [`& .${gaugeClasses.valueArc}`]: {
+              fill: logger.rawDeliveryPct >= 85 ? '#059669' : logger.rawDeliveryPct >= 70 ? '#d97706' : '#e11d48',
+            },
+            [`& .${gaugeClasses.referenceArc}`]: { fill: '#e2e8f0' },
+            [`& .${gaugeClasses.valueText}`]: { display: 'none' },
+          }}
+        />
+      ) : undefined,
   };
 
   const col4: HealthKpiCol = {
@@ -169,19 +213,22 @@ export const HealthKpiStrip: React.FC<HealthKpiStripProps> = ({ report, canonica
             )}
           </div>
 
-          <div className="flex items-baseline gap-1.5 min-w-0">
-            <span
-              className={`text-[18px] sm:text-[19px] font-extrabold tracking-tight tabular-nums whitespace-nowrap ${
-                TONE_CLASS[col.primaryTone]
-              }`}
-            >
-              {col.primary}
-            </span>
-            {col.primaryUnit && (
-              <span className="text-[11px] font-semibold text-slate-500 truncate tabular-nums">
-                {col.primaryUnit}
+          <div className="flex items-center justify-between gap-1.5 min-w-0">
+            <div className="flex items-baseline gap-1.5 min-w-0">
+              <span
+                className={`text-[18px] sm:text-[19px] font-extrabold tracking-tight tabular-nums whitespace-nowrap ${
+                  TONE_CLASS[col.primaryTone]
+                }`}
+              >
+                {col.primary}
               </span>
-            )}
+              {col.primaryUnit && (
+                <span className="text-[11px] font-semibold text-slate-500 truncate tabular-nums">
+                  {col.primaryUnit}
+                </span>
+              )}
+            </div>
+            {col.gauge && <div className="shrink-0 -my-1">{col.gauge}</div>}
           </div>
 
           <div className="text-[11px] font-medium text-slate-500 tabular-nums truncate">

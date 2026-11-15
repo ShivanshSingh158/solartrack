@@ -11,6 +11,7 @@ import {
   Table as TableIcon,
   X,
 } from 'lucide-react';
+import { Tabs, TabsList, TabsTab } from '@ui-sdk/react/tabs';
 import {
   formatIndianDate,
   formatIndianMonthYear,
@@ -188,53 +189,56 @@ export const PerformanceControlHeader: React.FC<PerformanceControlHeaderProps> =
     <div className="px-4 sm:px-6 py-3.5 border-b border-slate-200/75 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 bg-white rounded-t-3xl">
       {/* LEFT: Sliding 4-Mode Segmented Track */}
       <div className="flex items-center justify-between gap-3">
-        <div
-          ref={trackRef}
-          className="relative inline-flex items-center p-1 rounded-2xl apple-glass-pill select-none shadow-2xs"
-          role="tablist"
-          aria-label="Performance Timescale"
+        <Tabs
+          value={timescale}
+          onValueChange={(val) => {
+            if (val) onChangeTimescale(val as TimescaleMode);
+          }}
         >
-          {sliderStyle.ready && (
-            <div
-              aria-hidden="true"
-              className="absolute top-1 bottom-1 rounded-xl bg-white shadow-xs border border-white/90 pointer-events-none"
-              style={{
-                width: `${sliderStyle.width}px`,
-                transform: `translateX(${sliderStyle.left - 4}px)`,
-                transition:
-                  'transform 220ms cubic-bezier(0.22, 1, 0.36, 1), width 220ms cubic-bezier(0.22, 1, 0.36, 1)',
-              }}
-            />
-          )}
-
-          {MODE_OPTIONS.map((opt) => {
-            const active = timescale === opt.key;
-            return (
-              <button
-                key={opt.key}
-                ref={(el) => {
-                  tabRefs.current[opt.key] = el;
+          <TabsList
+            ref={trackRef}
+            className="relative inline-flex items-center p-1 rounded-2xl apple-glass-pill select-none shadow-2xs"
+            aria-label="Performance Timescale"
+          >
+            {sliderStyle.ready && (
+              <div
+                aria-hidden="true"
+                className="absolute top-1 bottom-1 rounded-xl bg-white shadow-xs border border-white/90 pointer-events-none"
+                style={{
+                  width: `${sliderStyle.width}px`,
+                  transform: `translateX(${sliderStyle.left - 4}px)`,
+                  transition:
+                    'transform 220ms cubic-bezier(0.22, 1, 0.36, 1), width 220ms cubic-bezier(0.22, 1, 0.36, 1)',
                 }}
-                type="button"
-                role="tab"
-                aria-selected={active}
-                onClick={() => onChangeTimescale(opt.key)}
-                className={`relative z-10 px-2.5 sm:px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap ${
-                  active ? 'text-slate-900' : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                <span>{opt.shortLabel}</span>
-                <span
-                  className={`hidden sm:inline text-[10.5px] font-medium ${
-                    active ? 'text-slate-500' : 'text-slate-400'
+              />
+            )}
+
+            {MODE_OPTIONS.map((opt) => {
+              const active = timescale === opt.key;
+              return (
+                <TabsTab
+                  key={opt.key}
+                  value={opt.key}
+                  ref={(el) => {
+                    tabRefs.current[opt.key] = el;
+                  }}
+                  className={`relative z-10 px-2.5 sm:px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap ${
+                    active ? 'text-slate-900' : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  · {opt.subLabel}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+                  <span>{opt.shortLabel}</span>
+                  <span
+                    className={`hidden sm:inline text-[10.5px] font-medium ${
+                      active ? 'text-slate-500' : 'text-slate-400'
+                    }`}
+                  >
+                    · {opt.subLabel}
+                  </span>
+                </TabsTab>
+              );
+            })}
+          </TabsList>
+        </Tabs>
 
         {/* Mobile quick View-Swap icon group */}
         <div className="inline-flex sm:hidden items-center p-0.5 rounded-lg bg-slate-100/80 border border-slate-200/70">

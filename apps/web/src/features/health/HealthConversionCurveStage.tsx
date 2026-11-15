@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import {
   formatMinutes12hUpper,
   type CanonicalSolarSnapshot,
@@ -139,9 +140,123 @@ export const HealthConversionCurveStage: React.FC<HealthConversionCurveStageProp
   };
 
   const hoveredPt = hoveredConvIdx !== null ? conversion.points[hoveredConvIdx] ?? null : null;
+  const etaVal = conversion.weightedEtaPct ?? conversion.liveEtaPct ?? 96.5;
+  const capacityKw = config.acInverterCapacityKw || 3.0;
+  const peakKw = conversion.peakAcKw;
+  const attainmentPct = Math.min(100, Math.round((peakKw / Math.max(0.1, capacityKw)) * 100));
 
   return (
     <div className="px-4 sm:px-6 pt-3 pb-4">
+      {/* Telemetry Gauge Diagnostics Hub */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4 p-3 rounded-2xl bg-gradient-to-r from-slate-50/80 via-emerald-50/20 to-sky-50/20 border border-slate-200/70 shadow-2xs">
+        {/* Gauge 1: MPPT Efficiency */}
+        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/90 border border-slate-200/60 shadow-2xs">
+          <div className="w-[74px] h-[64px] shrink-0 flex items-center justify-center">
+            <Gauge
+              value={etaVal}
+              valueMin={80}
+              valueMax={100}
+              startAngle={-110}
+              endAngle={110}
+              innerRadius="72%"
+              outerRadius="100%"
+              cornerRadius="50%"
+              width={74}
+              height={64}
+              text={`${etaVal.toFixed(1)}%`}
+              sx={{
+                [`& .${gaugeClasses.valueArc}`]: {
+                  fill: etaVal >= 95 ? '#059669' : etaVal >= 90 ? '#d97706' : '#e11d48',
+                },
+                [`& .${gaugeClasses.referenceArc}`]: { fill: '#e2e8f0' },
+                [`& .${gaugeClasses.valueText}`]: {
+                  fontSize: '11.5px',
+                  fontWeight: 800,
+                  fill: '#0f172a',
+                  fontFamily: 'inherit',
+                },
+              }}
+            />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              MPPT Efficiency (η)
+            </div>
+            <div className="text-[13px] font-extrabold text-slate-900 tabular-nums">
+              {etaVal.toFixed(1)}%
+            </div>
+            <div className="text-[10.5px] font-medium text-emerald-700 truncate">
+              {etaVal >= 95 ? 'Euro-η Optimal' : 'Derated Operation'}
+            </div>
+          </div>
+        </div>
+
+        {/* Gauge 2: Capacity Attainment */}
+        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/90 border border-slate-200/60 shadow-2xs">
+          <div className="w-[74px] h-[64px] shrink-0 flex items-center justify-center">
+            <Gauge
+              value={attainmentPct}
+              valueMin={0}
+              valueMax={100}
+              startAngle={-110}
+              endAngle={110}
+              innerRadius="72%"
+              outerRadius="100%"
+              cornerRadius="50%"
+              width={74}
+              height={64}
+              text={`${attainmentPct}%`}
+              sx={{
+                [`& .${gaugeClasses.valueArc}`]: { fill: '#0284c7' },
+                [`& .${gaugeClasses.referenceArc}`]: { fill: '#e2e8f0' },
+                [`& .${gaugeClasses.valueText}`]: {
+                  fontSize: '11.5px',
+                  fontWeight: 800,
+                  fill: '#0f172a',
+                  fontFamily: 'inherit',
+                },
+              }}
+            />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Inverter Attainment
+            </div>
+            <div className="text-[13px] font-extrabold text-slate-900 tabular-nums">
+              {peakKw.toFixed(2)} kW
+            </div>
+            <div className="text-[10.5px] font-medium text-slate-500 truncate">
+              {attainmentPct}% of {capacityKw.toFixed(1)} kW rated
+            </div>
+          </div>
+        </div>
+
+        {/* Metric 3: Heat Dissipation */}
+        <div className="flex flex-col justify-between p-2.5 rounded-xl bg-white/90 border border-slate-200/60 shadow-2xs">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            Avg Heat Dissipation
+          </div>
+          <div className="text-[17px] font-extrabold text-rose-600 tabular-nums my-0.5">
+            {conversion.avgHeatLossWatts !== null ? `${conversion.avgHeatLossWatts} W` : '0 W'}
+          </div>
+          <div className="text-[10.5px] font-medium text-slate-500 truncate">
+            Inverter thermal loss delta
+          </div>
+        </div>
+
+        {/* Metric 4: Sample Purity */}
+        <div className="flex flex-col justify-between p-2.5 rounded-xl bg-white/90 border border-slate-200/60 shadow-2xs">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            Telemetry Purity
+          </div>
+          <div className="text-[17px] font-extrabold text-slate-900 tabular-nums my-0.5">
+            {conversion.cleanSamplesCount} clean
+          </div>
+          <div className="text-[10.5px] font-medium text-slate-500 truncate">
+            {conversion.skewedSamplesCount > 0 ? `${conversion.skewedSamplesCount} RS485 skew filtered` : '100% sample synchrony'}
+          </div>
+        </div>
+      </div>
       <div className="flex flex-wrap items-center justify-between gap-2 pb-2 text-[11px] font-medium text-slate-500">
         <div className="flex flex-wrap items-center gap-3.5">
           <span className="inline-flex items-center gap-1.5">

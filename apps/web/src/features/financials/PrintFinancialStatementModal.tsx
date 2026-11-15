@@ -1,5 +1,6 @@
 import React from 'react';
 import { Printer, X } from 'lucide-react';
+import { Dialog, DialogBackdrop, DialogContent, DialogTitle } from '@ui-sdk/react/dialog';
 import {
   formatINR,
   type CanonicalSolarSnapshot,
@@ -37,25 +38,20 @@ export const PrintFinancialStatementModal: React.FC<PrintFinancialStatementModal
   subsidyInr,
   washCostInr,
 }) => {
-  if (!isOpen) return null;
-
   const { config, lifetime, clock } = canonicalSnapshot;
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 print:bg-white print:p-0"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Printable Solar Financial Statement"
-    >
-      <div className="bg-white/95 backdrop-blur-2xl rounded-3xl border border-white/80 shadow-2xl max-w-2xl w-full max-h-[88vh] overflow-y-auto print:shadow-none print:border-0 print:max-h-none">
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3 sticky top-0 bg-white z-10 print:hidden">
-          <div>
-            <h3 className="text-sm font-bold text-slate-900">Financial Return & DISCOM Statement</h3>
-            <p className="text-[11px] font-medium text-slate-500">
-              {config.locationName} · {config.capacityKwp.toFixed(1)} kWp · Generated {clock.indianMediumLabel}
-            </p>
-          </div>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogBackdrop className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm print:hidden animate-in fade-in duration-200" />
+      <DialogContent className="fixed inset-0 z-50 flex items-center justify-center p-4 print:bg-white print:p-0 pointer-events-none">
+        <div className="pointer-events-auto bg-white/95 backdrop-blur-2xl rounded-3xl border border-white/80 shadow-2xl max-w-2xl w-full max-h-[88vh] overflow-y-auto print:shadow-none print:border-0 print:max-h-none">
+          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3 sticky top-0 bg-white z-10 print:hidden">
+            <div>
+              <DialogTitle className="text-sm font-bold text-slate-900">Financial Return & DISCOM Statement</DialogTitle>
+              <p className="text-[11px] font-medium text-slate-500">
+                {config.locationName} · {config.capacityKwp.toFixed(1)} kWp · Generated {clock.indianMediumLabel}
+              </p>
+            </div>
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -201,7 +197,8 @@ export const PrintFinancialStatementModal: React.FC<PrintFinancialStatementModal
             </div>
           </div>
         </div>
-      </div>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

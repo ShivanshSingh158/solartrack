@@ -1,5 +1,6 @@
 import React from 'react';
 import { Compass } from 'lucide-react';
+import { Slider } from 'antd';
 import { NumericInput } from '../../shared/ui/NumericInput';
 import { PANEL_TECH_PRESETS, type PanelTechPresetId } from '@solar-track/core';
 import { SettingFieldShell, type BasePanelProps } from './SettingsShared';
@@ -35,24 +36,36 @@ export const ArrayGeometryCard: React.FC<BasePanelProps> = ({
         title="Module Tilt Angle (0° Flat → 60° Steep)"
         description="Sent directly to Open-Meteo tilt parameter for GTI curve calculation and seasonal archive baseline."
       >
-        <div className="flex flex-wrap items-center gap-2">
-          <NumericInput
-            value={settings.arrayTiltDeg ?? 26.5}
-            onChangeValue={(v) => void onUpdateSettings({ arrayTiltDeg: v })}
-            min={0}
-            max={60}
-            allowDecimal
-            ariaLabel="Array tilt angle in degrees"
-            className="w-28 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[13px] font-bold text-slate-900 tabular-nums focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-          />
-          <span className="text-[12px] font-semibold text-slate-500">°</span>
-          <button
-            type="button"
-            onClick={() => void onUpdateSettings({ arrayTiltDeg: parseFloat(locLat.toFixed(1)) })}
-            className="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
-          >
-            Match Latitude ({locLat.toFixed(1)}°)
-          </button>
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <NumericInput
+              value={settings.arrayTiltDeg ?? 26.5}
+              onChangeValue={(v) => void onUpdateSettings({ arrayTiltDeg: v })}
+              min={0}
+              max={60}
+              allowDecimal
+              ariaLabel="Array tilt angle in degrees"
+              className="w-28 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[13px] font-bold text-slate-900 tabular-nums focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+            />
+            <span className="text-[12px] font-semibold text-slate-500">°</span>
+            <button
+              type="button"
+              onClick={() => void onUpdateSettings({ arrayTiltDeg: parseFloat(locLat.toFixed(1)) })}
+              className="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              Match Latitude ({locLat.toFixed(1)}°)
+            </button>
+          </div>
+          <div className="max-w-md pt-0.5">
+            <Slider
+              min={0}
+              max={60}
+              step={0.5}
+              value={settings.arrayTiltDeg ?? 26.5}
+              onChange={(v) => void onUpdateSettings({ arrayTiltDeg: v })}
+              tooltip={{ formatter: (val) => `${val}° Tilt` }}
+            />
+          </div>
         </div>
       </SettingFieldShell>
 
@@ -111,6 +124,21 @@ export const ArrayGeometryCard: React.FC<BasePanelProps> = ({
                     ? 'West (Late Afternoon Peak)'
                     : `${(settings.arrayAzimuthDeg ?? 0) > 0 ? `+${settings.arrayAzimuthDeg}` : settings.arrayAzimuthDeg}° Orientation`}
                 </span>
+              </div>
+              <div className="pt-0.5 max-w-md">
+                <Slider
+                  min={-180}
+                  max={180}
+                  step={5}
+                  value={settings.arrayAzimuthDeg ?? 0}
+                  onChange={(v) => void onUpdateSettings({ arrayAzimuthDeg: v })}
+                  tooltip={{ formatter: (val) => `${val}° Azimuth` }}
+                  marks={{
+                    '-90': '-90° E',
+                    '0': '0° S',
+                    '90': '+90° W',
+                  }}
+                />
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {AZIMUTH_CHIPS.map((c) => {

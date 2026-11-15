@@ -7,8 +7,8 @@ import {
   CheckCircle2,
   Clock,
   Droplets,
-  Sparkles,
 } from 'lucide-react';
+import { Dialog, DialogBackdrop, DialogContent, DialogTitle } from '@ui-sdk/react/dialog';
 import {
   formatINR,
   generateDailySolarReport,
@@ -205,24 +205,26 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-3xl max-h-[92vh] flex flex-col bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/80 overflow-hidden">
-        {/* Sticky Header */}
-        <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between apple-glass-float shrink-0">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10B981] animate-pulse" />
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                End-of-Day Performance Audit
-              </span>
-              <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50/80 px-2.5 py-0.5 rounded-full border border-emerald-200/60 shadow-2xs">
-                Inverter &amp; Weather Verified
-              </span>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogBackdrop className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
+      <DialogContent className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 pointer-events-none">
+        <div className="pointer-events-auto relative w-full max-w-3xl max-h-[92vh] flex flex-col bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/80 overflow-hidden">
+          {/* Sticky Header */}
+          <div className="px-6 py-4.5 border-b border-slate-100 flex items-center justify-between apple-glass-float shrink-0">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10B981] animate-pulse" />
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  End-of-Day Performance Audit
+                </span>
+                <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50/80 px-2.5 py-0.5 rounded-full border border-emerald-200/60 shadow-2xs">
+                  Inverter &amp; Weather Verified
+                </span>
+              </div>
+              <DialogTitle className="text-xl font-black text-slate-900 mt-0.5 tracking-tight flex items-center gap-2">
+                <span>Daily Solar Report · {dateStr}</span>
+              </DialogTitle>
             </div>
-            <h2 className="text-xl font-black text-slate-900 mt-0.5 tracking-tight flex items-center gap-2">
-              <span>Daily Solar Report · {dateStr}</span>
-            </h2>
-          </div>
 
           <div className="flex items-center gap-2">
             <button
@@ -342,7 +344,7 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
 
               {/* Mood / Plain-English Day Verdict Banner */}
               <div className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/80 flex items-start gap-3">
-                <Sparkles className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                <Sun className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700">Daily Solar Verdict</h4>
                   <p className="text-xs text-slate-600 font-medium leading-relaxed mt-0.5">
@@ -657,7 +659,8 @@ export const DailyReportCardModal: React.FC<DailyReportCardModalProps> = ({
             Done
           </button>
         </div>
-      </div>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

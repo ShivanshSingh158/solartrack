@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { ShieldAlert, ShieldCheck, Wrench } from 'lucide-react';
+import { Tabs, TabsList, TabsTab } from '@ui-sdk/react/tabs';
 import {
   buildSystemHealthReport,
   type CanonicalSolarSnapshot,
@@ -125,38 +126,41 @@ export const HealthTab: React.FC<HealthTabProps> = ({
             </p>
           </div>
 
-          <div
-            role="tablist"
-            aria-label="System health chart views"
-            className="apple-glass-pill p-1 rounded-full inline-flex items-center self-start md:self-auto shrink-0 shadow-2xs"
+          <Tabs
+            value={stageView}
+            onValueChange={(val) => {
+              if (val) setStageView(val as HealthStageView);
+            }}
           >
-            {(
-              [
-                { id: 'conversion', label: 'Inverter Efficiency Graph' },
-                { id: 'sync14', label: '14-Day Connection Log' },
-                { id: 'channels', label: 'Hardware Sensors' },
-                { id: 'alarms', label: 'Safety & Outage Alerts' },
-              ] as const
-            ).map((tab) => {
-              const active = stageView === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  onClick={() => setStageView(tab.id)}
-                  className={`px-3 py-1.5 rounded-full text-[11.5px] font-bold transition cursor-pointer whitespace-nowrap ${
-                    active
-                      ? 'bg-white text-slate-900 shadow-xs'
-                      : 'text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
+            <TabsList
+              aria-label="System health chart views"
+              className="apple-glass-pill p-1 rounded-full inline-flex items-center self-start md:self-auto shrink-0 shadow-2xs"
+            >
+              {(
+                [
+                  { id: 'conversion', label: 'Inverter Efficiency Graph' },
+                  { id: 'sync14', label: '14-Day Connection Log' },
+                  { id: 'channels', label: 'Hardware Sensors' },
+                  { id: 'alarms', label: 'Safety & Outage Alerts' },
+                ] as const
+              ).map((tab) => {
+                const active = stageView === tab.id;
+                return (
+                  <TabsTab
+                    key={tab.id}
+                    value={tab.id}
+                    className={`px-3 py-1.5 rounded-full text-[11.5px] font-bold transition cursor-pointer whitespace-nowrap ${
+                      active
+                        ? 'bg-white text-slate-900 shadow-xs'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    {tab.label}
+                  </TabsTab>
+                );
+              })}
+            </TabsList>
+          </Tabs>
         </div>
 
         <HealthKpiStrip report={report} canonicalSnapshot={canonicalSnapshot} />

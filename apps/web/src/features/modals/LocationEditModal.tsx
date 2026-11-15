@@ -8,6 +8,7 @@ import {
   Search,
   CheckCircle2,
 } from 'lucide-react';
+import { Dialog, DialogBackdrop, DialogContent, DialogTitle } from '@ui-sdk/react/dialog';
 import { ApiService } from '../../shared/api/solarApi';
 import { INDIAN_SOLAR_PRESETS } from '@solar-track/core';
 
@@ -189,18 +190,20 @@ export const LocationEditModal: React.FC<LocationEditModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-md animate-fade-in">
-      <div className="bg-white/95 backdrop-blur-2xl rounded-3xl max-w-lg w-full shadow-2xl border border-black/[0.08] overflow-hidden transition-all">
-        {/* Apple iOS Style Header */}
-        <div className="px-6 py-4 border-b border-black/[0.06] flex items-center justify-between">
-          <div>
-            <h3 className="text-base font-bold text-gray-900 tracking-tight">
-              Rooftop Location
-            </h3>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Syncs Open-Meteo satellite irradiance & weather
-            </p>
-          </div>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogBackdrop className="fixed inset-0 z-50 bg-black/30 backdrop-blur-md animate-fade-in" />
+      <DialogContent className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+        <div className="pointer-events-auto bg-white/95 backdrop-blur-2xl rounded-3xl max-w-lg w-full shadow-2xl border border-black/[0.08] overflow-hidden transition-all">
+          {/* Apple iOS Style Header */}
+          <div className="px-6 py-4 border-b border-black/[0.06] flex items-center justify-between">
+            <div>
+              <DialogTitle className="text-base font-bold text-gray-900 tracking-tight">
+                Rooftop Location
+              </DialogTitle>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Syncs Open-Meteo satellite irradiance & weather
+              </p>
+            </div>
           <button
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-900 flex items-center justify-center transition cursor-pointer"
@@ -342,7 +345,8 @@ export const LocationEditModal: React.FC<LocationEditModalProps> = ({
             </button>
           </div>
         </form>
-      </div>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

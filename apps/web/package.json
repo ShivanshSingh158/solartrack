@@ -11,8 +11,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^6.3.4",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.5.0",
+    "@mui/x-charts": "^9.18.0",
     "@tailwindcss/vite": "^4.3.5",
     "@types/leaflet": "^1.9.22",
+    "@ui-sdk/core": "^0.1.0-beta.5",
+    "@ui-sdk/react": "^0.1.0-beta.5",
+    "antd": "^6.7.0",
     "chart.js": "^4.6.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.70.0",
