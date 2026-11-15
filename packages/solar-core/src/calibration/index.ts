@@ -7,3 +7,11 @@ export {
   type SiteGeometryCalibrationParams,
 } from './horizonAndAzimuth.ts';
 export { calibrateSitePhysicsFromHistory } from './siteCalibrator.ts';
+export {
+  getKanpurMonthlyProfile,
+  getKanpurProfileForDate,
+  isKanpurRegion,
+  KANPUR_12_MONTH_PROFILES,
+  type KanpurMonthlyProfile,
+} from './monthlyProfiles.ts';
+

@@ -1,4 +1,5 @@
 import { computeAstronomicalSunTimes, computeDailySolarPhysicsModel } from '../physics/index.ts';
+import { getKanpurProfileForDate, isKanpurRegion } from '../calibration/monthlyProfiles.ts';
 import { parseYmdParts, shiftYmdDays } from '../time/istDate.ts';
 import type { DailyPerformanceLedgerEntry, DipAttributionCategory } from '../types/intelligence.ts';
 import type { DailySolarPhysicsModel } from '../types/physics.ts';
@@ -257,6 +258,16 @@ export function buildPhysicsModelForDate(
     recentPast?.radiationMjM2 ??
     15.2;
 
+  const kanpurProfile = isKanpurRegion(lat, lon) ? getKanpurProfileForDate(ymd) : null;
+  const effectiveKSite =
+    typeof kSite === 'number' && Number.isFinite(kSite) && kSite > 0
+      ? kSite
+      : kanpurProfile?.kSite ?? null;
+  const effectiveHourlyShadeFactors =
+    Array.isArray(hourlyShadeFactors) && hourlyShadeFactors.length === 24
+      ? hourlyShadeFactors
+      : kanpurProfile?.hourlyShadeFactors ?? null;
+
   return computeDailySolarPhysicsModel({
     sunriseIso,
     sunsetIso,
@@ -292,9 +303,9 @@ export function buildPhysicsModelForDate(
     thermalCoeffPerC,
     basePrAtStc,
     inverterEfficiency,
-    kSite,
+    kSite: effectiveKSite,
     inverterLossCoeffs,
-    hourlyShadeFactors,
+    hourlyShadeFactors: effectiveHourlyShadeFactors,
     surfaceLossPct,
   });
 }
