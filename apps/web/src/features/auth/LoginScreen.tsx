@@ -7,62 +7,11 @@ import {
   User,
 } from 'lucide-react';
 import { ApiService } from '../../shared/api/solarApi';
+import { SolarTrackLogo } from '../../shared/components/SolarTrackLogo';
 
 interface LoginScreenProps {
   onLoginSuccess: (user?: any) => void;
 }
-
-/**
- * Official SolarTrack squircle brand logo from favicon.svg
- */
-const SolarTrackBrandLogo: React.FC<{ size?: number; className?: string }> = ({
-  size = 44,
-  className = '',
-}) => (
-  <svg
-    viewBox="0 0 64 64"
-    width={size}
-    height={size}
-    fill="none"
-    className={`shrink-0 select-none ${className}`}
-  >
-    <defs>
-      <linearGradient id="brandSunGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#FBBF24" />
-        <stop offset="100%" stopColor="#D97706" />
-      </linearGradient>
-      <linearGradient id="brandTrackGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#107C41" />
-        <stop offset="100%" stopColor="#16A34A" />
-      </linearGradient>
-    </defs>
-
-    {/* Background rounded squircle */}
-    <rect width="64" height="64" rx="15" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="1.2" />
-
-    {/* Solar Core Orb */}
-    <circle cx="32" cy="32" r="10.5" fill="url(#brandSunGrad)" />
-
-    {/* Solar Tracking Orbital Trajectory Sweep */}
-    <path
-      d="M 16 37 A 19 19 0 1 1 48 37"
-      fill="none"
-      stroke="url(#brandTrackGrad)"
-      strokeWidth="3.2"
-      strokeLinecap="round"
-    />
-
-    {/* Tracking Points */}
-    <circle cx="32" cy="13" r="2.2" fill="#107C41" />
-    <circle cx="18" cy="21" r="1.8" fill="#107C41" />
-    <circle cx="46" cy="21" r="1.8" fill="#107C41" />
-
-    {/* Foundation Grid */}
-    <path d="M 22 47 L 42 47" stroke="#94A3B8" strokeWidth="2.2" strokeLinecap="round" />
-    <path d="M 26 43 L 38 43" stroke="#94A3B8" strokeWidth="1.8" strokeLinecap="round" />
-    <path d="M 32 38 L 32 47" stroke="#107C41" strokeWidth="1.8" strokeLinecap="round" />
-  </svg>
-);
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
@@ -143,8 +92,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
         {/* Left Side: Editorial Solar Intelligence Showcase */}
         <div className="lg:col-span-7 flex flex-col justify-center space-y-6 sm:space-y-8 pr-0 lg:pr-2">
           {/* Brand Header */}
-          <div className="flex items-center gap-3">
-            <SolarTrackBrandLogo size={44} />
+          <div className="flex items-center gap-3.5">
+            <SolarTrackLogo size={48} className="shadow-md rounded-2xl" />
             <div>
               <div className="text-2xl font-bold tracking-tight text-slate-900">
                 SolarTrack

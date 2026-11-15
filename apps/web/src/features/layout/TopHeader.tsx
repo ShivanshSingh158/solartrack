@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import type { Account, NewWaareePacketEvent, TabType } from '@solar-track/core';
 import { HeaderSyncPopover, type SyncMetaBarInfo } from './HeaderSyncPopover';
 import { HeaderAccountMenu } from './HeaderAccountMenu';
+import { SolarTrackLogo } from '../../shared/components/SolarTrackLogo';
 
 interface TopHeaderProps {
   title: string;
@@ -193,7 +194,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           className="flex items-center gap-2.5 group cursor-pointer select-none shrink-0"
           title="SolarTrack Overview"
         >
-          <span className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b] group-hover:scale-125 transition-transform shrink-0" />
+          <SolarTrackLogo size={24} className="rounded-lg shadow-2xs group-hover:scale-105 transition-transform" />
           <span className="text-xs font-black text-slate-900 tracking-[0.22em] uppercase font-sans whitespace-nowrap">
             <span className="sm:hidden">S T</span>
             <span className="hidden sm:inline">SOLARTRACK</span>
