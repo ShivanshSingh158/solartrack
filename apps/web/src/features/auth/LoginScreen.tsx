@@ -144,13 +144,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
         <div className="lg:col-span-7 flex flex-col justify-center space-y-6 sm:space-y-8 pr-0 lg:pr-2">
           {/* Brand Header */}
           <div className="flex items-center gap-3">
-            <SolarTrackBrandLogo size={46} />
+            <SolarTrackBrandLogo size={44} />
             <div>
               <div className="text-2xl font-bold tracking-tight text-slate-900">
                 SolarTrack
               </div>
               <p className="text-xs text-slate-500 font-medium">
-                Rooftop Solar Intelligence
+                Rooftop Solar
               </p>
             </div>
           </div>
@@ -158,10 +158,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           {/* Headline */}
           <div className="space-y-3">
             <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-slate-900 tracking-tight leading-[1.15]">
-              Real-time solar telemetry &amp; rooftop intelligence.
+              Track your solar energy in real time.
             </h1>
             <p className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-lg">
-              Track daily generation curves, irradiance modeling, and inverter telemetry in one seamless view.
+              See your daily power generation, savings, and solar system performance in one simple place.
             </p>
           </div>
 
@@ -172,10 +172,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             {/* Header: Pure Typography, Zero Pills */}
             <div className="flex items-center justify-between text-xs text-slate-500 pb-2 border-b border-slate-100">
               <span className="font-semibold text-slate-800">
-                Solar Generation Profile
+                Today's Solar Power
               </span>
               <span className="text-slate-500 font-medium">
-                3.27 kWp DC · 3.0 kW AC
+                3.3 kW System
               </span>
             </div>
 
@@ -241,15 +241,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
 
                 {/* Minimalist Axis Timestamps */}
                 <text x="35" y="137" fill="#94A3B8" fontSize="10" fontWeight="500" textAnchor="middle">06:27 AM</text>
-                <text x="250" y="137" fill="#64748B" fontSize="10" fontWeight="600" textAnchor="middle">Solar Noon 11:53 AM</text>
+                <text x="250" y="137" fill="#64748B" fontSize="10" fontWeight="600" textAnchor="middle">Peak Noon 11:53 AM</text>
                 <text x="465" y="137" fill="#94A3B8" fontSize="10" fontWeight="500" textAnchor="middle">05:19 PM</text>
               </svg>
             </div>
 
             {/* Calm, Understated Baseline Note */}
             <div className="pt-2 flex items-center justify-between text-[11px] text-slate-500">
-              <span>Astronomical daylight window · 10h 52m</span>
-              <span>Telemetry Gateway Active</span>
+              <span>Sunlight today: 10 hrs 52 mins</span>
+              <span>Connected to Inverter</span>
             </div>
           </div>
         </div>
@@ -265,7 +265,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 Sign In
               </h2>
               <p className="text-xs text-slate-500 font-normal mt-1">
-                Enter your credentials to access your station.
+                Enter your details to view your solar dashboard.
               </p>
             </div>
 
@@ -280,14 +280,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Username or Phone
+                  Phone or Username
                 </label>
                 <div className="relative">
                   <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="e.g. 9876543210 or user@example.com"
+                    placeholder="Enter phone or username"
                     required
                     autoFocus
                     className="w-full bg-slate-50/70 border border-slate-200 focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none transition pr-10"
@@ -329,7 +329,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 {isLoading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Signing In...</span>
+                    <span>Signing in...</span>
                   </>
                 ) : (
                   <>
@@ -343,7 +343,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             {/* Clean Footer Note */}
             <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-center text-xs text-slate-400 gap-1.5">
               <Lock className="w-3.5 h-3.5 text-slate-400" />
-              <span>Secure Waaree Telemetry Link</span>
+              <span>Encrypted &amp; Secure</span>
             </div>
           </div>
         </div>
