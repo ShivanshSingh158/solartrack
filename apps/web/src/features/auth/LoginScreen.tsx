@@ -3,9 +3,11 @@ import {
   ArrowRight,
   Eye,
   EyeOff,
+  Gauge,
   Lock,
   Sparkles,
   User,
+  Zap,
 } from 'lucide-react';
 import { ApiService } from '../../shared/api/solarApi';
 
@@ -80,14 +82,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
     const hour = new Date().getHours();
     if (hour >= 6 && hour < 12) {
       return {
-        mode: 'Morning Sun',
+        mode: 'Morning Horizon',
         gradient: 'from-[#FFFDF5] via-[#FEF9E7] to-[#F0FDF4]',
         accent: '#F59E0B',
-        accentBg: 'bg-amber-500/10 text-amber-800 border-amber-200/80',
-        sunX: 130,
+        sunX: 165,
         sunY: 62,
+        sunLabel: '1.24 kW',
         sunColor: '#F59E0B',
-        label: 'Morning Solar Harvest',
       };
     }
     if (hour >= 12 && hour < 16) {
@@ -95,11 +96,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
         mode: 'Solar Noon',
         gradient: 'from-[#FFFDF2] via-[#FEFCE8] to-[#E0F2FE]',
         accent: '#D97706',
-        accentBg: 'bg-amber-500/10 text-amber-800 border-amber-200/80',
-        sunX: 200,
-        sunY: 38,
+        sunX: 250,
+        sunY: 34,
+        sunLabel: '1.95 kW Peak',
         sunColor: '#FBBF24',
-        label: 'Peak Direct Irradiance',
       };
     }
     if (hour >= 16 && hour < 19) {
@@ -107,22 +107,20 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
         mode: 'Golden Hour',
         gradient: 'from-[#FFF7ED] via-[#FFEDD5] to-[#FEF2F2]',
         accent: '#EA580C',
-        accentBg: 'bg-orange-500/10 text-orange-800 border-orange-200/80',
-        sunX: 285,
-        sunY: 72,
+        sunX: 350,
+        sunY: 78,
+        sunLabel: '0.82 kW',
         sunColor: '#F97316',
-        label: 'Golden Hour Tracking',
       };
     }
     return {
-      mode: 'Clear Twilight',
+      mode: 'Night Standby',
       gradient: 'from-[#F8FAFC] via-[#F1F5F9] to-[#FEF3C7]',
       accent: '#0284C7',
-      accentBg: 'bg-sky-500/10 text-sky-800 border-sky-200/80',
-      sunX: 340,
-      sunY: 96,
+      sunX: 420,
+      sunY: 110,
+      sunLabel: 'Standby',
       sunColor: '#38BDF8',
-      label: 'Night Standby & Sync',
     };
   }, []);
 
@@ -154,7 +152,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
     <div
       className={`min-h-screen w-full relative flex items-center justify-center p-4 sm:p-8 lg:p-12 overflow-hidden bg-gradient-to-br ${atmosphericTheme.gradient} text-slate-900 font-sans selection:bg-amber-500/20`}
     >
-      {/* Organic Atmospheric Ambient Backdrops (Seamless Blending) */}
+      {/* Organic Atmospheric Ambient Backdrops (Seamless Soft Blending) */}
       <div className="absolute -top-40 -left-40 w-[650px] h-[650px] bg-amber-300/25 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-emerald-400/15 rounded-full blur-[160px] pointer-events-none" />
       <div className="absolute -bottom-40 right-10 w-[600px] h-[600px] bg-sky-300/20 rounded-full blur-[150px] pointer-events-none" />
@@ -163,7 +161,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
       {/* Main Container - Blended Dual-Stage Architecture */}
       <div className="w-full max-w-6xl relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left Side: Visual Solar Intelligence Showcase */}
-        <div className="lg:col-span-7 flex flex-col justify-center space-y-6 sm:space-y-8 pr-0 lg:pr-6">
+        <div className="lg:col-span-7 flex flex-col justify-center space-y-6 sm:space-y-7 pr-0 lg:pr-4">
           {/* Brand Header */}
           <div className="flex items-center gap-3.5">
             <SolarTrackBrandLogo size={52} />
@@ -172,7 +170,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 <span className="text-2xl font-black tracking-tight text-slate-900">
                   SolarTrack
                 </span>
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   Live Sync
                 </span>
@@ -184,8 +182,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           </div>
 
           {/* Headline */}
-          <div className="space-y-3">
-            <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-black text-slate-900 tracking-tight leading-[1.18]">
+          <div className="space-y-2.5">
+            <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-black text-slate-900 tracking-tight leading-[1.18]">
               High-precision solar telemetry, calibrated for your rooftop.
             </h1>
             <p className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-lg">
@@ -193,111 +191,170 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             </p>
           </div>
 
-          {/* Dynamic Celestial Solar Arc Card (SVG + Fluid Animation) */}
+          {/* High-Grade Studio Solar Curve Card (Apple/Tesla Grade Visualization) */}
           <div
-            className="rounded-3xl p-6 sm:p-7 border border-white/80 shadow-xl shadow-slate-200/60 relative overflow-hidden"
+            className="rounded-3xl p-6 sm:p-7 border border-white/80 shadow-xl shadow-slate-200/50 relative overflow-hidden space-y-5"
             style={{
-              background: 'rgba(255, 255, 255, 0.72)',
-              backdropFilter: 'blur(24px) saturate(1.8)',
-              WebkitBackdropFilter: 'blur(24px) saturate(1.8)',
-              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 1), 0 20px 40px -15px rgba(15, 23, 42, 0.07)',
+              background: 'rgba(255, 255, 255, 0.76)',
+              backdropFilter: 'blur(28px) saturate(1.9)',
+              WebkitBackdropFilter: 'blur(28px) saturate(1.9)',
+              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 1), 0 20px 45px -15px rgba(15, 23, 42, 0.08)',
             }}
           >
-            {/* Top Stat Row */}
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+            {/* Top Stat Row (Location-Free Privacy) */}
+            <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                <span className="text-xs font-bold text-slate-800 tracking-wide">
-                  Kanpur Rooftop Station
+                <div className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]" />
+                <span className="text-xs font-bold text-slate-900 tracking-wide">
+                  Rooftop Solar Generation Curve
                 </span>
               </div>
-              <span className="text-xs font-extrabold text-amber-700 tracking-tight">
-                3.27 kWp DC · 3.0 kW AC
-              </span>
+              <div className="flex items-center gap-2 text-xs">
+                <span className="font-extrabold text-amber-700 tracking-tight bg-amber-50 px-2.5 py-0.5 rounded-md border border-amber-200/60">
+                  3.27 kWp DC
+                </span>
+                <span className="text-slate-400 font-medium">·</span>
+                <span className="font-semibold text-slate-600">3.0 kW AC</span>
+              </div>
             </div>
 
-            {/* Celestial Parabolic Solar Arc SVG */}
-            <div className="py-2 relative">
-              <svg viewBox="0 0 400 130" className="w-full h-32 overflow-visible" fill="none">
+            {/* High-Resolution SVG Solar Curve with Dual Trajectories & Precision Grid */}
+            <div className="py-1 relative">
+              <svg viewBox="0 0 500 150" className="w-full h-36 overflow-visible" fill="none">
                 <defs>
-                  {/* Arc Stroke Gradient */}
-                  <linearGradient id="solarPathGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#D97706" stopOpacity="0.3" />
-                    <stop offset="25%" stopColor="#F59E0B" stopOpacity="0.8" />
-                    <stop offset="50%" stopColor="#FBBF24" stopOpacity="1" />
-                    <stop offset="75%" stopColor="#F59E0B" stopOpacity="0.8" />
-                    <stop offset="100%" stopColor="#D97706" stopOpacity="0.3" />
+                  {/* Subtle Grid Pattern */}
+                  <linearGradient id="gridLineFade" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#CBD5E1" stopOpacity="0.4" />
+                    <stop offset="100%" stopColor="#CBD5E1" stopOpacity="0.05" />
                   </linearGradient>
 
-                  {/* Shaded Area Under Parabola */}
-                  <linearGradient id="areaGlowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#FEF08A" stopOpacity="0.45" />
-                    <stop offset="60%" stopColor="#FEF9C3" stopOpacity="0.15" />
+                  {/* Expected Clear-Sky Theoretical Stroke */}
+                  <linearGradient id="targetCurveStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#0284C7" stopOpacity="0.3" />
+                    <stop offset="50%" stopColor="#0284C7" stopOpacity="0.85" />
+                    <stop offset="100%" stopColor="#0284C7" stopOpacity="0.3" />
+                  </linearGradient>
+
+                  {/* Active Generation Fill Gradient */}
+                  <linearGradient id="genAreaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.38" />
+                    <stop offset="45%" stopColor="#FBBF24" stopOpacity="0.18" />
+                    <stop offset="85%" stopColor="#10B981" stopOpacity="0.06" />
                     <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.0" />
                   </linearGradient>
 
-                  {/* Pulsing Sun Radial Gradient */}
-                  <radialGradient id="liveSunOrb" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#FFFBEB" />
-                    <stop offset="40%" stopColor="#FDE047" />
-                    <stop offset="85%" stopColor="#F59E0B" />
-                    <stop offset="100%" stopColor="#D97706" />
+                  {/* Active Generation Line Stroke */}
+                  <linearGradient id="genLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#10B981" stopOpacity="0.4" />
+                    <stop offset="35%" stopColor="#F59E0B" stopOpacity="0.9" />
+                    <stop offset="50%" stopColor="#D97706" stopOpacity="1" />
+                    <stop offset="65%" stopColor="#F59E0B" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#10B981" stopOpacity="0.4" />
+                  </linearGradient>
+
+                  {/* Live Sun Glowing Radial Halo */}
+                  <radialGradient id="sunAuraGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#FFFBEB" stopOpacity="1" />
+                    <stop offset="35%" stopColor="#FEF08A" stopOpacity="0.9" />
+                    <stop offset="70%" stopColor="#F59E0B" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="#D97706" stopOpacity="0.0" />
                   </radialGradient>
                 </defs>
 
-                {/* Horizon Baseline */}
-                <line
-                  x1="10"
-                  y1="115"
-                  x2="390"
-                  y2="115"
-                  stroke="#E2E8F0"
-                  strokeWidth="1.5"
-                  strokeDasharray="4 4"
+                {/* Horizontal Grid Level Guidelines (0.0 kW, 1.2 kW, 2.4 kW) */}
+                <line x1="20" y1="35" x2="480" y2="35" stroke="#F1F5F9" strokeWidth="1" strokeDasharray="4 4" />
+                <line x1="20" y1="80" x2="480" y2="80" stroke="#F1F5F9" strokeWidth="1" strokeDasharray="4 4" />
+                <line x1="20" y1="125" x2="480" y2="125" stroke="#E2E8F0" strokeWidth="1.2" />
+
+                {/* Vertical Time Meridian Guides (8 AM, 10 AM, 12 PM Noon, 2 PM, 4 PM) */}
+                <line x1="120" y1="30" x2="120" y2="125" stroke="url(#gridLineFade)" strokeWidth="1" strokeDasharray="2 2" />
+                <line x1="185" y1="25" x2="185" y2="125" stroke="url(#gridLineFade)" strokeWidth="1" strokeDasharray="2 2" />
+                <line x1="250" y1="20" x2="250" y2="125" stroke="url(#gridLineFade)" strokeWidth="1.2" strokeDasharray="3 3" />
+                <line x1="315" y1="25" x2="315" y2="125" stroke="url(#gridLineFade)" strokeWidth="1" strokeDasharray="2 2" />
+                <line x1="380" y1="30" x2="380" y2="125" stroke="url(#gridLineFade)" strokeWidth="1" strokeDasharray="2 2" />
+
+                {/* 1. Expected Sun Target (Dashed Blue Celestial Path) */}
+                <path
+                  d="M 35 125 C 100 120, 160 22, 250 22 C 340 22, 400 120, 465 125"
+                  stroke="url(#targetCurveStroke)"
+                  strokeWidth="2"
+                  strokeDasharray="5 4"
+                  strokeLinecap="round"
                 />
 
-                {/* Shaded Area Under Parabola */}
+                {/* 2. Shaded Generation Area Under Parabola */}
                 <path
-                  d="M 20 115 Q 200 15 380 115 Z"
-                  fill="url(#areaGlowGrad)"
+                  d="M 35 125 C 100 122, 165 32, 250 32 C 335 32, 400 122, 465 125 L 465 125 L 35 125 Z"
+                  fill="url(#genAreaGrad)"
                 />
 
-                {/* Parabolic Sun Trajectory Curve */}
+                {/* 3. Sculpted Real Generation Curve */}
                 <path
-                  d="M 20 115 Q 200 15 380 115"
-                  stroke="url(#solarPathGrad)"
+                  d="M 35 125 C 100 122, 165 32, 250 32 C 335 32, 400 122, 465 125"
+                  stroke="url(#genLineGrad)"
                   strokeWidth="3.5"
                   strokeLinecap="round"
                 />
 
-                {/* Solar Noon Apex Guide Point */}
-                <circle cx="200" cy="40" r="3.5" fill="#CBD5E1" />
-                <line x1="200" y1="45" x2="200" y2="115" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="2 2" />
+                {/* Solar Noon Apex Indicator Marker */}
+                <circle cx="250" cy="32" r="3.5" fill="#D97706" />
 
-                {/* Animated Dynamic Sun Position Based on Time of Day */}
+                {/* Dynamic Animated Sun Orb Traveling on Trajectory */}
                 <g transform={`translate(${atmosphericTheme.sunX}, ${atmosphericTheme.sunY})`}>
-                  {/* Outer Pulsing Corona Rays */}
-                  <circle cx="0" cy="0" r="18" fill={atmosphericTheme.sunColor} fillOpacity="0.15" className="animate-ping" style={{ animationDuration: '3s' }} />
-                  <circle cx="0" cy="0" r="12" fill={atmosphericTheme.sunColor} fillOpacity="0.25" />
-                  {/* Glowing Solar Core */}
-                  <circle cx="0" cy="0" r="6.5" fill="url(#liveSunOrb)" stroke="#FFFFFF" strokeWidth="1.5" className="shadow-md" />
+                  {/* Outer Pulsing Corona Waves */}
+                  <circle cx="0" cy="0" r="22" fill={atmosphericTheme.sunColor} fillOpacity="0.12" className="animate-ping" style={{ animationDuration: '3.5s' }} />
+                  <circle cx="0" cy="0" r="14" fill={atmosphericTheme.sunColor} fillOpacity="0.25" />
+                  {/* Glowing Solar Core Sphere */}
+                  <circle cx="0" cy="0" r="7.5" fill="url(#sunAuraGlow)" stroke="#FFFFFF" strokeWidth="2" className="shadow-lg" />
+                  {/* Floating Wattage Badge Tag */}
+                  <g transform="translate(0, -18)">
+                    <rect x="-30" y="-14" width="60" height="17" rx="8.5" fill="#0F172A" fillOpacity="0.92" />
+                    <text x="0" y="-2" textAnchor="middle" fill="#F8FAFC" fontSize="9.5" fontWeight="700" fontFamily="sans-serif">
+                      {atmosphericTheme.sunLabel}
+                    </text>
+                  </g>
                 </g>
+
+                {/* Axis Labels */}
+                <text x="35" y="142" fill="#94A3B8" fontSize="10" fontWeight="600" textAnchor="middle">06:27 AM</text>
+                <text x="185" y="142" fill="#94A3B8" fontSize="10" fontWeight="600" textAnchor="middle">10:00 AM</text>
+                <text x="250" y="142" fill="#D97706" fontSize="10.5" fontWeight="800" textAnchor="middle">11:53 AM (Noon)</text>
+                <text x="315" y="142" fill="#94A3B8" fontSize="10" fontWeight="600" textAnchor="middle">02:00 PM</text>
+                <text x="465" y="142" fill="#94A3B8" fontSize="10" fontWeight="600" textAnchor="middle">05:19 PM</text>
               </svg>
             </div>
 
-            {/* Bottom Timeline Legend */}
-            <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500 pt-2 border-t border-slate-100/80">
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-                06:27 AM Sunrise
-              </span>
-              <span className="text-amber-800 font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60 shadow-2xs">
-                Solar Noon 11:53 AM
-              </span>
-              <span className="flex items-center gap-1.5">
-                05:19 PM Sunset
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-              </span>
+            {/* Added Value: Real-Time Micro-Metrics Pill Strip */}
+            <div className="grid grid-cols-3 gap-3 pt-3 border-t border-slate-100">
+              <div className="p-2.5 rounded-2xl bg-white/70 border border-slate-200/70 shadow-2xs flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0">
+                  <Zap className="w-4 h-4 text-amber-600" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Est. Full Day</div>
+                  <div className="text-xs sm:text-sm font-extrabold text-slate-900 truncate">~12.4 kWh</div>
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-2xl bg-white/70 border border-slate-200/70 shadow-2xs flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0">
+                  <Gauge className="w-4 h-4 text-emerald-600" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Peak Power</div>
+                  <div className="text-xs sm:text-sm font-extrabold text-slate-900 truncate">1.95 kW</div>
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-2xl bg-white/70 border border-slate-200/70 shadow-2xs flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-sky-500/10 flex items-center justify-center shrink-0">
+                  <Sparkles className="w-4 h-4 text-sky-600" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Clean Energy</div>
+                  <div className="text-xs sm:text-sm font-extrabold text-slate-900 truncate">100% Green</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
