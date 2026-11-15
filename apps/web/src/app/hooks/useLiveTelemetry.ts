@@ -932,6 +932,7 @@ export function useLiveTelemetry(params: UseLiveTelemetryParams) {
     peakTimeText: resolvedHistoryView.peakTimeText,
     isChartLoading,
     isRefreshing,
+    isInitialLoading: accounts.length === 0 || !weatherData,
     handleFullRefresh,
     handleExportCSV,
     fullPersistedSettings,

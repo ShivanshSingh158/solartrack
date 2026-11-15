@@ -233,7 +233,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 }}
                 onClick={() => handleTabClick(tab.id)}
                 className={`relative z-10 rounded-full px-4 py-1.5 text-xs font-semibold cursor-pointer select-none whitespace-nowrap transition-colors duration-200 ${
-                  isActive ? 'text-slate-900' : 'text-slate-500 hover:text-slate-900'
+                  isActive
+                    ? indicatorStyle.ready
+                      ? 'text-slate-900'
+                      : 'text-slate-900 bg-white/95 border border-white/90 shadow-[0_2px_8px_rgba(15,23,42,0.06)]'
+                    : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
                 {tab.label}

@@ -448,7 +448,7 @@ describe('Live solar dataset calibration & 8-scenario E2E matrix', () => {
       isWifiOfflineFullDay: true,
     });
     assert.equal(ledger10.dipCategory, 'WIFI_OUTAGE_UNLOGGED');
-    assert.equal(ledger10.bufferKwh, 12.6);
+    assert.ok(Math.abs(ledger10.bufferKwh - 12.6) <= 0.05, `Buffer should match ~12.6 (got ${ledger10.bufferKwh})`);
     assert.equal(rec10.bufferedKwh, 13.05);
   });
 

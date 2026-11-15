@@ -17,6 +17,7 @@ import { DataCatalogModal } from './features/modals/DataCatalogModal';
 import { LocationEditModal } from './features/modals/LocationEditModal';
 import { DailyReportCardModal } from './features/modals/DailyReportCardModal';
 import { LoginScreen } from './features/auth/LoginScreen';
+import { OverviewSkeleton } from './features/overview/OverviewSkeleton';
 import { PacketNotificationToast } from './app/components/PacketNotificationToast';
 import { useAppSettings } from './app/hooks/useAppSettings';
 import { useLiveTelemetry } from './app/hooks/useLiveTelemetry';
@@ -152,6 +153,16 @@ export const App: React.FC = () => {
     ? 'Combined Fleet Overview'
     : settings.plantDisplayName || telemetry.activePlantObj?.plantName || 'Solar Station';
 
+  if (!authStatus.isChecked) {
+    return (
+      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#FFFDF5] font-sans">
+        <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200/80 shadow-md flex items-center justify-center">
+          <div className="w-6 h-6 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
   if (authStatus.isChecked && !authStatus.authenticated) {
     return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
   }
@@ -210,41 +221,44 @@ export const App: React.FC = () => {
       )}
 
       <main className="flex-1 max-w-[1600px] mx-auto w-full px-4 sm:px-6 lg:px-7 pb-8 pt-0">
-        {activeTab === 'home' && (
-          <OverviewTab
-            livePower={telemetry.liveInstantPower}
-            solarDcPower={telemetry.solarPower}
-            todayYield={telemetry.todayYield}
-            yesterdayYieldOverride={telemetry.singleSummary?.generationYesterday ?? null}
-            monthYield={telemetry.monthYield}
-            lifetimeYield={telemetry.lifetimeYield}
-            plantCapacity={settings.resolvedDcDisplayCap}
-            tariffPerKwh={settings.tariffPerKwh}
-            lastUpdateText={telemetry.rawStatusText}
-            stationId={telemetry.effectiveContext}
-            plantCommissioningYmd={telemetry.resolvedCommissioningYmd}
-            recent7DaysData={telemetry.monthlyDaysData.slice(-7)}
-            monthlyDaysData={telemetry.monthlyDaysData}
-            weatherData={telemetry.weatherData}
-            todayRawSeries={telemetry.todayRawSeries}
-            yesterdayRawSeries={telemetry.yesterdayRawSeries}
-            lastSyncedDay={telemetry.lastSyncedDay}
-            istClock={telemetry.istClock}
-            syncMeta={telemetry.syncMeta}
-            latestNewData={telemetry.latestNewData}
-            currentLocation={settings.currentLocation}
-            onOpenLocationEdit={() => setIsLocationModalOpen(true)}
-            onNavigateToPerformance={navigateToDayPerformance}
-            peakTimeText={telemetry.peakTimeText}
-            onRefresh={telemetry.handleFullRefresh}
-            isRefreshing={telemetry.isRefreshing}
-            canonicalSnapshot={telemetry.canonicalSnapshot}
-            intelligenceReport={telemetry.intelligenceReport}
-            onIntelligenceReportChange={telemetry.handleIntelligenceReportChange}
-            onUpdateSettings={settings.handleUpdateSettingsPartial}
-            manualGridOffDates={settings.manualGridOffDates}
-          />
-        )}
+        {activeTab === 'home' &&
+          (telemetry.isInitialLoading ? (
+            <OverviewSkeleton />
+          ) : (
+            <OverviewTab
+              livePower={telemetry.liveInstantPower}
+              solarDcPower={telemetry.solarPower}
+              todayYield={telemetry.todayYield}
+              yesterdayYieldOverride={telemetry.singleSummary?.generationYesterday ?? null}
+              monthYield={telemetry.monthYield}
+              lifetimeYield={telemetry.lifetimeYield}
+              plantCapacity={settings.resolvedDcDisplayCap}
+              tariffPerKwh={settings.tariffPerKwh}
+              lastUpdateText={telemetry.rawStatusText}
+              stationId={telemetry.effectiveContext}
+              plantCommissioningYmd={telemetry.resolvedCommissioningYmd}
+              recent7DaysData={telemetry.monthlyDaysData.slice(-7)}
+              monthlyDaysData={telemetry.monthlyDaysData}
+              weatherData={telemetry.weatherData}
+              todayRawSeries={telemetry.todayRawSeries}
+              yesterdayRawSeries={telemetry.yesterdayRawSeries}
+              lastSyncedDay={telemetry.lastSyncedDay}
+              istClock={telemetry.istClock}
+              syncMeta={telemetry.syncMeta}
+              latestNewData={telemetry.latestNewData}
+              currentLocation={settings.currentLocation}
+              onOpenLocationEdit={() => setIsLocationModalOpen(true)}
+              onNavigateToPerformance={navigateToDayPerformance}
+              peakTimeText={telemetry.peakTimeText}
+              onRefresh={telemetry.handleFullRefresh}
+              isRefreshing={telemetry.isRefreshing}
+              canonicalSnapshot={telemetry.canonicalSnapshot}
+              intelligenceReport={telemetry.intelligenceReport}
+              onIntelligenceReportChange={telemetry.handleIntelligenceReportChange}
+              onUpdateSettings={settings.handleUpdateSettingsPartial}
+              manualGridOffDates={settings.manualGridOffDates}
+            />
+          ))}
 
         {activeTab === 'performance' && (
           <PerformanceTab
