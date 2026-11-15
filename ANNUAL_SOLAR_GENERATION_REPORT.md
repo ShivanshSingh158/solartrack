@@ -176,6 +176,70 @@ Many consumers ask: *"If I use 1,127 units in June but my 6 kW solar only genera
 
 ---
 
+## Part 7: Real Capital Payback & ROI Analysis (Waaree 2 × 3 kW Systems)
+
+### System Capex & Subsidy Architecture
+- **Hardware:** 2 × 3.0 kW Waaree Rooftop Solar Systems (Combined 6.0 kW AC / ~6.27 kWp DC)
+- **Gross Cost per System:** ₹1,85,000
+- **Total Gross Investment (2 Systems):** 2 × ₹1,85,000 = **₹3,70,000**
+- **Subsidy Structure per 3 kW in Uttar Pradesh:**
+  - **PM Surya Ghar Central Subsidy (CFA):** ₹78,000
+  - **UP State Government (UPNEDA) Top-Up Subsidy:** ₹30,000
+  - **Total Subsidy per 3 kW System:** **₹1,08,000**
+
+---
+
+### Scenario A: Two Subsidies Claimed (Two Separate Meters / Consumer Connections)
+If the two systems are registered on **two distinct KESCO consumer numbers / electricity meters** (e.g., ground floor & first floor, or two family connections):
+
+```
+┌────────────────────────────────────────────────────────┬───────────────────────┐
+│ Metric                                                 │ Financial Figure      │
+├────────────────────────────────────────────────────────┼───────────────────────┤
+│ Gross Cost for 2 × 3 kW Systems                        │ ₹3,70,000             │
+│ Total Subsidy Claimed (2 × ₹1,08,000)                  │ -₹2,16,000            │
+├────────────────────────────────────────────────────────┼───────────────────────┤
+│ NET OUT-OF-POCKET INVESTMENT                           │ ₹1,54,000             │
+├────────────────────────────────────────────────────────┼───────────────────────┤
+│ Net Annual Cash Savings (Eliminating 8,116 kWh Load)   │ ₹55,291 / year        │
+│ Monthly Cash Retained in Pocket                        │ ~₹4,608 / month       │
+├────────────────────────────────────────────────────────┼───────────────────────┤
+│ EXACT PAYBACK PERIOD                                   │ 2.78 YEARS            │
+│ (Time to Recover 100% of Money Back)                  │ (2 Years & 9 Months)  │
+├────────────────────────────────────────────────────────┼───────────────────────┤
+│ Return on Investment (Annual IRR)                      │ ~35.9% per annum      │
+│ Total Net Profit Generated Over 25-Year Lifecycle     │ ₹12,28,000+           │
+└────────────────────────────────────────────────────────┴───────────────────────┘
+```
+
+> **Milestone:** In just **33 months**, you have 100% of your ₹1,54,000 back in your bank account. For the remaining **22+ years of the panel warranty**, all electricity generated is 100% free profit.
+
+---
+
+### Scenario B: Single Meter Constraint (Single KESCO Connection)
+Under national PM Surya Ghar guidelines, subsidy is capped at **one claim per electricity connection ID**. If both 3 kW systems are installed on **one single KESCO meter**:
+
+```
+┌────────────────────────────────────────────────────────┬───────────────────────┐
+│ Metric                                                 │ Financial Figure      │
+├────────────────────────────────────────────────────────┼───────────────────────┤
+│ Gross Cost for 2 × 3 kW Systems                        │ ₹3,70,000             │
+│ Subsidy for Single Meter (1 × ₹1,08,000 Cap)           │ -₹1,08,000            │
+├────────────────────────────────────────────────────────┼───────────────────────┤
+│ NET OUT-OF-POCKET INVESTMENT                           │ ₹2,62,000             │
+├────────────────────────────────────────────────────────┼───────────────────────┤
+│ Net Annual Cash Savings (Eliminating 8,116 kWh Load)   │ ₹55,291 / year        │
+├────────────────────────────────────────────────────────┼───────────────────────┤
+│ EXACT PAYBACK PERIOD                                   │ 4.74 YEARS            │
+│ (Time to Recover 100% of Money Back)                  │ (4 Years & 9 Months)  │
+├────────────────────────────────────────────────────────┼───────────────────────┤
+│ Return on Investment (Annual IRR)                      │ ~21.1% per annum      │
+│ Total Net Profit Generated Over 25-Year Lifecycle     │ ₹11,20,000+           │
+└────────────────────────────────────────────────────────┴───────────────────────┘
+```
+
+---
+
 ## Final Recommendation: Sizing vs Summer Spike Conclusion
 
 1. **Regarding the Summer Spike:** Your spike was not an anomaly or billing error; it was the direct mathematical result of air conditioning loads colliding with the tier-4 tariff trap (>500 units at ₹7.35/unit).
