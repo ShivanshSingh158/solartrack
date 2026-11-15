@@ -1,5 +1,4 @@
 import { parseRawTelemetry } from '../analytics/telemetryParser.ts';
-import { getKanpurProfileForDate, isKanpurRegion } from '../calibration/monthlyProfiles.ts';
 import {
   convertTemperature,
   formatINR,
@@ -118,12 +117,11 @@ export function buildCanonicalSolarSnapshot(
       ? Math.max(0.75, Math.min(1.0, Number(s.dcCleanFactor)))
       : SOLAR_CONSTANTS.DC_CLEAN_FACTOR;
   const useCalibratedTwin = s.useCalibratedTwin !== false;
-  const kanpurMonthly = isKanpurRegion(lat, lon) ? getKanpurProfileForDate(clock.ymd) : null;
   const kSiteApplied = !useCalibratedTwin
     ? 1.0
     : typeof s.kSiteOverride === 'number' && Number.isFinite(s.kSiteOverride) && s.kSiteOverride > 0
       ? Math.min(SOLAR_CONSTANTS.KSITE_MAX, Math.max(SOLAR_CONSTANTS.KSITE_MIN, Number(s.kSiteOverride)))
-      : rep?.siteCalibration?.kSiteApplied ?? kanpurMonthly?.kSite ?? 1.0;
+      : rep?.siteCalibration?.kSiteApplied ?? 1.0;
   const inverterLossCoeffs =
     typeof s.inverterTareKw === 'number' && Number.isFinite(s.inverterTareKw) && s.inverterTareKw > 0
       ? {
@@ -135,7 +133,7 @@ export function buildCanonicalSolarSnapshot(
         }
       : rep?.siteCalibration?.inverterCoeffs ?? null;
   const hourlyShadeFactors = useCalibratedTwin
-    ? (rep?.siteCalibration?.hourlyShadeFactors ?? kanpurMonthly?.hourlyShadeFactors ?? null)
+    ? (rep?.siteCalibration?.hourlyShadeFactors ?? null)
     : null;
   const panelTechPreset = s.panelTechPreset || 'mono_perc';
   const thermalCoeffPerC =

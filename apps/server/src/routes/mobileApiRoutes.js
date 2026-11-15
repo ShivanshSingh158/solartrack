@@ -219,7 +219,7 @@ async function handleMobileApiRoutes(req, res, reqUrl) {
           dataProvenance: isGenerating ? "CONFIRMED_LIVE" : isNight ? "NIGHT_STANDBY" : "TELEMETRY_BLIND",
           confidenceScore: isGenerating ? 1.0 : isNight ? 1.0 : 0.95,
           isStale: false,
-          location: "Kanpur, Uttar Pradesh",
+          location: settings?.plantDisplayName || settings?.plantLocation?.name || primary?.plantName || "Rooftop Solar Station",
           lastUpdateDate: flowData?.result?.status?.lastUpdateDate || waareeSummary?.lastUpdateDate || "Live synchronized",
         },
         systemStatus: {

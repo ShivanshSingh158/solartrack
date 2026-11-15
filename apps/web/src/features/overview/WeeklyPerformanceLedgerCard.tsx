@@ -236,7 +236,7 @@ export const WeeklyPerformanceLedgerCard: React.FC<WeeklyPerformanceLedgerCardPr
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
           <span>7-Day Generation Avg: <strong className="text-slate-800 font-semibold">{avgDailyKwh.toFixed(1)} kWh/day</strong></span>
           <span className="text-slate-300">·</span>
-          <span>Consistent with Kanpur 3.27 kWp clear-sky calibration</span>
+          <span>Consistent with station clear-sky calibration</span>
         </div>
         <span className="text-slate-400 text-[10.5px]">
           Click any day to inspect hourly telemetry curve

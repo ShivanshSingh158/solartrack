@@ -1,5 +1,4 @@
 import { SOLAR_CONSTANTS, computeDailySolarPhysicsModel } from '../physics/index.ts';
-import { getKanpurProfileForDate, isKanpurRegion } from '../calibration/monthlyProfiles.ts';
 import type {
   DailyAtmosphereRecord,
   DailyPerformanceLedgerEntry,
@@ -32,20 +31,12 @@ export function resolveTomorrowForecastWindow(
       ? (day.tempMax + day.tempMin) / 2
       : day.tempMax ?? 24;
 
-  const kanpurMonthly = isKanpurRegion(latDeg, physicsOverrides?.lonDeg ?? SOLAR_CONSTANTS.DEFAULT_LON)
-    ? getKanpurProfileForDate(day.ymd)
-    : null;
-
   const resolvedKSite =
-    kanpurMonthly?.kSite ??
-    (typeof physicsOverrides?.kSite === 'number' && Number.isFinite(physicsOverrides.kSite)
+    typeof physicsOverrides?.kSite === 'number' && Number.isFinite(physicsOverrides.kSite)
       ? physicsOverrides.kSite
-      : null);
+      : null;
 
-  const resolvedHourlyShades =
-    kanpurMonthly?.hourlyShadeFactors ??
-    physicsOverrides?.hourlyShadeFactors ??
-    null;
+  const resolvedHourlyShades = physicsOverrides?.hourlyShadeFactors ?? null;
 
   const sharedParams = {
     sunriseIso: day.sunrise,

@@ -83,7 +83,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ user, onLogout }
           <View style={styles.divider} />
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Location</Text>
-            <Text style={styles.infoValue}>Kanpur, UP (26.50° N, 80.24° E)</Text>
+            <Text style={styles.infoValue}>{user.location || "Rooftop Solar Station"}</Text>
           </View>
           <View style={styles.divider} />
           <View style={styles.infoRow}>

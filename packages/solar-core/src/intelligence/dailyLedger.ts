@@ -4,7 +4,6 @@ import {
   computeEffectiveSolarPr,
   computeSmogAnomalyTransmittance,
 } from '../physics/index.ts';
-import { getKanpurProfileForDate, isKanpurRegion } from '../calibration/monthlyProfiles.ts';
 import type { DailyAtmosphereRecord, UnifiedPhysicsOptions } from '../types/intelligence.ts';
 import { SOILING_THRESHOLDS, avgNums, isValidYmd, minNums, sumNums } from './soilingModel.ts';
 
@@ -91,17 +90,11 @@ export function computeDayIrradianceBenchmarks(
   const aodAvgVal = +avgNums(day.hourlyAod, 0.5, 7, 17).toFixed(2);
   const pm10AvgVal = Math.round(avgNums(day.hourlyPm10, 140, 7, 17));
 
-  const kanpurMonthly = isKanpurRegion(latDeg, physicsOverrides?.lonDeg ?? SOLAR_CONSTANTS.DEFAULT_LON)
-    ? getKanpurProfileForDate(day.ymd)
-    : null;
   const effectiveKSite =
     typeof physicsOverrides?.kSite === 'number' && Number.isFinite(physicsOverrides.kSite)
       ? physicsOverrides.kSite
-      : kanpurMonthly?.kSite ?? null;
-  const effectiveShades =
-    physicsOverrides?.hourlyShadeFactors ??
-    kanpurMonthly?.hourlyShadeFactors ??
-    null;
+      : null;
+  const effectiveShades = physicsOverrides?.hourlyShadeFactors ?? null;
 
   const baselinePrRes = computeEffectiveSolarPr({
     ambientTempC: ambientAvgC,

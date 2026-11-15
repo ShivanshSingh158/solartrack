@@ -706,6 +706,21 @@ export function computeSolarIntelligence(input: SolarIntelligenceInput): SolarIn
     headlineSummary = `${latestWindow.realAvgKwh} kWh/d real vs ${latestWindow.modelAvgKwh} model (${latestWindow.normalizedPerfPct ?? 0}%)`;
   }
 
+  // Dynamically calibrate forward forecast from the station's observed telemetry realization factor
+  const empiricalRealizationPct =
+    latestWindow?.normalizedPerfPct != null && latestWindow.normalizedPerfPct >= 50 && latestWindow.normalizedPerfPct <= 115
+      ? latestWindow.normalizedPerfPct
+      : priorWindow?.normalizedPerfPct != null && priorWindow.normalizedPerfPct >= 50 && priorWindow.normalizedPerfPct <= 115
+      ? priorWindow.normalizedPerfPct
+      : null;
+
+  const forecastOverrides: UnifiedPhysicsOptions = empiricalRealizationPct !== null
+    ? {
+        ...physicsOverrides,
+        kSite: +((physicsOverrides.kSite ?? 1.0) * (empiricalRealizationPct / 100)).toFixed(4),
+      }
+    : physicsOverrides;
+
   const extendedForecast = futureDays
     .slice(0, 4)
     .map((fDay) =>
@@ -715,7 +730,7 @@ export function computeSolarIntelligence(input: SolarIntelligenceInput): SolarIn
         effectiveSurfaceLossPct,
         latDeg,
         tiltDeg,
-        physicsOverrides,
+        forecastOverrides,
         customRainResetMm
       )
     );

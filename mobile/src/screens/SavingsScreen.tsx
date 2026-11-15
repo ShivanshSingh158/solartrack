@@ -148,7 +148,7 @@ export const SavingsScreen: React.FC<SavingsScreenProps> = ({ user }) => {
 
         {/* Tariff Info Box */}
         <View style={styles.tariffCard}>
-          <Text style={styles.tariffLabel}>Discom Net-Metering Rate (Kanpur)</Text>
+          <Text style={styles.tariffLabel}>Discom Net-Metering Rate</Text>
           <Text style={styles.tariffValue}>₹{tariff} / kWh</Text>
           <Text style={styles.tariffSub}>Configured in Settings · Real-time bill offset</Text>
         </View>

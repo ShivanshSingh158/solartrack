@@ -224,7 +224,7 @@ export const CockpitScreen: React.FC<CockpitScreenProps> = ({
               </View>
             </View>
             <Text style={styles.headlineText}>
-              {data?.forecast?.tomorrowCondition || "Sunny - Clear Sky"} · Ideal solar generation expected across Kanpur.
+              {data?.forecast?.tomorrowCondition || "Sunny - Clear Sky"} · Ideal solar generation expected.
             </Text>
             <View style={styles.horizonRow}>
               {(data?.forecast?.threeDayHorizon || []).map((h, i) => (

@@ -219,7 +219,7 @@ export const SolarIntelligenceModal: React.FC<SolarIntelligenceModalProps> = ({
                 <p className="text-[11px] text-slate-500 font-medium mt-1">
                   {report.siteCalibration.enabled ? 'Satellite-Calibrated Solar Model' : 'Raw Weather Model'} ·{' '}
                   <span className="font-semibold text-slate-700">
-                    Calibrated for Kanpur Rooftop ({tiltDegrees}° Tilt)
+                    Calibrated for Rooftop Array ({tiltDegrees}° Tilt)
                   </span>
                 </p>
               )}
