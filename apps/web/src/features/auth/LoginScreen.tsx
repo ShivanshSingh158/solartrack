@@ -249,7 +249,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             {/* Calm, Understated Baseline Note */}
             <div className="pt-2 flex items-center justify-between text-[11px] text-slate-500">
               <span>Astronomical daylight window · 10h 52m</span>
-              <span>Kanpur Array · 26.5° N</span>
+              <span>Telemetry Gateway Active</span>
             </div>
           </div>
         </div>
