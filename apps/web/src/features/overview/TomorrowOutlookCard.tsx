@@ -32,10 +32,10 @@ export const TomorrowOutlookCard: React.FC<TomorrowOutlookCardProps> = ({
   return (
     <div className="p-5 sm:p-6 apple-glass-card rounded-3xl !bg-amber-50/20 flex-1 flex flex-col justify-between space-y-3.5">
       {/* Card Header: Plain text, no pills */}
-      <div className="pb-2.5 border-b border-slate-100 flex items-center justify-between gap-2">
+      <div className="pb-2.5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
         <div className="flex items-center space-x-2 min-w-0">
           <Sun className="w-4 h-4 text-amber-500 shrink-0" />
-          <h3 className="card-title-h2 text-slate-800 text-[13px] sm:text-[14px] whitespace-nowrap">
+          <h3 className="card-title-h2 text-slate-800 text-[13px] sm:text-[14px] font-bold">
             Tomorrow&apos;s Solar Forecast
           </h3>
         </div>

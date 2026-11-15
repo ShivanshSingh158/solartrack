@@ -1,4 +1,5 @@
 const solarTruth = require("@solar-track/core/physics");
+const { getKanpurProfileForDate, isKanpurRegion } = require("@solar-track/core/calibration");
 const { buildPhysicsArgsFromSettings } = require("../config/settingsStore");
 const { getISTClockSnapshot } = require("../time/istClock");
 const { getPrimaryStationAndToken } = require("../waaree/accountsStore");
@@ -149,6 +150,10 @@ async function buildSolarWeatherPayload(
   }
 
   const todayRadMj = weather.daily?.shortwave_radiation_sum?.[0] ?? 15.33;
+  const isKanpur = isKanpurRegion(lat, lon);
+  const kanpurToday = isKanpur ? getKanpurProfileForDate(todayYmd) : null;
+  const kanpurTomorrow = isKanpur ? getKanpurProfileForDate(tomorrowYmd) : null;
+
   const todayModel = solarTruth.computeDailySolarPhysicsModel({
     sunriseIso: weather.daily?.sunrise?.[0] || `${istClock.ymd}T06:23`,
     sunsetIso: weather.daily?.sunset?.[0] || `${istClock.ymd}T17:20`,
@@ -185,6 +190,8 @@ async function buildSolarWeatherPayload(
     pm10: pm10Val,
     pm25: pm25Val,
     ...calPhysics,
+    kSite: kanpurToday?.kSite ?? calPhysics.kSite,
+    hourlyShadeFactors: kanpurToday?.hourlyShadeFactors ?? calPhysics.hourlyShadeFactors,
   });
   const todayYieldEst = todayModel.targetDailyModelKwh;
   const todaySavingsEst = Math.round(todayYieldEst * tariff);
@@ -233,6 +240,8 @@ async function buildSolarWeatherPayload(
     pm10: pm10Val,
     pm25: pm25Val,
     ...calPhysics,
+    kSite: kanpurTomorrow?.kSite ?? calPhysics.kSite,
+    hourlyShadeFactors: kanpurTomorrow?.hourlyShadeFactors ?? calPhysics.hourlyShadeFactors,
   });
   const tomorrowYieldEst = tomorrowModel.targetDailyModelKwh;
   const tomorrowSavingsEst = Math.round(tomorrowYieldEst * tariff);

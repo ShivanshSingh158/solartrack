@@ -4,6 +4,7 @@ import {
   computeEffectiveSolarPr,
   computeSmogAnomalyTransmittance,
 } from '../physics/index.ts';
+import { getKanpurProfileForDate, isKanpurRegion } from '../calibration/monthlyProfiles.ts';
 import type { DailyAtmosphereRecord, UnifiedPhysicsOptions } from '../types/intelligence.ts';
 import { SOILING_THRESHOLDS, avgNums, isValidYmd, minNums, sumNums } from './soilingModel.ts';
 
@@ -90,6 +91,18 @@ export function computeDayIrradianceBenchmarks(
   const aodAvgVal = +avgNums(day.hourlyAod, 0.5, 7, 17).toFixed(2);
   const pm10AvgVal = Math.round(avgNums(day.hourlyPm10, 140, 7, 17));
 
+  const kanpurMonthly = isKanpurRegion(latDeg, physicsOverrides?.lonDeg ?? SOLAR_CONSTANTS.DEFAULT_LON)
+    ? getKanpurProfileForDate(day.ymd)
+    : null;
+  const effectiveKSite =
+    typeof physicsOverrides?.kSite === 'number' && Number.isFinite(physicsOverrides.kSite)
+      ? physicsOverrides.kSite
+      : kanpurMonthly?.kSite ?? null;
+  const effectiveShades =
+    physicsOverrides?.hourlyShadeFactors ??
+    kanpurMonthly?.hourlyShadeFactors ??
+    null;
+
   const baselinePrRes = computeEffectiveSolarPr({
     ambientTempC: ambientAvgC,
     windSpeedKmh: windAvg,
@@ -105,7 +118,7 @@ export function computeDayIrradianceBenchmarks(
     dcCapacityKwp: dcCap,
     acInverterCapacityKw: acCap,
     inverterLossCoeffs: physicsOverrides?.inverterLossCoeffs,
-    kSite: physicsOverrides?.kSite,
+    kSite: effectiveKSite,
   });
   const radBaselineKwh = +((radMj / 3.6) * dcCap * baselinePrRes.pr).toFixed(2);
 
@@ -140,12 +153,12 @@ export function computeDayIrradianceBenchmarks(
     hourlyWindKmh: Array.isArray(day.hourlyWindKmh) ? day.hourlyWindKmh.slice(0, 24) : [],
     hourlyAod: Array.isArray(day.hourlyAod) ? day.hourlyAod.slice(0, 24) : [],
     hourlyPm10: Array.isArray(day.hourlyPm10) ? day.hourlyPm10.slice(0, 24) : [],
-    hourlyShadeFactors: physicsOverrides?.hourlyShadeFactors ?? null,
+    hourlyShadeFactors: effectiveShades,
     thermalCoeffPerC: physicsOverrides?.thermalCoeffPerC,
     dcCleanFactor: physicsOverrides?.dcCleanFactor,
     basePrAtStc: physicsOverrides?.basePrAtStc,
     inverterEfficiency: physicsOverrides?.inverterEfficiency,
-    kSite: physicsOverrides?.kSite,
+    kSite: effectiveKSite,
     inverterLossCoeffs: physicsOverrides?.inverterLossCoeffs,
   });
 

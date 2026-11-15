@@ -1,4 +1,5 @@
 import { SOLAR_CONSTANTS, computeDailySolarPhysicsModel } from '../physics/index.ts';
+import { getKanpurProfileForDate, isKanpurRegion } from '../calibration/monthlyProfiles.ts';
 import type {
   DailyAtmosphereRecord,
   DailyPerformanceLedgerEntry,
@@ -30,6 +31,22 @@ export function resolveTomorrowForecastWindow(
     day.tempMax != null && day.tempMin != null
       ? (day.tempMax + day.tempMin) / 2
       : day.tempMax ?? 24;
+
+  const kanpurMonthly = isKanpurRegion(latDeg, physicsOverrides?.lonDeg ?? SOLAR_CONSTANTS.DEFAULT_LON)
+    ? getKanpurProfileForDate(day.ymd)
+    : null;
+
+  const resolvedKSite =
+    kanpurMonthly?.kSite ??
+    (typeof physicsOverrides?.kSite === 'number' && Number.isFinite(physicsOverrides.kSite)
+      ? physicsOverrides.kSite
+      : null);
+
+  const resolvedHourlyShades =
+    kanpurMonthly?.hourlyShadeFactors ??
+    physicsOverrides?.hourlyShadeFactors ??
+    null;
+
   const sharedParams = {
     sunriseIso: day.sunrise,
     sunsetIso: day.sunset,
@@ -57,7 +74,7 @@ export function resolveTomorrowForecastWindow(
     hourlyWindKmh: Array.isArray(day.hourlyWindKmh) ? day.hourlyWindKmh : [],
     hourlyAod: Array.isArray(day.hourlyAod) ? day.hourlyAod : [],
     hourlyPm10: Array.isArray(day.hourlyPm10) ? day.hourlyPm10 : [],
-    hourlyShadeFactors: physicsOverrides?.hourlyShadeFactors ?? null,
+    hourlyShadeFactors: resolvedHourlyShades,
     hourlyDiffuse: Array.isArray(day.hourlyDiffuse) ? day.hourlyDiffuse : [],
     hourlyDni: Array.isArray(day.hourlyDni) ? day.hourlyDni : [],
     hourlyCloudCover: Array.isArray(day.hourlyCloudCover) ? day.hourlyCloudCover : [],
@@ -66,7 +83,7 @@ export function resolveTomorrowForecastWindow(
     dcCleanFactor: physicsOverrides?.dcCleanFactor,
     basePrAtStc: physicsOverrides?.basePrAtStc,
     inverterEfficiency: physicsOverrides?.inverterEfficiency,
-    kSite: physicsOverrides?.kSite,
+    kSite: resolvedKSite,
     inverterLossCoeffs: physicsOverrides?.inverterLossCoeffs,
   };
   const cleanCurve = computeDailySolarPhysicsModel({ ...sharedParams, surfaceLossPct: 0 });
