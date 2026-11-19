@@ -240,7 +240,7 @@ export function buildPerformanceKpiColumns(params: {
     const avgDaily = activeOrBufferedDays > 0 ? totalReconciled / activeOrBufferedDays : 0;
     const capturePct = totalModel > 0.3 ? Math.round((totalReconciled / totalModel) * 100) : null;
     const bestDayItem =
-      [...confirmedItems].sort(
+      confirmedItems.toSorted(
         (a, b) => b.realKwh + (b.bufferKwh || 0) - (a.realKwh + (a.bufferKwh || 0)),
       )[0] || null;
     const deltaPriorPct =

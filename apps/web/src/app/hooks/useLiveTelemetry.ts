@@ -248,7 +248,7 @@ export function useLiveTelemetry(params: UseLiveTelemetryParams) {
         });
       }
 
-      if (snap.weather && snap.weather.available) {
+      if (snap.weather) {
         setWeatherData(snap.weather);
       }
 
@@ -365,7 +365,7 @@ export function useLiveTelemetry(params: UseLiveTelemetryParams) {
           ]);
           setCombinedSummary(sum);
           setSingleSummary(null);
-          if (w && w.available) setWeatherData(w);
+          if (w) setWeatherData(w);
         } else {
           const snap = await ApiService.getLiveSync(effectiveContext, force);
           if (snap && snap.errno === 0) {
@@ -932,7 +932,9 @@ export function useLiveTelemetry(params: UseLiveTelemetryParams) {
     peakTimeText: resolvedHistoryView.peakTimeText,
     isChartLoading,
     isRefreshing,
-    isInitialLoading: accounts.length === 0 || !weatherData,
+    isInitialLoading:
+      accounts.length === 0 ||
+      (!singleSummary && !combinedSummary && !liveFlow && !weatherData && !lastSyncedDay),
     handleFullRefresh,
     handleExportCSV,
     fullPersistedSettings,

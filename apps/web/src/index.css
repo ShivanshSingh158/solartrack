@@ -11,6 +11,19 @@ body, button, input, select {
   -webkit-font-smoothing: antialiased;
 }
 
+html, body {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#root::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 /* Eradicate typewriter fonts: map all numbers and any legacy font-mono to Plus Jakarta Sans tabular-nums */
 .num,
 .font-mono {
@@ -741,20 +754,32 @@ body, button, input, select {
   }
 }
 
-/* Custom scrollbars */
+/* Eradicate scrollbars globally for iOS/Apple clean presentation */
+:root {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+
+/* Eradicate scrollbars on clean Apple panels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
-::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 6px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 /* Apple-Grade Skeleton Shimmer Engine */

@@ -47,7 +47,7 @@ export const FinancialsFooterLedgers: React.FC<FinancialsFooterLedgersProps> = (
 }) => {
   const { soiling } = canonicalSnapshot;
 
-  const sortedSeasons = [...payback.seasonalProfile].sort((a, b) => b.avgDailyKwh - a.avgDailyKwh);
+  const sortedSeasons = payback.seasonalProfile.toSorted((a, b) => b.avgDailyKwh - a.avgDailyKwh);
   const peakMonth = sortedSeasons[0];
   const lowMonth = sortedSeasons[sortedSeasons.length - 1];
 

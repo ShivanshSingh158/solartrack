@@ -82,8 +82,8 @@ export const HealthConversionCurveStage: React.FC<HealthConversionCurveStageProp
     }
     const dcCoords = pts.map((p) => `${convX(p.minutes).toFixed(1)},${kwY(p.dcKw).toFixed(1)}`);
     const acCoords = pts.map((p) => `${convX(p.minutes).toFixed(1)},${kwY(p.acKw).toFixed(1)}`);
-    const dcRevCoords = [...pts]
-      .reverse()
+    const dcRevCoords = pts
+      .toReversed()
       .map((p) => `${convX(p.minutes).toFixed(1)},${kwY(Math.max(p.dcKw, p.acKw)).toFixed(1)}`);
     const firstX = convX(pts[0].minutes).toFixed(1);
     const lastX = convX(pts[pts.length - 1].minutes).toFixed(1);

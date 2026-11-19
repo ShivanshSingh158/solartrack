@@ -97,6 +97,8 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
             <input
               type="text"
               required
+              autoComplete="username"
+              spellCheck={false}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="e.g. user_two_pv"
@@ -111,6 +113,7 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
             <input
               type="password"
               required
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"

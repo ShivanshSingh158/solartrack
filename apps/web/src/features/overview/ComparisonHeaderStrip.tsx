@@ -92,7 +92,7 @@ export interface ComparisonHeaderStripProps {
 export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
   selectedYmd,
   todayYmd,
-  yesterdayYmd,
+  yesterdayYmd: _yesterdayYmd,
   minDateYmd,
   maxDateYmd,
   loadingYmd,
@@ -147,7 +147,7 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
       <div className="min-w-0">
         <div className="flex items-center gap-2.5 flex-wrap">
           <h3 className="text-[16px] font-bold tracking-tight text-slate-900">
-            {isTodaySelected ? "Today's Solar Generation Curve" : 'Daily Solar Generation Curve'}
+            Solar Generation Curve
           </h3>
           {loadingYmd === selectedYmd && (
             <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-sky-700">
@@ -183,12 +183,6 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
           >
             <CalendarIcon className="w-3.5 h-3.5 text-slate-500" />
             <span>{formatIndianDate(selectedYmd)}</span>
-            {isTodaySelected && (
-              <span className="text-[10.5px] font-semibold text-amber-700">· Today</span>
-            )}
-            {!isTodaySelected && selectedYmd === yesterdayYmd && (
-              <span className="text-[10.5px] font-semibold text-slate-500">· Yesterday</span>
-            )}
           </button>
 
           <button
@@ -219,20 +213,20 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
         <button
           type="button"
           onClick={() => (onOpenDailyReport ? onOpenDailyReport(selectedYmd) : undefined)}
-          className="text-[11.5px] font-semibold text-emerald-800 hover:text-emerald-950 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl apple-glass-pill transition cursor-pointer whitespace-nowrap shadow-2xs hover:shadow-xs"
+          className="text-[12px] font-medium text-slate-600 hover:text-slate-900 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-slate-100 transition cursor-pointer whitespace-nowrap"
           title="Open complete daily performance audit & dip analysis report"
         >
-          <FileText className="w-3.5 h-3.5 text-emerald-600" />
+          <FileText className="w-3.5 h-3.5 text-slate-400" />
           <span>Daily Report</span>
         </button>
 
         <button
           type="button"
           onClick={() => onNavigateToPerformance(selectedYmd)}
-          className="text-[11.5px] font-semibold text-sky-800 hover:text-sky-950 inline-flex items-center gap-1 px-3 py-1.5 rounded-2xl apple-glass-pill transition cursor-pointer whitespace-nowrap shadow-2xs hover:shadow-xs"
+          className="text-[12px] font-medium text-slate-600 hover:text-slate-900 inline-flex items-center gap-1 px-3 py-1.5 rounded-xl hover:bg-slate-100 transition cursor-pointer whitespace-nowrap"
         >
           <span>5-Min History</span>
-          <ArrowUpRight className="w-3.5 h-3.5 text-sky-600" />
+          <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
         </button>
       </div>
     </div>
@@ -256,7 +250,7 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
             <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-emerald-700 tabular-nums whitespace-nowrap shrink-0">
               <CheckCircle2 className="w-3 h-3 shrink-0" />
               {isTodaySelected
-                ? `${displayLiveKw.toFixed(2)} kW live`
+                ? 'Active'
                 : parsedReal.peakKw > 0
                 ? `Peak ${parsedReal.peakKw.toFixed(2)} kW`
                 : 'Cloud confirmed'}
@@ -275,12 +269,9 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
               <div className="w-full min-w-0">
                 <div className="flex items-baseline justify-between gap-2 min-w-0">
                   <span className="text-[17px] font-extrabold text-slate-900 tabular-nums whitespace-nowrap">
-                    {todayYield.toFixed(1)} kWh{' '}
-                    <span className="text-[11px] font-medium text-slate-400">
-                      till now
-                    </span>
+                    {todayYield.toFixed(1)} kWh
                   </span>
-                  <span className="text-[11px] font-semibold text-slate-600 tabular-nums whitespace-nowrap shrink-0">
+                  <span className="text-[11px] font-semibold text-emerald-700 tabular-nums whitespace-nowrap shrink-0">
                     {displayLiveKw > 0 ? `${displayLiveKw.toFixed(2)} kW live` : `Peak ${parsedReal.peakKw.toFixed(2)} kW`}
                   </span>
                 </div>
@@ -406,16 +397,15 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
               <>
                 <span className="text-[16px] font-extrabold text-slate-900 tabular-nums whitespace-nowrap">
                   ~{nowCalcAtPoint.cumKwh.toFixed(1)} kWh{' '}
-                  <span className="text-[11px] font-medium text-slate-500">
-                    till {formatMinutes12hUpper(activeNowMinutes)}
+                  <span className="text-[11px] font-medium text-slate-400">
+                    at {formatMinutes12hUpper(activeNowMinutes)}
                   </span>
                 </span>
                 <span className="text-[10.5px] font-medium text-sky-700 tabular-nums whitespace-nowrap shrink-0">
-                  ~{(isDaytimeToday && !isScrubbing && todayNowcast?.active
+                  Target ~{(isDaytimeToday && !isScrubbing && todayNowcast?.active
                     ? todayNowcast.blendedFullDayTargetKwh
                     : physicsModel.targetDailyModelKwh
-                  ).toFixed(1)}{' '}
-                  kWh day{isDaytimeToday && !isScrubbing && todayNowcast?.active ? ` · ×${todayNowcast.ratio.toFixed(2)}` : ''}
+                  ).toFixed(1)} kWh
                 </span>
               </>
             ) : (
@@ -450,9 +440,6 @@ export const ComparisonHeaderStrip: React.FC<ComparisonHeaderStripProps> = ({
           <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 whitespace-nowrap">
             <Activity className="w-3 h-3 text-slate-400 shrink-0" />
             Comparison
-          </span>
-          <span className="text-[10.5px] font-medium text-slate-400 tabular-nums whitespace-nowrap shrink-0">
-            {formatIndianDate(selectedYmd, 'numeric')}
           </span>
         </div>
 

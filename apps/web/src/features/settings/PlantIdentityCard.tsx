@@ -131,6 +131,9 @@ export const PlantIdentityCard: React.FC<PlantIdentityCardProps> = ({
             onBlur={commitDisplayName}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
+                if (e.nativeEvent.isComposing || e.keyCode === 229) {
+                  return;
+                }
                 e.currentTarget.blur();
               }
             }}

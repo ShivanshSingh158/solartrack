@@ -109,8 +109,9 @@ export const AlertsSoilingPanel: React.FC<AlertsSoilingPanelProps> = ({
   };
 
   const cleaningEventsDesc = useMemo(() => {
-    const list = Array.isArray(settings.cleaningEvents) ? [...settings.cleaningEvents] : [];
-    return list.sort((a, b) => b.ymd.localeCompare(a.ymd));
+    return Array.isArray(settings.cleaningEvents)
+      ? settings.cleaningEvents.toSorted((a, b) => b.ymd.localeCompare(a.ymd))
+      : [];
   }, [settings.cleaningEvents]);
 
   const renderGuardBadge = (guardKey?: string, isArmedFallback = false) => {

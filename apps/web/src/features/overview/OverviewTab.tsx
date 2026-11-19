@@ -633,8 +633,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </div>
       )}
 
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        <div className="lg:col-span-8 flex flex-col space-y-4">
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+        <div className="lg:col-span-8 flex flex-col space-y-5 h-full">
           <SolarComparisonChart
             stationId={stationId}
             safeCapacity={safeCapacity}
@@ -693,12 +693,14 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             onOpenDailyReport={(ymd) => {
               setReportSelectedYmd(ymd || istNow.ymd);
               setReportRealPoints(null);
+              setReportPhysicsModel(null);
+              setReportYieldKwh(null);
               setIsReportCardOpen(true);
             }}
           />
         </div>
 
-        <div className="lg:col-span-4 flex flex-col space-y-4">
+        <div className="lg:col-span-4 flex flex-col space-y-5 h-full">
           <PanelHygieneCard
             report={effectiveIntelligenceReport}
             currentSurfaceLossPct={currentSurfaceLossPct}

@@ -146,8 +146,8 @@ export function buildDayStageGeometry({
       }
       if (upperPts.length >= 2) {
         const fwd = upperPts.map((pt, i) => `${i === 0 ? 'M' : 'L'} ${pt.x},${pt.y}`).join(' ');
-        const rev = [...lowerPts]
-          .reverse()
+        const rev = lowerPts
+          .toReversed()
           .map((pt) => `L ${pt.x},${pt.y}`)
           .join(' ');
         dcAcGapBandPaths.push(`${fwd} ${rev} Z`);

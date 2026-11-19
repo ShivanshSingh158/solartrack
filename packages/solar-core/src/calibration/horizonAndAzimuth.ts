@@ -205,7 +205,7 @@ export function estimateHourlyShadeFactors(
   for (let h = 6; h <= 17; h++) {
     const ratios = hourlyClearRatios[h];
     if (!ratios || ratios.length < 3) continue;
-    const sortedR = [...ratios].sort((a, b) => a - b);
+    const sortedR = ratios.toSorted((a, b) => a - b);
     const p85Idx = Math.min(sortedR.length - 1, Math.floor((sortedR.length - 1) * 0.88));
     const upperClear = sortedR[p85Idx];
     if (upperClear < 0.90) {
