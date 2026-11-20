@@ -247,79 +247,106 @@ export const SolarDateCalendarPopover: React.FC<SolarDateCalendarPopoverProps> =
         })}
       </div>
 
-      {/* Quick Bookmarks + Legend */}
-      <div className="mt-2.5 pt-2.5 border-t border-slate-100 space-y-2">
-        <div className="flex flex-wrap items-center gap-1.5">
+      {/* Apple-Grade Structured Calendar Footer */}
+      <div className="mt-3 pt-3 border-t border-slate-100/90 space-y-2.5">
+        {/* Quick Jump Buttons: Balanced & Unified */}
+        <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => handlePickDate(todayYmd)}
-            className={`px-2 py-1 rounded-lg text-[10.5px] font-semibold transition cursor-pointer ${
+            className={`w-full py-1.5 px-3 rounded-xl text-[11px] font-semibold transition cursor-pointer flex items-center justify-center gap-1.5 border ${
               selectedYmd === todayYmd
-                ? 'bg-slate-900 text-white'
-                : 'bg-slate-100 hover:bg-slate-200/80 text-slate-700'
+                ? 'bg-slate-900 border-slate-900 text-white shadow-xs'
+                : 'bg-slate-50 hover:bg-slate-100/90 border-slate-200/70 text-slate-700'
             }`}
           >
-            Today ({formatIndianDate(todayYmd, 'short')})
+            <CalendarIcon className="w-3.5 h-3.5 opacity-70" />
+            <span>Today ({formatIndianDate(todayYmd, 'short')})</span>
           </button>
 
-          {lastSyncedYmd && lastSyncedYmd !== todayYmd && (
+          {lastSyncedYmd && lastSyncedYmd !== todayYmd ? (
             <button
               type="button"
               onClick={() => handlePickDate(lastSyncedYmd)}
-              className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10.5px] font-semibold transition cursor-pointer ${
+              className={`w-full py-1.5 px-3 rounded-xl text-[11px] font-semibold transition cursor-pointer flex items-center justify-center gap-1.5 border ${
                 selectedYmd === lastSyncedYmd
-                  ? 'bg-emerald-700 text-white'
-                  : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800'
+                  ? 'bg-emerald-700 border-emerald-700 text-white shadow-xs'
+                  : 'bg-emerald-50/60 hover:bg-emerald-100/80 border-emerald-200/70 text-emerald-800'
               }`}
             >
-              <CheckCircle2 className="w-3 h-3" />
-              Last Sync ({formatIndianDate(lastSyncedYmd, 'short')})
+              <CheckCircle2 className="w-3.5 h-3.5 opacity-80" />
+              <span>Last Sync ({formatIndianDate(lastSyncedYmd, 'short')})</span>
             </button>
-          )}
-
-          {peakHighlight && (
+          ) : (
             <button
               type="button"
-              onClick={() => handlePickDate(peakHighlight.ymd)}
-              className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10.5px] font-semibold transition cursor-pointer ${
-                selectedYmd === peakHighlight.ymd
-                  ? 'bg-sky-700 text-white'
-                  : 'bg-sky-50 hover:bg-sky-100 text-sky-800'
-              }`}
+              onClick={() => handlePickDate(shiftYm(todayYmd, 0))}
+              disabled
+              className="w-full py-1.5 px-3 rounded-xl text-[11px] font-medium border border-slate-100 bg-slate-50/40 text-slate-400 flex items-center justify-center"
             >
-              <Sparkles className="w-3 h-3" />
-              Peak {formatIndianDate(peakHighlight.ymd, 'short')} ({peakHighlight.kwh.toFixed(1)})
-            </button>
-          )}
-
-          {dipHighlight && (
-            <button
-              type="button"
-              onClick={() => handlePickDate(dipHighlight.ymd)}
-              className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10.5px] font-semibold transition cursor-pointer ${
-                selectedYmd === dipHighlight.ymd
-                  ? 'bg-amber-700 text-white'
-                  : 'bg-amber-50 hover:bg-amber-100 text-amber-800'
-              }`}
-            >
-              <CloudRain className="w-3 h-3" />
-              Dip {formatIndianDate(dipHighlight.ymd, 'short')} ({dipHighlight.kwh.toFixed(1)})
+              <span>Current Range</span>
             </button>
           )}
         </div>
 
-        <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium pt-0.5">
+        {/* Quiet Milestone Metrics (Peak & Dip) */}
+        {(peakHighlight || dipHighlight) && (
+          <div className="grid grid-cols-2 gap-2 pt-0.5 text-[10.5px]">
+            {peakHighlight && (
+              <button
+                type="button"
+                onClick={() => handlePickDate(peakHighlight.ymd)}
+                className={`px-2.5 py-1.5 rounded-lg border text-left transition cursor-pointer flex items-center justify-between ${
+                  selectedYmd === peakHighlight.ymd
+                    ? 'bg-sky-50 border-sky-300 text-sky-900 font-bold'
+                    : 'bg-slate-50/50 hover:bg-slate-100/80 border-slate-200/60 text-slate-600 font-medium'
+                }`}
+              >
+                <span className="flex items-center gap-1 text-sky-700">
+                  <Sparkles className="w-3 h-3 text-sky-600" />
+                  <span>Peak</span>
+                </span>
+                <span className="tabular-nums font-bold text-slate-800">
+                  {peakHighlight.kwh.toFixed(1)} kWh
+                </span>
+              </button>
+            )}
+
+            {dipHighlight && (
+              <button
+                type="button"
+                onClick={() => handlePickDate(dipHighlight.ymd)}
+                className={`px-2.5 py-1.5 rounded-lg border text-left transition cursor-pointer flex items-center justify-between ${
+                  selectedYmd === dipHighlight.ymd
+                    ? 'bg-amber-50 border-amber-300 text-amber-900 font-bold'
+                    : 'bg-slate-50/50 hover:bg-slate-100/80 border-slate-200/60 text-slate-600 font-medium'
+                }`}
+              >
+                <span className="flex items-center gap-1 text-amber-700">
+                  <CloudRain className="w-3 h-3 text-amber-600" />
+                  <span>Lowest</span>
+                </span>
+                <span className="tabular-nums font-bold text-slate-800">
+                  {dipHighlight.kwh.toFixed(1)} kWh
+                </span>
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Minimal Bottom Legend */}
+        <div className="flex items-center justify-between text-[10px] text-slate-400 font-medium pt-1">
           <span>
-            Logs: {formatIndianDate(minDateYmd)} – {formatIndianDate(maxDateYmd)}
+            {formatIndianDate(minDateYmd, 'short')} – {formatIndianDate(maxDateYmd, 'short')}
           </span>
-          <span className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 text-emerald-700">
+          <span className="flex items-center gap-2.5">
+            <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               Synced
             </span>
-            <span className="inline-flex items-center gap-1 text-amber-700">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-              Offline
+            <span className="inline-flex items-center gap-1 text-slate-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+              Pending
             </span>
           </span>
         </div>

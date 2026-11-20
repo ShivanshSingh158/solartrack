@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
-import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import {
   formatMinutes12hUpper,
   type CanonicalSolarSnapshot,
   type HealthConversionPoint,
   type SystemHealthReport,
 } from '@solar-track/core';
+import { ThermalStressLedgerCard } from './HealthFooterLedgers';
 
 interface HealthConversionCurveStageProps {
   uid: string;
@@ -14,6 +14,7 @@ interface HealthConversionCurveStageProps {
   boxWidth: number;
   hoveredConvIdx: number | null;
   onHoverConvIdx: (idx: number | null) => void;
+  onNavigateToSettings: () => void;
 }
 
 /**
@@ -26,6 +27,7 @@ export const HealthConversionCurveStage: React.FC<HealthConversionCurveStageProp
   boxWidth,
   hoveredConvIdx,
   onHoverConvIdx,
+  onNavigateToSettings,
 }) => {
   const { conversion } = report;
   const { sun, config } = canonicalSnapshot;
@@ -33,8 +35,8 @@ export const HealthConversionCurveStage: React.FC<HealthConversionCurveStageProp
   const isCompact = boxWidth < 520;
   const svgW = Math.max(300, boxWidth);
   const svgH = isCompact ? 255 : 295;
-  const padL = isCompact ? 38 : 48;
-  const padR = isCompact ? 36 : 46;
+  const padL = isCompact ? 40 : 50;
+  const padR = isCompact ? 48 : 58;
   const padT = 22;
   const padB = 34;
   const plotW = Math.max(80, svgW - padL - padR);
@@ -147,113 +149,123 @@ export const HealthConversionCurveStage: React.FC<HealthConversionCurveStageProp
 
   return (
     <div className="px-4 sm:px-6 pt-3 pb-4">
-      {/* Telemetry Gauge Diagnostics Hub */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4 p-3 rounded-2xl bg-gradient-to-r from-slate-50/80 via-emerald-50/20 to-sky-50/20 border border-slate-200/70 shadow-2xs">
-        {/* Gauge 1: MPPT Efficiency */}
-        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/90 border border-slate-200/60 shadow-2xs">
-          <div className="w-[74px] h-[64px] shrink-0 flex items-center justify-center">
-            <Gauge
-              value={etaVal}
-              valueMin={80}
-              valueMax={100}
-              startAngle={-110}
-              endAngle={110}
-              innerRadius="72%"
-              outerRadius="100%"
-              cornerRadius="50%"
-              width={74}
-              height={64}
-              text={`${etaVal.toFixed(1)}%`}
-              sx={{
-                [`& .${gaugeClasses.valueArc}`]: {
-                  fill: etaVal >= 95 ? '#059669' : etaVal >= 90 ? '#d97706' : '#e11d48',
-                },
-                [`& .${gaugeClasses.referenceArc}`]: { fill: '#e2e8f0' },
-                [`& .${gaugeClasses.valueText}`]: {
-                  fontSize: '11.5px',
-                  fontWeight: 800,
-                  fill: '#0f172a',
-                  fontFamily: 'inherit',
-                },
-              }}
-            />
-          </div>
-          <div className="min-w-0">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              MPPT Efficiency (η)
+      {/* Telemetry Diagnostics Hub - 4 Uniform Apple Diagnostic Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        {/* Card 1: Inverter Efficiency */}
+        <div className="p-3.5 rounded-2xl bg-white/95 border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between text-[10.5px] font-bold uppercase tracking-wider text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                Inverter Efficiency
+              </span>
+              <span className="font-semibold text-emerald-700">
+                {etaVal >= 95 ? 'Optimal' : etaVal >= 90 ? 'Normal' : 'Derated'}
+              </span>
             </div>
-            <div className="text-[13px] font-extrabold text-slate-900 tabular-nums">
+            <div className="text-[22px] font-extrabold text-slate-900 tabular-nums mt-1.5">
               {etaVal.toFixed(1)}%
             </div>
-            <div className="text-[10.5px] font-medium text-emerald-700 truncate">
-              {etaVal >= 95 ? 'Euro-η Optimal' : 'Derated Operation'}
+          </div>
+          <div className="mt-2.5 space-y-1.5">
+            <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-emerald-500 transition-all duration-300"
+                style={{ width: `${Math.min(100, Math.max(0, ((etaVal - 80) / 20) * 100))}%` }}
+              />
+            </div>
+            <div className="text-[11px] font-medium text-slate-500 truncate">
+              {etaVal >= 95 ? 'Optimal conversion efficiency' : etaVal >= 90 ? 'Nominal operating range' : 'Derated during light load'}
             </div>
           </div>
         </div>
 
-        {/* Gauge 2: Capacity Attainment */}
-        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/90 border border-slate-200/60 shadow-2xs">
-          <div className="w-[74px] h-[64px] shrink-0 flex items-center justify-center">
-            <Gauge
-              value={attainmentPct}
-              valueMin={0}
-              valueMax={100}
-              startAngle={-110}
-              endAngle={110}
-              innerRadius="72%"
-              outerRadius="100%"
-              cornerRadius="50%"
-              width={74}
-              height={64}
-              text={`${attainmentPct}%`}
-              sx={{
-                [`& .${gaugeClasses.valueArc}`]: { fill: '#0284c7' },
-                [`& .${gaugeClasses.referenceArc}`]: { fill: '#e2e8f0' },
-                [`& .${gaugeClasses.valueText}`]: {
-                  fontSize: '11.5px',
-                  fontWeight: 800,
-                  fill: '#0f172a',
-                  fontFamily: 'inherit',
-                },
-              }}
-            />
-          </div>
-          <div className="min-w-0">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Inverter Attainment
+        {/* Card 2: Capacity Attainment */}
+        <div className="p-3.5 rounded-2xl bg-white/95 border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between text-[10.5px] font-bold uppercase tracking-wider text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-sky-500" />
+                Peak Attainment
+              </span>
+              <span className="font-semibold text-sky-700 tabular-nums">
+                {attainmentPct}%
+              </span>
             </div>
-            <div className="text-[13px] font-extrabold text-slate-900 tabular-nums">
+            <div className="text-[22px] font-extrabold text-slate-900 tabular-nums mt-1.5">
               {peakKw.toFixed(2)} kW
             </div>
-            <div className="text-[10.5px] font-medium text-slate-500 truncate">
-              {attainmentPct}% of {capacityKw.toFixed(1)} kW rated
+          </div>
+          <div className="mt-2.5 space-y-1.5">
+            <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-sky-500 transition-all duration-300"
+                style={{ width: `${Math.min(100, Math.max(0, attainmentPct))}%` }}
+              />
+            </div>
+            <div className="text-[11px] font-medium text-slate-500 truncate">
+              {attainmentPct}% of {capacityKw.toFixed(1)} kW system rating
             </div>
           </div>
         </div>
 
-        {/* Metric 3: Heat Dissipation */}
-        <div className="flex flex-col justify-between p-2.5 rounded-xl bg-white/90 border border-slate-200/60 shadow-2xs">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Avg Heat Dissipation
+        {/* Card 3: Heat Dissipation */}
+        <div className="p-3.5 rounded-2xl bg-white/95 border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between text-[10.5px] font-bold uppercase tracking-wider text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-500" />
+                Heat Dissipation
+              </span>
+              <span className="font-semibold text-slate-600">
+                Inverter Loss
+              </span>
+            </div>
+            <div className="text-[22px] font-extrabold text-slate-900 tabular-nums mt-1.5">
+              {conversion.avgHeatLossWatts !== null ? `${conversion.avgHeatLossWatts} W` : '0 W'}
+            </div>
           </div>
-          <div className="text-[17px] font-extrabold text-rose-600 tabular-nums my-0.5">
-            {conversion.avgHeatLossWatts !== null ? `${conversion.avgHeatLossWatts} W` : '0 W'}
-          </div>
-          <div className="text-[10.5px] font-medium text-slate-500 truncate">
-            Inverter thermal loss delta
+          <div className="mt-2.5 space-y-1.5">
+            <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-amber-500 transition-all duration-300"
+                style={{ width: `${Math.min(100, Math.max(4, ((conversion.avgHeatLossWatts || 0) / 150) * 100))}%` }}
+              />
+            </div>
+            <div className="text-[11px] font-medium text-slate-500 truncate">
+              Operating within thermal threshold
+            </div>
           </div>
         </div>
 
-        {/* Metric 4: Sample Purity */}
-        <div className="flex flex-col justify-between p-2.5 rounded-xl bg-white/90 border border-slate-200/60 shadow-2xs">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Telemetry Purity
+        {/* Card 4: Telemetry Purity */}
+        <div className="p-3.5 rounded-2xl bg-white/95 border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between text-[10.5px] font-bold uppercase tracking-wider text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-indigo-500" />
+                Telemetry Purity
+              </span>
+              <span className="font-semibold text-emerald-700">
+                100% Sync
+              </span>
+            </div>
+            <div className="text-[22px] font-extrabold text-slate-900 tabular-nums mt-1.5">
+              {conversion.cleanSamplesCount} Clean
+            </div>
           </div>
-          <div className="text-[17px] font-extrabold text-slate-900 tabular-nums my-0.5">
-            {conversion.cleanSamplesCount} clean
-          </div>
-          <div className="text-[10.5px] font-medium text-slate-500 truncate">
-            {conversion.skewedSamplesCount > 0 ? `${conversion.skewedSamplesCount} RS485 skew filtered` : '100% sample synchrony'}
+          <div className="mt-2.5 space-y-1.5">
+            <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-indigo-500 transition-all duration-300"
+                style={{ width: '100%' }}
+              />
+            </div>
+            <div className="text-[11px] font-medium text-slate-500 truncate">
+              {conversion.skewedSamplesCount > 0
+                ? `${conversion.skewedSamplesCount} timing skew filtered`
+                : 'Verified 5-minute telemetry intervals'}
+            </div>
           </div>
         </div>
       </div>
@@ -469,6 +481,14 @@ export const HealthConversionCurveStage: React.FC<HealthConversionCurveStageProp
             </div>
           </div>
         )}
+      </div>
+
+      <div className="mt-5">
+        <ThermalStressLedgerCard
+          report={report}
+          canonicalSnapshot={canonicalSnapshot}
+          onNavigateToSettings={onNavigateToSettings}
+        />
       </div>
     </div>
   );

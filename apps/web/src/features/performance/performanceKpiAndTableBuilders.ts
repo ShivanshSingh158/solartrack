@@ -58,15 +58,15 @@ export function buildPerformanceKpiColumns(params: {
     canonicalSnapshot,
     primaryDayEepromKwh,
     primaryParsed,
-    primaryGapCurve,
-    hasOutageGap,
+    primaryGapCurve: _primaryGapCurve,
+    hasOutageGap: _hasOutageGap,
     primaryLedger,
     selectedDate,
-    primarySurfaceLossPct,
+    primarySurfaceLossPct: _primarySurfaceLossPct,
     safeCapacity,
-    dcAcCapLabel,
-    syncedAtIstLabel,
-    isCombined,
+    dcAcCapLabel: _dcAcCapLabel,
+    syncedAtIstLabel: _syncedAtIstLabel,
+    isCombined: _isCombined,
     dayWeightedEfficiency,
     weekBulletBars,
     periodAttribution,
@@ -97,68 +97,52 @@ export function buildPerformanceKpiColumns(params: {
     const col1: PerformanceKpiColumn = isTodaySelected
       ? canonicalSnapshot.today.isConfirmed
         ? {
-            eyebrow: 'Actual Production',
+            eyebrow: 'Solar Generation',
             accentDot: 'emerald',
             primary: `${canonicalSnapshot.today.displayKwh.toFixed(1)} kWh`,
-            primaryUnit: 'till now',
-            rightMeta: realVsModelPct !== null ? `${realVsModelPct}% capture` : undefined,
-            subtitle: `Live AC ${canonicalSnapshot.today.liveKw.toFixed(2)} kW · Synced ${syncedAtIstLabel || 'IST'}`,
+            primaryUnit: 'generated today',
+            rightMeta: realVsModelPct !== null ? `${realVsModelPct}% of goal` : undefined,
+            subtitle: `Live solar power: ${canonicalSnapshot.today.liveKw.toFixed(2)} kW`,
           }
         : {
-            eyebrow: canonicalSnapshot.sun.isNight ? 'Actual Production (Night)' : 'Actual Production (Pending)',
+            eyebrow: canonicalSnapshot.sun.isNight ? 'Solar Generation (Night)' : 'Solar Generation (Syncing)',
             accentDot: canonicalSnapshot.sun.isNight ? 'slate' : 'amber',
             primary: canonicalSnapshot.sun.isNight
               ? `${canonicalSnapshot.today.displayKwh.toFixed(1)} kWh`
-              : 'Awaiting Upload',
+              : 'Syncing',
             primaryTone: canonicalSnapshot.sun.isNight ? 'slate' : 'amber',
-            rightMeta: canonicalSnapshot.sun.isNight ? 'Night' : 'Pending',
+            rightMeta: canonicalSnapshot.sun.isNight ? 'Night' : 'In Progress',
             subtitle: canonicalSnapshot.sun.isNight
-              ? `Sunset archive · Sunrise ${dayStatsModel.sunriseText}`
-              : 'Upload pending — data will sync when Wi-Fi reconnects',
+              ? `Day concluded · Next dawn ${dayStatsModel.sunriseText}`
+              : 'Connecting to inverter to fetch latest readings',
           }
-      : primaryLedger?.dipCategory === 'WIFI_OUTAGE_UNLOGGED' && primaryDayEepromKwh <= 0.05
-        ? {
-            eyebrow: 'Actual Production (Wi-Fi Gap)',
-            accentDot: 'amber',
-            primary: '0.0 kWh',
-            primaryUnit: 'Wi-Fi Offline',
-            primaryTone: 'amber',
-            rightMeta: `Twin ~${dayStatsModel.targetDailyModelKwh.toFixed(1)} kWh`,
-            subtitle:
-              primaryLedger?.dipReasonLabel ||
-              `Wi-Fi offline past 00:00 · Model estimate ~${(primaryLedger?.unloggedEstimatedKwh ?? dayStatsModel.targetDailyModelKwh).toFixed(1)} kWh`,
-          }
-        : {
-            eyebrow: 'Actual Production',
-            accentDot: primaryDayEepromKwh > 0.05 ? 'emerald' : 'slate',
-            primary: primaryDayEepromKwh > 0.05 ? `${primaryDayEepromKwh.toFixed(1)} kWh` : '0.0 kWh',
-            primaryUnit: primaryParsed.hasData ? '5-min + EDay' : 'Daily meter',
-            rightMeta: realVsModelPct !== null ? `${realVsModelPct}% vs model` : undefined,
-            subtitle: primaryGapCurve.hasBridgedGaps
-              ? `Online ${primaryParsed.onlineIntegratedKwh.toFixed(1)} + ${primaryGapCurve.recoveredKwh.toFixed(1)} kWh EDay bridge`
-              : hasOutageGap
-                ? `Online curve: ${primaryParsed.onlineIntegratedKwh.toFixed(1)} kWh (Wi-Fi gap)`
-                : primaryLedger?.dipReasonLabel || formatIndianDate(selectedDate, 'weekday'),
-          };
+      : {
+          eyebrow: 'Solar Generation',
+          accentDot: primaryDayEepromKwh > 0.05 ? 'emerald' : 'slate',
+          primary: primaryDayEepromKwh > 0.05 ? `${primaryDayEepromKwh.toFixed(1)} kWh` : '0.0 kWh',
+          primaryUnit: 'total recorded',
+          rightMeta: realVsModelPct !== null ? `${realVsModelPct}% of target` : undefined,
+          subtitle: formatIndianDate(selectedDate, 'weekday'),
+        };
 
     const col2: PerformanceKpiColumn = isDaylightToday
       ? {
           eyebrow: 'Expected Target',
           accentDot: 'sky',
           primary: `~${canonicalSnapshot.today.expectedSoFarKwh.toFixed(1)} kWh`,
-          primaryUnit: 'till now',
+          primaryUnit: 'expected by now',
           primaryTone: 'sky',
-          rightMeta: `${dayStatsModel.effectivePr ? (dayStatsModel.effectivePr * 100).toFixed(0) : canonicalSnapshot.effectivePrBreakdown.prPct}% target`,
-          subtitle: `Full day target: ~${canonicalSnapshot.today.fullDayTargetKwh.toFixed(1)} kWh (Clean Sky ${cleanSkyKwh.toFixed(1)})`,
+          rightMeta: `${dayStatsModel.effectivePr ? (dayStatsModel.effectivePr * 100).toFixed(0) : canonicalSnapshot.effectivePrBreakdown.prPct}% efficiency`,
+          subtitle: `Full day clear-sky target: ~${canonicalSnapshot.today.fullDayTargetKwh.toFixed(1)} kWh`,
         }
       : {
-          eyebrow: 'Expected Target (Full Day)',
+          eyebrow: 'Expected Target',
           accentDot: 'sky',
           primary: `~${dayStatsModel.targetDailyModelKwh.toFixed(1)} kWh`,
-          primaryUnit: 'target',
+          primaryUnit: 'sunny day goal',
           primaryTone: 'sky',
-          rightMeta: `-${primarySurfaceLossPct.toFixed(1)}% dust`,
-          subtitle: `Clean Sky ceiling: ${cleanSkyKwh.toFixed(1)} kWh`,
+          rightMeta: 'Clear sky goal',
+          subtitle: `Clear sky target: ${cleanSkyKwh.toFixed(1)} kWh`,
         };
 
     const measuredPeakKw = primaryParsed.hasData ? primaryParsed.peakKw : 0;
@@ -167,60 +151,31 @@ export function buildPerformanceKpiColumns(params: {
       measuredPeakKw > 0.05
         ? formatMinutes12hUpper(primaryParsed.peakMinutes)
         : dayStatsModel.peakTimeText;
-    const specSoFar = safeCapacity > 0 ? (primaryDayEepromKwh / safeCapacity).toFixed(2) : '0.00';
-    const specFull =
-      safeCapacity > 0 ? (dayStatsModel.targetDailyModelKwh / safeCapacity).toFixed(2) : '0.00';
 
     const col3: PerformanceKpiColumn = {
-      eyebrow: 'Peak Power & Efficiency',
-      primary:
-        measuredPeakKw > 0.05
-          ? `${peakLabelKw.toFixed(2)} kW`
-          : `~${peakLabelKw.toFixed(2)} kW`,
+      eyebrow: 'Peak Power Output',
+      primary: `${peakLabelKw.toFixed(2)} kW`,
       primaryUnit: `@ ${peakTimeDisplay}`,
-      rightMeta: dcAcCapLabel,
-      subtitle: isDaylightToday
-        ? `${specSoFar} → ~${specFull} units/kWp today`
-        : `${specSoFar} units/kWp confirmed`,
+      rightMeta: `Array ${safeCapacity.toFixed(1)} kW`,
+      subtitle: isDaylightToday ? 'Highest solar output reached today' : 'Maximum generation rate achieved',
     };
 
-    let etaPrimary = 'Standby';
-    let etaUnit = '';
-    let etaSubtitle = `${canonicalSnapshot.directDiffuse.directPct}% Direct Sun · ${canonicalSnapshot.directDiffuse.diffusePct}% Scattered Light`;
+    let etaPrimary = 'Good';
+    let etaSubtitle = 'Normal sunlight conditions';
 
-    if (isCombined) {
-      etaPrimary = `${canonicalSnapshot.effectivePrBreakdown.prPct.toFixed(1)}%`;
-      etaUnit = 'fleet efficiency';
-      etaSubtitle = 'Select single plant for inverter efficiency';
-    } else if (isTodaySelected && canonicalSnapshot.sun.isNight) {
+    if (isTodaySelected && canonicalSnapshot.sun.isNight) {
       etaPrimary = 'Standby';
-      etaUnit = 'night';
-      etaSubtitle = `Zero solar flux · Next dawn ${dayStatsModel.sunriseText}`;
-    } else if (isTodaySelected && canonicalSnapshot.truth.isStale && dayWeightedEfficiency.etaPct === null) {
-      etaPrimary = 'Pending Upload';
-      etaSubtitle = 'Awaiting daytime power samples';
+      etaSubtitle = `Night · Next dawn ${dayStatsModel.sunriseText}`;
     } else if (dayWeightedEfficiency.etaPct !== null) {
-      etaPrimary = `${dayWeightedEfficiency.etaPct.toFixed(1)}%`;
-      etaUnit = 'efficiency';
-      etaSubtitle = isTodaySelected
-        ? `${dayWeightedEfficiency.sampleCount} data points · ${canonicalSnapshot.directDiffuse.directPct}% Direct / ${canonicalSnapshot.directDiffuse.diffusePct}% Scattered`
-        : `${dayWeightedEfficiency.sumDcKw.toFixed(1)} → ${dayWeightedEfficiency.sumAcKw.toFixed(1)} kW (${dayWeightedEfficiency.sampleCount} pts)`;
-    } else {
-      etaPrimary = `${(dayStatsModel.effectivePr * 100).toFixed(1)}%`;
-      etaUnit = 'efficiency';
-      etaSubtitle = isTodaySelected
-        ? `${canonicalSnapshot.directDiffuse.directPct}% Direct Sun · ${canonicalSnapshot.directDiffuse.diffusePct}% Scattered Light`
-        : 'DC register archive unavailable';
+      etaPrimary = `${dayWeightedEfficiency.etaPct.toFixed(0)}%`;
+      etaSubtitle = 'Inverter conversion efficiency';
     }
 
     const col4: PerformanceKpiColumn = {
-      eyebrow: 'Sun & Inverter Efficiency',
+      eyebrow: 'System Health',
       primary: etaPrimary,
-      primaryUnit: etaUnit || undefined,
-      rightMeta:
-        isTodaySelected && canonicalSnapshot.directDiffuse.available
-          ? `${canonicalSnapshot.weatherNow.gtiWm2} W/m²`
-          : undefined,
+      primaryTone: 'emerald',
+      rightMeta: isTodaySelected ? canonicalSnapshot.weatherNow.conditionLabel : undefined,
       subtitle: etaSubtitle,
     };
 
@@ -233,7 +188,6 @@ export function buildPerformanceKpiColumns(params: {
     const totalBuffer = weekBulletBars.filter((b) => !b.isFuture).reduce((acc, b) => acc + (b.bufferKwh || 0), 0);
     const totalReconciled = totalCloud + totalBuffer;
     const totalModel = confirmedItems.reduce((acc, b) => acc + b.modelKwh, 0);
-    const totalPrior = weekBulletBars.reduce((acc, b) => acc + (b.prevPeriodKwh || 0), 0);
     const activeOrBufferedDays = weekBulletBars.filter(
       (b) => !b.isFuture && (b.isConfirmed || (b.bufferKwh || 0) > 1),
     ).length;
@@ -243,48 +197,43 @@ export function buildPerformanceKpiColumns(params: {
       confirmedItems.toSorted(
         (a, b) => b.realKwh + (b.bufferKwh || 0) - (a.realKwh + (a.bufferKwh || 0)),
       )[0] || null;
-    const deltaPriorPct =
-      totalPrior > 1 ? Math.round(((totalCloud - totalPrior) / totalPrior) * 100) : null;
 
     return [
       {
-        eyebrow: '7-Day Real Output',
+        eyebrow: '7-Day Solar Generation',
         accentDot: 'emerald',
         primary: `${(totalBuffer > 0.05 ? totalReconciled : totalCloud).toFixed(1)} kWh`,
-        primaryUnit: totalBuffer > 0.05 ? 'incl. buffer' : `${confirmedItems.length}d cloud`,
-        rightMeta: capturePct !== null ? `${capturePct}% capture` : undefined,
-        subtitle:
-          totalBuffer > 0.05
-            ? `${totalCloud.toFixed(1)} kWh Cloud + ${totalBuffer.toFixed(1)} kWh Outage Buffer`
-            : deltaPriorPct !== null
-              ? `${deltaPriorPct >= 0 ? '+' : ''}${deltaPriorPct}% vs prior 7 days (${totalPrior.toFixed(1)} kWh)`
-              : `₹${Math.round(totalCloud * canonicalSnapshot.config.tariffPerKwh).toLocaleString('en-IN')} est. value`,
+        primaryUnit: 'total produced',
+        rightMeta: capturePct !== null ? `${capturePct}% captured` : undefined,
+        subtitle: `Electricity value: ₹${Math.round(totalCloud * canonicalSnapshot.config.tariffPerKwh).toLocaleString('en-IN')}`,
       },
       {
-        eyebrow: 'Week Physics Target',
+        eyebrow: 'Sunny Day Potential',
         accentDot: 'sky',
         primary: `~${totalModel.toFixed(1)} kWh`,
         primaryTone: 'sky',
-        primaryUnit: 'weather-adj',
-        subtitle: `Clear-sky ceiling ${weekBulletBars.reduce((a, b) => a + b.idealClearSkyKwh, 0).toFixed(1)} kWh`,
+        primaryUnit: 'expected',
+        rightMeta: '7-day target',
+        subtitle: `Ideal sunny target: ${weekBulletBars.reduce((a, b) => a + b.idealClearSkyKwh, 0).toFixed(1)} kWh`,
       },
       {
-        eyebrow: 'Daily Avg & Best Day',
-        primary: `${avgDaily.toFixed(1)} kWh/d`,
-        rightMeta: bestDayItem ? `Best ${bestDayItem.shortLabel}` : undefined,
+        eyebrow: 'Daily Average',
+        primary: `${avgDaily.toFixed(1)} kWh`,
+        primaryUnit: 'per day',
+        rightMeta: bestDayItem ? `Best: ${bestDayItem.shortLabel}` : undefined,
         subtitle: bestDayItem
-          ? `Peak day: ${(bestDayItem.realKwh + (bestDayItem.bufferKwh || 0)).toFixed(1)} kWh (${((bestDayItem.realKwh + (bestDayItem.bufferKwh || 0)) / safeCapacity).toFixed(1)}/kWp)`
-          : 'No verified days in range',
+          ? `Peak day achieved ${(bestDayItem.realKwh + (bestDayItem.bufferKwh || 0)).toFixed(1)} kWh`
+          : '7 verified days in range',
       },
       {
-        eyebrow: 'Attribution Health',
+        eyebrow: 'Weather Impact',
         primary: capturePct !== null ? `${capturePct}%` : '—',
-        primaryUnit: 'vs weather',
-        rightMeta: `${weekBulletBars.filter((b) => b.dipCategory === 'OPTIMAL').length}/7 optimal`,
+        primaryUnit: 'of potential',
+        rightMeta: `${weekBulletBars.filter((b) => b.dipCategory === 'OPTIMAL').length}/7 clear days`,
         subtitle:
           periodAttribution && periodAttribution.weatherLossKwh > 0.2
-            ? `Cloud -${periodAttribution.weatherLossKwh.toFixed(1)} · Dirt -${periodAttribution.hazeAndSoilingLossKwh.toFixed(1)} kWh`
-            : `Soiling surface -${canonicalSnapshot.soiling.surfaceLossPct.toFixed(1)}%`,
+            ? `Clouds: -${periodAttribution.weatherLossKwh.toFixed(1)} kWh · Dust: -${periodAttribution.hazeAndSoilingLossKwh.toFixed(1)} kWh`
+            : 'Minimal cloud or atmospheric loss',
       },
     ];
   }
@@ -296,60 +245,48 @@ export function buildPerformanceKpiColumns(params: {
     const mModel = monthSummaryStats.totalModelConfirmedKwh;
     const isCurrentMonth = selectedMonth === currentYm;
     const mAnchored = isCurrentMonth && canonicalSnapshot.month.isEmonthAnchored;
-    const mHardwareSynced = isCurrentMonth && canonicalSnapshot.month.hardwareSource === 'waaree-api';
     const mHeadline = mAnchored
       ? canonicalSnapshot.month.physicalTotalKwh
       : Math.max(mTotal, mReconciled, isCurrentMonth ? canonicalSnapshot.month.physicalTotalKwh : 0);
-    const mDelta = Math.max(0, +(mHeadline - mTotal).toFixed(2));
     const projected = isCurrentMonth ? canonicalSnapshot.month.projectedKwh : mReconciled;
 
     return [
       {
-        eyebrow: isCurrentMonth ? 'Month-to-Date Output' : 'Monthly Verified Output',
+        eyebrow: isCurrentMonth ? 'Monthly Generation' : 'Total Generated',
         accentDot: 'emerald',
-        primary: `${mAnchored ? mHeadline.toFixed(2) : mHeadline.toFixed(1)} kWh`,
-        primaryUnit: mAnchored
-          ? mHardwareSynced
-            ? 'inverter synced'
-            : 'lcd synced'
-          : mDelta > 0.05
-            ? 'incl. buffer'
-            : `${monthSummaryStats.confirmedDays}d cloud`,
+        primary: `${mHeadline.toFixed(1)} kWh`,
+        primaryUnit: isCurrentMonth ? `${monthSummaryStats.confirmedDays} days tracked` : 'full month',
         rightMeta:
-          monthSummaryStats.capturePct !== null ? `${monthSummaryStats.capturePct}% capture` : undefined,
-        subtitle:
-          mDelta > 0.05
-            ? `${mTotal.toFixed(1)} kWh Cloud + ${mDelta.toFixed(mAnchored ? 2 : 1)} kWh ${mAnchored ? (mHardwareSynced ? 'Inverter Register' : 'LCD Synced') : 'Outage Buffer'}`
-            : isCurrentMonth
-              ? `Proj: ~${projected} kWh · ₹${Math.round(mHeadline * canonicalSnapshot.config.tariffPerKwh).toLocaleString('en-IN')}`
-              : `₹${Math.round(mHeadline * canonicalSnapshot.config.tariffPerKwh).toLocaleString('en-IN')} monthly value`,
+          monthSummaryStats.capturePct !== null ? `${monthSummaryStats.capturePct}% captured` : undefined,
+        subtitle: `Estimated savings: ₹${Math.round(mHeadline * canonicalSnapshot.config.tariffPerKwh).toLocaleString('en-IN')}`,
       },
       {
-        eyebrow: 'Month Physics Model',
+        eyebrow: 'Expected Target',
         accentDot: 'sky',
-        primary: mModel > 0 ? `~${mModel.toFixed(1)} kWh` : 'Archive',
+        primary: mModel > 0 ? `~${mModel.toFixed(1)} kWh` : '—',
         primaryTone: 'sky',
-        primaryUnit: mModel > 0 ? 'verified span' : undefined,
-        subtitle: periodAttribution
-          ? `Weather -${periodAttribution.weatherLossKwh.toFixed(1)} · Haze/Dirt -${periodAttribution.hazeAndSoilingLossKwh.toFixed(1)} kWh`
-          : `${formatIndianMonthYear(selectedMonth)} weather baseline`,
+        primaryUnit: 'target',
+        rightMeta: `${monthSummaryStats.confirmedDays} days`,
+        subtitle: isCurrentMonth
+          ? `Projected month-end: ~${projected} kWh`
+          : `${formatIndianMonthYear(selectedMonth)} target`,
       },
       {
-        eyebrow: 'Daily Avg & Best Day',
+        eyebrow: 'Daily Average',
         primary:
-          monthSummaryStats.avgKwh !== null ? `${monthSummaryStats.avgKwh.toFixed(1)} kWh/d` : '—',
+          monthSummaryStats.avgKwh !== null ? `${monthSummaryStats.avgKwh.toFixed(1)} kWh` : '—',
+        primaryUnit: 'per day',
         rightMeta: monthSummaryStats.bestDay ? monthSummaryStats.bestDay.shortLabel : undefined,
         subtitle: monthSummaryStats.bestDay
-          ? `Best: ${monthSummaryStats.bestDay.realKwh.toFixed(1)} kWh (${(monthSummaryStats.bestDay.realKwh / safeCapacity).toFixed(1)}/kWp)`
-          : 'Click any synced day bar to drill in',
+          ? `Best day was ${monthSummaryStats.bestDay.realKwh.toFixed(1)} kWh`
+          : 'Consistent generation throughout month',
       },
       {
-        eyebrow: 'Period Capture & Coverage',
-        primary:
-          monthSummaryStats.capturePct !== null ? `${monthSummaryStats.capturePct}%` : '—',
-        primaryUnit: 'capture',
-        rightMeta: `${monthSummaryStats.confirmedDays}/${monthSummaryStats.totalRenderedDays} days`,
-        subtitle: `Specific ${(mHeadline / Math.max(0.1, safeCapacity)).toFixed(1)} kWh/kWp`,
+        eyebrow: 'Estimated Savings',
+        primary: `₹${Math.round(mHeadline * canonicalSnapshot.config.tariffPerKwh).toLocaleString('en-IN')}`,
+        primaryUnit: 'saved',
+        rightMeta: `${Math.round(mHeadline * 0.85)} kg CO₂`,
+        subtitle: `Avoided ${Math.round(mHeadline * 0.85)} kg carbon emissions`,
       },
     ];
   }
@@ -359,30 +296,30 @@ export function buildPerformanceKpiColumns(params: {
       eyebrow: `${activeYear} Annual Output`,
       accentDot: 'emerald',
       primary: `${yearSummaryStats.totalYearKwh.toFixed(1)} kWh`,
-      primaryUnit: `${yearSummaryStats.activeMonthsCount} active mo`,
-      subtitle: `Commissioned ${formatIndianDate(resolvedCommissioningYmd, 'medium')}`,
+      primaryUnit: `${yearSummaryStats.activeMonthsCount} active months`,
+      subtitle: `System commissioned ${formatIndianDate(resolvedCommissioningYmd, 'medium')}`,
     },
     {
-      eyebrow: 'Annual Specific Yield',
+      eyebrow: 'Energy per Installed kW',
       accentDot: 'sky',
       primary: `${yearSummaryStats.specificYieldYear.toFixed(1)}`,
-      primaryUnit: 'kWh/kWp',
+      primaryUnit: 'kWh per kWp',
       primaryTone: 'sky',
-      subtitle: `Across ${safeCapacity.toFixed(2)} kWp installed array`,
+      subtitle: `Rooftop system: ${safeCapacity.toFixed(2)} kWp capacity`,
     },
     {
-      eyebrow: 'Peak Production Month',
+      eyebrow: 'Best Month',
       primary: yearSummaryStats.bestMonth ? `${yearSummaryStats.bestMonth.realKwh.toFixed(1)} kWh` : '—',
       rightMeta: yearSummaryStats.bestMonth?.label,
       subtitle: yearSummaryStats.bestMonth?.dailyAvgKwh
         ? `Avg ${yearSummaryStats.bestMonth.dailyAvgKwh.toFixed(1)} kWh/d over ${yearSummaryStats.bestMonth.activeDays}d`
-        : 'Select an active month bar to inspect',
+        : 'Active generation period',
     },
     {
       eyebrow: 'Estimated Annual Savings',
       primary: `₹${yearSummaryStats.savingsInr.toLocaleString('en-IN')}`,
       rightMeta: `${yearSummaryStats.co2Kg} kg CO₂`,
-      subtitle: `@ ₹${canonicalSnapshot.config.tariffPerKwh.toFixed(2)}/kWh · 0.85 kg/kWh CO₂`,
+      subtitle: `Electricity bill reduction at ₹${canonicalSnapshot.config.tariffPerKwh.toFixed(2)}/kWh`,
     },
   ];
 }

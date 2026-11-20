@@ -41,7 +41,7 @@ export interface FinancialsTabProps {
 
 /**
  * Financials & Payback Engine tab: Multi-year ROI payback curve, DISCOM cycle billing,
- * 100% reconciled daily cash P&L bridge, and interactive What-If scenario sandbox.
+ * 100% reconciled daily cash P&L bridge, and interactive Financial Settings sandbox.
  */
 export const FinancialsTab: React.FC<FinancialsTabProps> = ({
   canonicalSnapshot,
@@ -63,7 +63,7 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({
   const [showWhatIf, setShowWhatIf] = useState<boolean>(false);
   const [isStatementOpen, setIsStatementOpen] = useState<boolean>(false);
 
-  // Interactive What-If Sandbox State (keeps overview numbers untampered unless saved)
+  // Interactive Financial Settings Sandbox State (keeps overview numbers untampered unless saved)
   const [draftTariffOverride, setDraftTariffOverride] = useState<number | null>(null);
   const [draftSystemCostOverride, setDraftSystemCostOverride] = useState<number | null>(null);
   const [draftSubsidyOverride, setDraftSubsidyOverride] = useState<number | null>(null);
@@ -156,22 +156,22 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({
     const lines: string[] = [
       'Section,Metric,Value,Notes',
       `Summary,Location,"${canonicalSnapshot.config.locationName}",${canonicalSnapshot.config.capacityKwp} kWp`,
-      `Summary,Confirmed Lifetime Saved INR,${payback.confirmedSavedInr},${canonicalSnapshot.lifetime.confirmedKwh} kWh`,
-      `Summary,Net CapEx INR,${payback.netCapexInr},Gross ${draftSystemCost} minus Subsidy ${draftSubsidy}`,
-      `Summary,Breakeven Horizon,"${payback.breakevenLabel}",${payback.breakevenYears ?? '>25'} years`,
-      `Summary,All-In LCOE INR/kWh,${payback.lcoeAllInInrPerKwh},Includes ${payback.washesPerYear} washes/yr @ INR ${draftWashCost}`,
+      `Summary,Total Lifetime Saved INR,${payback.confirmedSavedInr},${canonicalSnapshot.lifetime.confirmedKwh} kWh`,
+      `Summary,Net System Investment INR,${payback.netCapexInr},Gross ${draftSystemCost} minus Subsidy ${draftSubsidy}`,
+      `Summary,Breakeven Payback Date,"${payback.breakevenLabel}",${payback.breakevenYears ?? '>25'} years`,
+      `Summary,Solar Cost per Unit INR/kWh,${payback.lcoeAllInInrPerKwh},Includes ${payback.washesPerYear} washes/yr @ INR ${draftWashCost}`,
       `Summary,DISCOM Cycle (${discom.cyclePeriodText}),${discom.accruedPlusPendingInr},Confirmed ${discom.confirmedInr} + Pending ${discom.pendingInr}`,
       '',
-      'Daily Cash P&L,Date,Earned INR,Weather Dip INR,Soil Loss INR,Pending/Outage INR,Ideal Clear-Sky INR',
+      'Daily Cash Attribution,Date,Earned INR,Weather Dip INR,Soil Loss INR,Pending Sync INR,Clear-Sky Potential INR',
       ...pnlSummary.dailyRows.map(
         (r) =>
-          `Daily Cash P&L,${r.ymd},${r.earnedInr},${r.weatherDipInr},${r.soilLossInr},${r.pendingOutageInr},${r.idealPotentialInr}`,
+          `Daily Cash Attribution,${r.ymd},${r.earnedInr},${r.weatherDipInr},${r.soilLossInr},${r.pendingOutageInr},${r.idealPotentialInr}`,
       ),
       '',
-      '25-Yr Schedule,Year,Est Yield kWh,Annual Net Cash INR,Cumulative Cash INR,Paid Off %',
+      'Payback Schedule,Year,Est Solar Harvest kWh,Annual Net Savings INR,Cumulative Net Cash INR,Paid Off %',
       ...payback.annualSeries.map(
         (a) =>
-          `25-Yr Schedule,${a.yearLabel},${a.annualYieldKwh},${a.annualNetSavingsInr},${a.cumulativeNetInr},${a.paidOffPct}%`,
+          `Payback Schedule,${a.yearLabel},${a.annualYieldKwh},${a.annualNetSavingsInr},${a.cumulativeNetInr},${a.paidOffPct}%`,
       ),
     ];
 
@@ -187,7 +187,7 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({
   };
 
   return (
-    <div className="space-y-5 max-w-[1440px] mx-auto pb-8 animate-in fade-in duration-300">
+    <div className="space-y-5 w-full pb-8 animate-in fade-in duration-300">
       <section className="rounded-3xl apple-glass-static overflow-hidden">
         <div className="px-4 sm:px-6 py-4 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div className="min-w-0">
@@ -198,12 +198,12 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({
               </h2>
               <span className="px-3 py-0.5 rounded-full text-[10.5px] font-bold apple-glass-pill shadow-2xs text-emerald-800">
                 {payback.baselineSource === 'open_meteo_365d_archive'
-                  ? '365-Day Satellite Solar Archive'
+                  ? '365-Day Solar Weather Archive'
                   : 'Satellite Baseline'}
               </span>
               {isWhatIfModified && (
                 <span className="px-3 py-0.5 rounded-full text-[10.5px] font-bold apple-glass-pill shadow-2xs text-amber-900 border-amber-300">
-                  Calculator Preview Active
+                  Settings Active
                 </span>
               )}
             </div>
@@ -258,7 +258,7 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({
               }`}
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
-              Savings Calculator
+              Financial Settings
             </button>
 
             <button
@@ -390,9 +390,12 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({
         )}
 
         <FinancialsKpiStrip
+          stageView={stageView}
           payback={payback}
           discom={discom}
+          pnlSummary={pnlSummary}
           canonicalSnapshot={canonicalSnapshot}
+          draftSystemCost={draftSystemCost}
           subsidyInr={draftSubsidy}
           washCostInr={draftWashCost}
           isWhatIfActive={isWhatIfModified}
@@ -405,36 +408,10 @@ export const FinancialsTab: React.FC<FinancialsTabProps> = ({
           pnlSummary={pnlSummary}
           cyclePnlSummary={cyclePnlSummary}
         />
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/75 border-t border-slate-200/75 bg-slate-50/40">
-          {payback.milestones.map((m) => (
-            <div key={m.pctTarget} className="px-4 sm:px-5 py-3 flex items-center justify-between gap-2 min-w-0">
-              <div className="min-w-0">
-                <div className="text-[10.5px] font-bold uppercase tracking-wider text-slate-500">
-                  {m.pctTarget === 100 ? 'Fully Paid Off' : `${m.pctTarget}% Paid Off`}
-                </div>
-                <div className="text-[12.5px] font-extrabold text-slate-900 tabular-nums mt-0.5">
-                  {formatINR(m.targetInr)}
-                </div>
-              </div>
-              <div className="text-right shrink-0">
-                <div
-                  className={`text-[11.5px] font-bold tabular-nums ${
-                    m.achieved ? 'text-emerald-700' : 'text-slate-700'
-                  }`}
-                >
-                  {m.achieved ? 'Achieved' : m.projectedLabel}
-                </div>
-                <div className="text-[10px] font-medium text-slate-400 tabular-nums">
-                  {m.achieved ? 'Unlocked' : m.monthsFromNow > 0 ? `+${m.monthsFromNow} mo` : '>25 yrs'}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </section>
 
       <FinancialsFooterLedgers
+        stageView={stageView}
         payback={payback}
         discom={discom}
         pnlSummary={pnlSummary}

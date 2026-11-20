@@ -1,5 +1,4 @@
 import React from 'react';
-import { getDipCategoryBarColor } from '@solar-track/core';
 import type {
   PerformanceBulletBarItem,
   StagePlotLayout,
@@ -27,7 +26,7 @@ interface PerformanceBulletBarsSvgProps {
  * monthly average guideline, prior-7d polyline, and capture % polyline.
  */
 export const PerformanceBulletBarsSvg: React.FC<PerformanceBulletBarsSvgProps> = ({
-  uid,
+  uid: _uid,
   animGeneration,
   timescale,
   layout,
@@ -35,7 +34,7 @@ export const PerformanceBulletBarsSvg: React.FC<PerformanceBulletBarsSvgProps> =
   yMaxKwh,
   kwhTicks,
   monthAvgKwh,
-  showClearSkyTicks,
+  showClearSkyTicks: _showClearSkyTicks,
   showPriorWeekOverlay,
   showCaptureLineOverlay,
   activeHoveredBarYmd,
@@ -47,8 +46,12 @@ export const PerformanceBulletBarsSvg: React.FC<PerformanceBulletBarsSvgProps> =
 
   const n = Math.max(1, bulletBars.length);
   const slotW = plotW / n;
-  const outerW = Math.max(8, Math.min(48, slotW * 0.72));
-  const innerW = Math.max(5, Math.min(30, outerW * 0.58));
+  // Apple Minimalist Rounded Capsule Geometry: unified bar width with soft background track
+  const barW =
+    timescale === 'week'
+      ? Math.max(16, Math.min(32, slotW * 0.42))
+      : Math.max(6, Math.min(14, slotW * 0.54));
+  const barRx = Math.min(barW / 2, 7);
 
   const priorWeekPts =
     timescale === 'week' && showPriorWeekOverlay
@@ -162,23 +165,8 @@ export const PerformanceBulletBarsSvg: React.FC<PerformanceBulletBarsSvgProps> =
         const envH = Math.max(0, baselineY - envY);
         const realY = kwhToY(b.realKwh);
         const realH = Math.max(0, baselineY - realY);
-        const bufferKwhVal = !b.isFuture ? Math.max(0, b.bufferKwh ?? 0) : 0;
-        const hasBufferStack = bufferKwhVal > 0.05;
-        const bufferTopY = hasBufferStack ? kwhToY(b.realKwh + bufferKwhVal) : realY;
-        const bufferH = hasBufferStack ? Math.max(0, realY - bufferTopY) : 0;
-        const stackAnchorKwh = b.realKwh + bufferKwhVal;
-        const stackAnchorY = hasBufferStack ? bufferTopY : realY;
-        const clearY = kwhToY(b.idealClearSkyKwh);
-        const palette = getDipCategoryBarColor(b.dipCategory);
         const isHovered = activeHoveredBarYmd === b.ymd;
         const staggerMs = Math.min(280, idx * (timescale === 'week' ? 28 : 12));
-
-        const hasTodayStack =
-          b.isToday &&
-          typeof b.todayTargetTotalKwh === 'number' &&
-          b.todayTargetTotalKwh > stackAnchorKwh + 0.2;
-        const stackTopY = hasTodayStack ? kwhToY(b.todayTargetTotalKwh!) : stackAnchorY;
-        const stackH = hasTodayStack ? Math.max(0, stackAnchorY - stackTopY) : 0;
 
         return (
           <g
@@ -205,131 +193,49 @@ export const PerformanceBulletBarsSvg: React.FC<PerformanceBulletBarsSvgProps> =
                 animation: `perfBarRise 420ms cubic-bezier(0.22, 1, 0.36, 1) ${staggerMs}ms both`,
               }}
             >
-              {showClearSkyTicks && b.idealClearSkyKwh > b.modelKwh + 0.3 && !b.isFuture && (
-                <line
-                  x1={cx - outerW * 0.45}
-                  x2={cx + outerW * 0.45}
-                  y1={clearY}
-                  y2={clearY}
-                  stroke="#94A3B8"
-                  strokeWidth="1.25"
-                />
-              )}
-
+              {/* Apple Minimalist Background Track: Benchmark potential */}
               {b.modelKwh > 0.05 && !b.isFuture && (
                 <rect
-                  x={cx - outerW / 2}
+                  x={cx - barW / 2}
                   y={envY}
-                  width={outerW}
+                  width={barW}
                   height={envH}
-                  rx="3"
-                  fill="rgba(2, 132, 199, 0.12)"
-                  stroke={isHovered ? 'rgba(2, 132, 199, 0.55)' : 'rgba(2, 132, 199, 0.25)'}
-                  strokeWidth="1"
+                  rx={barRx}
+                  fill={isHovered ? '#E2E8F0' : '#F1F5F9'}
+                  className="transition-colors duration-150"
                 />
               )}
 
-              {!b.isFuture &&
-                b.dipCategory === 'WIFI_OUTAGE_UNLOGGED' &&
-                b.realKwh <= 0.05 &&
-                !hasBufferStack &&
-                !b.isManualGridOff &&
-                envH > 2 && (
-                  <rect
-                    x={cx - innerW / 2}
-                    y={envY}
-                    width={innerW}
-                    height={envH}
-                    rx="2.5"
-                    fill={`url(#bridgedGapHatch-${uid})`}
-                    stroke="#D97706"
-                    strokeOpacity="0.85"
-                    strokeWidth="1.25"
-                    strokeDasharray="3 2"
-                    opacity={isHovered ? 0.95 : 0.78}
-                  />
-                )}
-
+              {/* Apple Minimalist Generation Capsule */}
               {b.realKwh > 0.05 && !b.isFuture && (
                 <rect
-                  x={cx - innerW / 2}
+                  x={cx - barW / 2}
                   y={realY}
-                  width={innerW}
+                  width={barW}
                   height={realH}
-                  rx="2.5"
+                  rx={barRx}
                   fill={
-                    b.dipCategory === 'WIFI_OUTAGE_UNLOGGED' && !hasBufferStack
-                      ? `url(#bridgedGapHatch-${uid})`
-                      : b.dipCategory === 'PENDING_SYNC'
-                        ? `url(#gapOutageHatch-${uid})`
-                        : palette.fill
+                    b.isToday
+                      ? '#10B981'
+                      : b.capturePct !== null && b.capturePct >= 85
+                        ? '#10B981'
+                        : b.capturePct !== null && b.capturePct >= 65
+                          ? '#F59E0B'
+                          : '#F43F5E'
                   }
-                  opacity={isHovered ? 1 : 0.92}
+                  opacity={isHovered ? 1 : 0.94}
                   style={{ transition: 'height 240ms ease, y 240ms ease' }}
                 />
               )}
 
-              {!b.isFuture && hasBufferStack && bufferH > 1.5 && (
-                <>
-                  <rect
-                    x={cx - innerW / 2}
-                    y={bufferTopY}
-                    width={innerW}
-                    height={bufferH}
-                    rx="2"
-                    fill={`url(#bridgedGapHatch-${uid})`}
-                    stroke="#D97706"
-                    strokeOpacity="0.9"
-                    strokeWidth="1.25"
-                    strokeDasharray="3 2"
-                    opacity={isHovered ? 0.98 : 0.86}
-                  />
-                  {b.realKwh > 0.05 && (
-                    <line
-                      x1={cx - innerW / 2}
-                      x2={cx + innerW / 2}
-                      y1={realY}
-                      y2={realY}
-                      stroke="#D97706"
-                      strokeWidth="1.25"
-                    />
-                  )}
-                </>
-              )}
-
-              {hasTodayStack && stackH > 2 && (
-                <>
-                  <rect
-                    x={cx - innerW / 2}
-                    y={stackTopY}
-                    width={innerW}
-                    height={stackH}
-                    rx="2"
-                    fill={`url(#pendingTargetHatch-${uid})`}
-                    stroke="#0284C7"
-                    strokeOpacity="0.45"
-                    strokeWidth="1"
-                  />
-                  <line
-                    x1={cx - innerW / 2}
-                    x2={cx + innerW / 2}
-                    y1={stackAnchorY}
-                    y2={stackAnchorY}
-                    stroke="#059669"
-                    strokeWidth="1.5"
-                  />
-                </>
-              )}
-
-              {b.modelKwh > 0.05 && !b.isFuture && (
-                <line
-                  x1={cx - outerW / 2 - 1.5}
-                  x2={cx + outerW / 2 + 1.5}
-                  y1={envY}
-                  y2={envY}
-                  stroke="#0284C7"
-                  strokeWidth="2"
-                  strokeLinecap="round"
+              {/* Gentle indicator when today is live in progress */}
+              {b.isToday && b.realKwh > 0.05 && (
+                <circle
+                  cx={cx}
+                  cy={realY + barRx}
+                  r={Math.min(2.5, barW * 0.22)}
+                  fill="#FFFFFF"
+                  opacity={0.9}
                 />
               )}
             </g>

@@ -17,7 +17,7 @@ interface FinancialsCycleStageProps {
 
 /**
  * DISCOM Cycle billing view: Confirmed vs Pending Sync breakdown,
- * cycle projection bar, and daily billing credits.
+ * executive donut hub, and clean daily billing credit capsule bars.
  */
 export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
   discom,
@@ -36,10 +36,14 @@ export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
   const plotW = Math.max(80, svgW - padL - padR);
   const plotH = Math.max(80, svgH - padT - padB);
 
-  const cycleRows: ReconciledCashPnlDay[] = cyclePnlSummary.dailyRows;
+  // Guarantee strict chronological ascending date ordering (e.g. Day 1, 2 ... 20)
+  const cycleRows: ReconciledCashPnlDay[] = useMemo(() => {
+    return [...cyclePnlSummary.dailyRows].sort((a, b) => a.ymd.localeCompare(b.ymd));
+  }, [cyclePnlSummary.dailyRows]);
+
   const count = Math.max(1, cycleRows.length);
   const colW = plotW / count;
-  const barW = Math.max(6, Math.min(30, colW * 0.62));
+  const barW = Math.max(6, Math.min(26, colW * 0.58));
   const maxY = Math.max(
     20,
     ...cycleRows.map((r) => Math.max(r.earnedInr + r.pendingOutageInr, r.idealPotentialInr * 0.9)),
@@ -51,8 +55,14 @@ export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
   const confBarPct = Math.min(100, (discom.confirmedInr / projTarget) * 100);
   const pendBarPct = Math.min(100 - confBarPct, (discom.pendingInr / projTarget) * 100);
 
-  const remainingUnitsKwh = Math.max(0, discom.projectedCycleUnitsKwh - discom.confirmedUnitsKwh - discom.pendingUnitsKwh);
-  const remainingInr = Math.max(0, discom.projectedCycleInr - discom.confirmedInr - discom.pendingInr);
+  const remainingUnitsKwh = Math.max(
+    0,
+    discom.projectedCycleUnitsKwh - discom.confirmedUnitsKwh - discom.pendingUnitsKwh,
+  );
+  const remainingInr = Math.max(
+    0,
+    discom.projectedCycleInr - discom.confirmedInr - discom.pendingInr,
+  );
 
   const pieSeriesData = useMemo(() => {
     return [
@@ -78,7 +88,7 @@ export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
               id: 'remaining',
               value: Number(remainingUnitsKwh.toFixed(1)),
               label: 'Projected Remainder',
-              color: '#CBD5E1',
+              color: '#E2E8F0',
             },
           ]
         : []),
@@ -91,7 +101,7 @@ export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
       <div className="mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-slate-50/80 via-emerald-50/20 to-amber-50/20 border border-slate-200/70 shadow-2xs">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
           {/* Donut Chart */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-3.5 shrink-0">
             <div className="relative w-[130px] h-[130px] flex items-center justify-center shrink-0">
               <PieChart
                 series={[
@@ -109,10 +119,10 @@ export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
                 hideLegend
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                <span className="text-[12px] font-extrabold text-slate-900 tabular-nums leading-none">
+                <span className="text-[13px] font-extrabold text-slate-900 tabular-nums leading-none">
                   {formatINR(discom.projectedCycleInr)}
                 </span>
-                <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
                   Cycle Proj
                 </span>
               </div>
@@ -231,34 +241,48 @@ export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
               const pendY = confY - pendH;
               const isHovered = hoveredDayIdx === i;
               const showTick = !isCompact || i % 2 === 0 || i === cycleRows.length - 1;
+              const radius = Math.min(5, barW / 2);
 
               return (
                 <g key={r.ymd} className="cursor-pointer" onMouseEnter={() => onHoverDayIdx(i)}>
+                  {/* Apple subtle hover highlight column */}
                   {isHovered && (
-                    <rect x={padL + i * colW} y={padT} width={colW} height={plotH} fill="#F1F5F9" rx={4} />
+                    <rect
+                      x={padL + i * colW + 1}
+                      y={padT}
+                      width={colW - 2}
+                      height={plotH}
+                      fill="#F1F5F9"
+                      rx={6}
+                    />
                   )}
+
+                  {/* Confirmed Credit Capsule */}
                   {confH > 0 && (
                     <rect
                       x={x}
                       y={confY}
                       width={barW}
                       height={confH}
-                      rx={pendH > 0 ? 1 : 4}
+                      rx={pendH > 0 ? 1 : radius}
                       fill="#107C41"
                       fillOpacity={0.92}
                     />
                   )}
+
+                  {/* Pending Sync Buffer Capsule Cap */}
                   {pendH > 0 && (
                     <rect
                       x={x}
                       y={pendY}
                       width={barW}
                       height={pendH}
-                      rx={confH > 0 ? 1 : 4}
+                      rx={confH > 0 ? radius : radius}
                       fill="#F59E0B"
-                      fillOpacity={0.85}
+                      fillOpacity={0.88}
                     />
                   )}
+
                   {confH === 0 && pendH === 0 && (
                     <rect
                       x={x}
@@ -269,6 +293,8 @@ export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
                       fill="#E2E8F0"
                     />
                   )}
+
+                  {/* Natural ascending day of month tick */}
                   {showTick && (
                     <text
                       x={cx}
@@ -289,7 +315,7 @@ export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
 
         {hoveredCycle && hoveredDayIdx !== null && (
           <div
-            className="pointer-events-none absolute top-2 z-20 rounded-xl bg-slate-900/95 text-white px-3 py-2 shadow-xl text-[11px] min-w-[215px]"
+            className="pointer-events-none absolute top-2 z-20 rounded-xl bg-slate-900/95 text-white px-3.5 py-2.5 shadow-xl text-[11px] min-w-[215px]"
             style={{
               left: Math.min(
                 Math.max(8, padL + (hoveredDayIdx + 0.5) * (plotW / Math.max(1, cycleRows.length)) - 107),
@@ -309,16 +335,16 @@ export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
                 }
               >
                 {hoveredCycle.isConfirmed && hoveredCycle.pendingOutageInr > 0.5
-                  ? 'Cloud + Buffer'
+                  ? 'Confirmed + Buffer'
                   : hoveredCycle.isConfirmed
-                    ? 'Confirmed'
+                    ? 'Confirmed Credit'
                     : 'Pending Sync'}
               </span>
             </div>
-            <div className="text-slate-200 mt-1 space-y-0.5 tabular-nums">
+            <div className="text-slate-200 mt-1.5 space-y-1 tabular-nums">
               {hoveredCycle.earnedInr > 0 && (
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-emerald-300">Cloud Logged</span>
+                  <span className="text-emerald-300">Meter Confirmed</span>
                   <span className="font-semibold">
                     {formatINR(hoveredCycle.earnedInr)} ({hoveredCycle.realKwh?.toFixed(2) ?? '0.00'} kWh)
                   </span>
@@ -326,18 +352,20 @@ export const FinancialsCycleStage: React.FC<FinancialsCycleStageProps> = ({
               )}
               {hoveredCycle.pendingOutageInr > 0.5 && (
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-amber-300">Outage / Live Buffer</span>
+                  <span className="text-amber-300">Pending Sync Buffer</span>
                   <span className="font-semibold">+{formatINR(hoveredCycle.pendingOutageInr)}</span>
                 </div>
               )}
               {hoveredCycle.earnedInr > 0 && hoveredCycle.pendingOutageInr > 0.5 && (
-                <div className="flex items-center justify-between gap-2 pt-0.5 border-t border-white/10 font-bold text-white">
-                  <span>Reconciled Total</span>
+                <div className="flex items-center justify-between gap-2 pt-1 border-t border-white/10 font-bold text-white">
+                  <span>Total Bill Credit</span>
                   <span>{formatINR(hoveredCycle.earnedInr + hoveredCycle.pendingOutageInr)}</span>
                 </div>
               )}
             </div>
-            <div className="text-[10px] text-slate-400 mt-1">{hoveredCycle.dipReasonLabel}</div>
+            {hoveredCycle.dipReasonLabel && (
+              <div className="text-[10px] text-slate-400 mt-1">{hoveredCycle.dipReasonLabel}</div>
+            )}
           </div>
         )}
       </div>

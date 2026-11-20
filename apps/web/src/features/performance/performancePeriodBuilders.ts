@@ -33,6 +33,14 @@ export function synthesizeRawFromCombined(
   ];
 }
 
+function cleanDipReason(label?: string | null): string | undefined {
+  if (!label) return undefined;
+  if (/Smooth unforecasted local haze/i.test(label)) return 'Morning haze dip';
+  if (/Partial telemetry coverage/i.test(label)) return 'Partial daylight sync';
+  if (/Normal solar yield/i.test(label)) return 'Clear sky solar generation';
+  return label;
+}
+
 export function buildWeekBulletBars(params: {
   weekDates: string[];
   ledgerByYmd: Map<string, DailyPerformanceLedgerEntry>;
@@ -143,11 +151,9 @@ export function buildWeekBulletBars(params: {
       dipReasonLabel:
         ymd === todayYmd
           ? canonicalSnapshot.today.isConfirmed
-            ? bufferKwh > 0.05
-              ? `Cloud ${realKwh.toFixed(1)} + ${bufferKwh.toFixed(1)} Buffer = ${physicalDayKwh.toFixed(1)} kWh`
-              : `Live (${canonicalSnapshot.today.displayKwh.toFixed(1)} kWh so far)`
+            ? `Live (${physicalDayKwh.toFixed(1)} kWh recorded today)`
             : 'Live Forecast'
-          : entry?.dipReasonLabel ||
+          : cleanDipReason(entry?.dipReasonLabel) ||
             (isConfirmed
               ? 'Verified'
               : ymd < todayYmd && canonicalSnapshot.today.isConfirmed
@@ -369,11 +375,9 @@ export function buildMonthBulletBarsAndStats(params: {
         ? 'Upcoming'
         : isToday
           ? canonicalSnapshot.today.isConfirmed
-            ? bufferKwh > 0.05
-              ? `Cloud ${realKwh.toFixed(1)} + ${bufferKwh.toFixed(1)} Buffer`
-              : 'Live Today'
+            ? 'Live Today'
             : 'Est. Today'
-          : entry?.dipReasonLabel ||
+          : cleanDipReason(entry?.dipReasonLabel) ||
             (isConfirmed
               ? 'Verified'
               : ymd < todayYmd && canonicalSnapshot.today.isConfirmed

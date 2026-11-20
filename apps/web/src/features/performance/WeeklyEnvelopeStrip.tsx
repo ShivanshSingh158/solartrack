@@ -48,6 +48,39 @@ function toAreaPath(pts: Array<{ t: number; v: number }>, w: number, h: number, 
   return `${line} L ${lastX},${base} L ${firstX},${base} Z`;
 }
 
+function getCleanWeatherLabel(
+  entry?: DailyPerformanceLedgerEntry | null,
+  fallbackLabel?: string,
+  isToday?: boolean,
+  capturePct?: number | null,
+): string {
+  if (isToday) return 'Live today';
+  if (!entry) return fallbackLabel || 'Verified';
+
+  const cat = (entry.dipCategory || '').toLowerCase();
+  const raw = (entry.dipReasonLabel || '').toLowerCase();
+
+  if (raw.includes('normal solar') || cat === 'optimal' || (capturePct != null && capturePct >= 88)) {
+    return 'Sunny & Clear';
+  }
+  if (cat === 'cloud' || raw.includes('cloud') || raw.includes('rain')) {
+    return 'Passing Clouds';
+  }
+  if (cat === 'fog' || cat === 'haze' || raw.includes('haze') || raw.includes('fog') || raw.includes('smog')) {
+    return 'Morning Haze';
+  }
+  if (cat === 'outage' || cat === 'gap' || raw.includes('telemetry') || raw.includes('outage') || raw.includes('cut')) {
+    return 'Partial Sync';
+  }
+  if (cat === 'soiling' || raw.includes('dust') || raw.includes('soiling')) {
+    return 'Dust Impact';
+  }
+  if (capturePct != null && capturePct >= 75) {
+    return 'Good Sunlight';
+  }
+  return 'Mixed Weather';
+}
+
 export const WeeklyEnvelopeStrip: React.FC<WeeklyEnvelopeStripProps> = ({
   days,
   hoveredYmd,
@@ -188,8 +221,8 @@ export const WeeklyEnvelopeStrip: React.FC<WeeklyEnvelopeStripProps> = ({
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between gap-1 text-[10px] text-slate-500 font-medium truncate">
-                  <span className="truncate">{entry?.dipReasonLabel || palette.label}</span>
+                <div className="flex items-center justify-between gap-1 text-[10px] text-slate-500 font-medium">
+                  <span className="truncate">{getCleanWeatherLabel(entry, palette.label, item.isToday, capturePct)}</span>
                   <span className="tabular-nums shrink-0 text-slate-400 group-hover:text-slate-600 transition-colors">
                     {spark.peakKw !== null
                       ? `${spark.peakKw.toFixed(1)} kW`

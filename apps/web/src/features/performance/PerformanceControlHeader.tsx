@@ -5,9 +5,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Download,
   GitCompareArrows,
-  Printer,
   Table as TableIcon,
   X,
 } from 'lucide-react';
@@ -50,10 +48,10 @@ interface PerformanceControlHeaderProps {
 }
 
 const MODE_OPTIONS: Array<{ key: TimescaleMode; shortLabel: string; subLabel: string }> = [
-  { key: 'day', shortLabel: 'Day', subLabel: '5-Min Curve' },
-  { key: 'week', shortLabel: 'Week', subLabel: '7-Day Overview' },
-  { key: 'month', shortLabel: 'Month', subLabel: 'Daily Breakdown' },
-  { key: 'year', shortLabel: 'Year', subLabel: '12-Month Progress' },
+  { key: 'day', shortLabel: 'Day', subLabel: '5-Min' },
+  { key: 'week', shortLabel: 'Week', subLabel: '7 Days' },
+  { key: 'month', shortLabel: 'Month', subLabel: 'Daily' },
+  { key: 'year', shortLabel: 'Year', subLabel: 'Monthly' },
 ];
 
 export const PerformanceControlHeader: React.FC<PerformanceControlHeaderProps> = ({
@@ -78,8 +76,8 @@ export const PerformanceControlHeader: React.FC<PerformanceControlHeaderProps> =
   todayYmd,
   monthAvailabilityByYm,
   onRequestMonthAvailability,
-  onDownloadCSV,
-  onOpenPrintAudit,
+  onDownloadCSV: _onDownloadCSV,
+  onOpenPrintAudit: _onOpenPrintAudit,
   isCombined = false,
 }) => {
   // Sliding segmented track state (matching TopHeader spring transition)
@@ -95,11 +93,9 @@ export const PerformanceControlHeader: React.FC<PerformanceControlHeaderProps> =
   const [isDateCalendarOpen, setIsDateCalendarOpen] = useState(false);
   const [isCompareMenuOpen, setIsCompareMenuOpen] = useState(false);
   const [isCompareCalendarOpen, setIsCompareCalendarOpen] = useState(false);
-  const [isExportOpen, setIsExportOpen] = useState(false);
 
   const datePopoverRef = useRef<HTMLDivElement | null>(null);
   const compareRef = useRef<HTMLDivElement | null>(null);
-  const exportRef = useRef<HTMLDivElement | null>(null);
 
   useLayoutEffect(() => {
     const updateSlider = () => {
@@ -138,16 +134,12 @@ export const PerformanceControlHeader: React.FC<PerformanceControlHeaderProps> =
         setIsCompareMenuOpen(false);
         setIsCompareCalendarOpen(false);
       }
-      if (exportRef.current && !exportRef.current.contains(target)) {
-        setIsExportOpen(false);
-      }
     };
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsDateCalendarOpen(false);
         setIsCompareMenuOpen(false);
         setIsCompareCalendarOpen(false);
-        setIsExportOpen(false);
       }
     };
     document.addEventListener('mousedown', handleOutside);
@@ -564,7 +556,7 @@ export const PerformanceControlHeader: React.FC<PerformanceControlHeaderProps> =
           <button
             type="button"
             onClick={() => onChangeViewMode('table')}
-            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11.5px] font-semibold cursor-pointer transition ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11.5px] font-semibold cursor-pointer transition ${
               viewMode === 'table'
                 ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-500 hover:text-slate-800'
@@ -573,56 +565,6 @@ export const PerformanceControlHeader: React.FC<PerformanceControlHeaderProps> =
             <TableIcon className="w-3.5 h-3.5" />
             <span>Table</span>
           </button>
-        </div>
-
-        {/* Single Quiet Export Popover */}
-        <div ref={exportRef} className="relative">
-          <button
-            type="button"
-            onClick={() => setIsExportOpen((o) => !o)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200/85 bg-white hover:bg-slate-50 text-[12px] font-semibold text-slate-700 hover:text-slate-950 cursor-pointer transition whitespace-nowrap"
-          >
-            <Download className="w-3.5 h-3.5 text-slate-500" />
-            <span>Export</span>
-            <ChevronDown className="w-3 h-3 text-slate-400" />
-          </button>
-
-          {isExportOpen && (
-            <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl bg-white border border-slate-200/90 shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsExportOpen(false);
-                  onDownloadCSV();
-                }}
-                className="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 flex items-center gap-2.5 text-[12px] font-semibold text-slate-700 cursor-pointer"
-              >
-                <Download className="w-3.5 h-3.5 text-emerald-600" />
-                <div>
-                  <div>Download CSV (.csv)</div>
-                  <div className="text-[10px] font-medium text-slate-400">
-                    Structured {timescale} data rows
-                  </div>
-                </div>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsExportOpen(false);
-                  onOpenPrintAudit();
-                }}
-                className="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 flex items-center gap-2.5 text-[12px] font-semibold text-slate-700 cursor-pointer"
-              >
-                <Printer className="w-3.5 h-3.5 text-sky-600" />
-                <div>
-                  <div>Print Period Audit</div>
-                  <div className="text-[10px] font-medium text-slate-400">
-                    Clean verified report sheet
-                  </div>
-                </div>
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>

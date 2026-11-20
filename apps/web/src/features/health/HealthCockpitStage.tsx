@@ -12,17 +12,33 @@ export interface HealthCockpitStageProps {
   report: SystemHealthReport;
   canonicalSnapshot: CanonicalSolarSnapshot;
   onInspectDayInPerformance: (ymd: string) => void;
+  onNavigateToSettings: () => void;
+  lastUpdateDate: string;
+  syncMeta: {
+    syncedAtIso: string;
+    syncedAtIstLabel: string;
+    trigger: string;
+    sseConnected: boolean;
+    nextPollInSec: number;
+    inBackoff: boolean;
+    backoffRemainingSec: number;
+  };
+  stationId?: string;
 }
 
 /**
  * Health cockpit stage hosting Inverter Conversion Curve, 14-day Sync Tracker,
- * and Plant Hardware Channel Probes.
+ * Plant Hardware Channel Probes, and Safety Guard Alerts.
  */
 export const HealthCockpitStage: React.FC<HealthCockpitStageProps> = ({
   view,
   report,
   canonicalSnapshot,
   onInspectDayInPerformance,
+  onNavigateToSettings,
+  lastUpdateDate,
+  syncMeta,
+  stationId,
 }) => {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -43,22 +59,6 @@ export const HealthCockpitStage: React.FC<HealthCockpitStageProps> = ({
 
   return (
     <div ref={containerRef}>
-      {view === 'channels' && (
-        <HealthChannelsView report={report} canonicalSnapshot={canonicalSnapshot} />
-      )}
-      {view === 'alarms' && (
-        <HealthAlarmsView alarmsPayload={canonicalSnapshot.alarms || null} />
-      )}
-      {view === 'sync14' && (
-        <HealthSync14Stage
-          report={report}
-          todayYmd={canonicalSnapshot.clock.ymd}
-          boxWidth={boxWidth}
-          hoveredSyncIdx={hoverSyncIdx}
-          onHoverSyncIdx={setHoverSyncIdx}
-          onInspectDayInPerformance={onInspectDayInPerformance}
-        />
-      )}
       {view === 'conversion' && (
         <HealthConversionCurveStage
           uid={uid}
@@ -67,6 +67,30 @@ export const HealthCockpitStage: React.FC<HealthCockpitStageProps> = ({
           boxWidth={boxWidth}
           hoveredConvIdx={hoverConvIdx}
           onHoverConvIdx={setHoverConvIdx}
+          onNavigateToSettings={onNavigateToSettings}
+        />
+      )}
+      {view === 'sync14' && (
+        <HealthSync14Stage
+          report={report}
+          canonicalSnapshot={canonicalSnapshot}
+          todayYmd={canonicalSnapshot.clock.ymd}
+          boxWidth={boxWidth}
+          hoveredSyncIdx={hoverSyncIdx}
+          onHoverSyncIdx={setHoverSyncIdx}
+          onInspectDayInPerformance={onInspectDayInPerformance}
+          lastUpdateDate={lastUpdateDate}
+          syncMeta={syncMeta}
+        />
+      )}
+      {view === 'channels' && (
+        <HealthChannelsView report={report} canonicalSnapshot={canonicalSnapshot} />
+      )}
+      {view === 'alarms' && (
+        <HealthAlarmsView
+          alarmsPayload={canonicalSnapshot.alarms || null}
+          stationId={stationId}
+          guards={report.guards}
         />
       )}
     </div>

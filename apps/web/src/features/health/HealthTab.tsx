@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ShieldAlert, ShieldCheck, Wrench } from 'lucide-react';
+import { Wrench } from 'lucide-react';
 import { Tabs, TabsList, TabsTab } from '@ui-sdk/react/tabs';
 import {
   buildSystemHealthReport,
@@ -11,9 +11,7 @@ import {
   type SolarIntelligenceReport,
   type SolarWeatherResponse,
 } from '@solar-track/core';
-import { HealthKpiStrip } from './HealthKpiStrip';
 import { HealthCockpitStage, type HealthStageView } from './HealthCockpitStage';
-import { HealthFooterLedgers } from './HealthFooterLedgers';
 
 export interface HealthTabProps {
   canonicalSnapshot: CanonicalSolarSnapshot;
@@ -53,12 +51,6 @@ const STATUS_DOT: Record<string, string> = {
   offline: 'bg-rose-500',
   fault: 'bg-rose-600',
   standby: 'bg-slate-400',
-};
-
-const GUARD_BADGE: Record<'Normal' | 'Triggered' | 'Muted', string> = {
-  Normal: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
-  Triggered: 'bg-amber-50 text-amber-700 border-amber-200',
-  Muted: 'bg-slate-100 text-slate-500 border-slate-200',
 };
 
 /**
@@ -106,14 +98,15 @@ export const HealthTab: React.FC<HealthTabProps> = ({
   );
 
   return (
-    <div className="space-y-5 max-w-[1440px] mx-auto pb-8 animate-in fade-in duration-300">
-      <section className="rounded-3xl apple-glass-static overflow-hidden">
+    <div className="space-y-5 w-full pb-8 animate-in fade-in duration-300">
+      <section className="rounded-3xl apple-glass-static overflow-hidden shadow-xs">
+        {/* Header & Subnav Switcher */}
         <div className="px-4 sm:px-6 py-4 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-[15px] font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
                 <Wrench className="w-4 h-4 text-emerald-600 shrink-0" />
-                System Health & Telemetry Integrity
+                System Health & Telemetry
               </h2>
               <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-bold apple-glass-pill shadow-2xs">
                 <span className={`w-1.5 h-1.5 rounded-full ${STATUS_DOT[report.statusLevel] || 'bg-slate-400'}`} />
@@ -138,10 +131,10 @@ export const HealthTab: React.FC<HealthTabProps> = ({
             >
               {(
                 [
-                  { id: 'conversion', label: 'Inverter Efficiency Graph' },
+                  { id: 'conversion', label: 'Inverter Efficiency' },
                   { id: 'sync14', label: '14-Day Connection Log' },
                   { id: 'channels', label: 'Hardware Sensors' },
-                  { id: 'alarms', label: 'Safety & Outage Alerts' },
+                  { id: 'alarms', label: 'Safety & Protection' },
                 ] as const
               ).map((tab) => {
                 const active = stageView === tab.id;
@@ -163,51 +156,18 @@ export const HealthTab: React.FC<HealthTabProps> = ({
           </Tabs>
         </div>
 
-        <HealthKpiStrip report={report} canonicalSnapshot={canonicalSnapshot} />
-
+        {/* Cockpit Stage (Each view contains its own purpose-driven content) */}
         <HealthCockpitStage
           view={stageView}
           report={report}
           canonicalSnapshot={canonicalSnapshot}
           onInspectDayInPerformance={onInspectDayInPerformance}
+          onNavigateToSettings={onNavigateToSettings}
+          lastUpdateDate={canonicalSnapshot.truth.exactTimestampIST}
+          syncMeta={syncMeta}
+          stationId={stationId}
         />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/75 border-t border-slate-200/75 bg-slate-50/40">
-          {report.guards.map((g) => (
-            <div key={g.key} className="px-4 sm:px-5 py-3 flex items-start justify-between gap-2.5 min-w-0">
-              <div className="min-w-0">
-                <div className="text-[11px] font-bold text-slate-700 truncate flex items-center gap-1.5">
-                  {g.liveState === 'Triggered' ? (
-                    <ShieldAlert className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                  ) : (
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  )}
-                  <span className="truncate">{g.label}</span>
-                </div>
-                <div className="text-[10.5px] font-medium text-slate-500 mt-0.5 truncate tabular-nums">
-                  {g.detail}
-                </div>
-              </div>
-              <span
-                className={`px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${
-                  GUARD_BADGE[g.liveState]
-                }`}
-              >
-                {g.armed ? g.liveState : 'Muted'}
-              </span>
-            </div>
-          ))}
-        </div>
       </section>
-
-      <HealthFooterLedgers
-        report={report}
-        canonicalSnapshot={canonicalSnapshot}
-        lastUpdateDate={canonicalSnapshot.truth.exactTimestampIST}
-        syncMeta={syncMeta}
-        onInspectDayInPerformance={onInspectDayInPerformance}
-        onNavigateToSettings={onNavigateToSettings}
-      />
     </div>
   );
 };

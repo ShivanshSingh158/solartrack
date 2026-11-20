@@ -32,7 +32,7 @@ export const FinancialsCockpitStage: React.FC<FinancialsCockpitStageProps> = ({
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const containerRef = useRef<HTMLDivElement>(null);
   const [boxWidth, setBoxWidth] = useState<number>(820);
-  const [horizonYears, setHorizonYears] = useState<10 | 25>(25);
+  const [horizonYears, setHorizonYears] = useState<10 | 25>(10);
   const [hoverYrIdx, setHoverYrIdx] = useState<number | null>(null);
   const [hoverDayIdx, setHoverDayIdx] = useState<number | null>(null);
 

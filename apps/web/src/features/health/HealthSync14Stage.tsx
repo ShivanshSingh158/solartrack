@@ -1,79 +1,159 @@
 import React from 'react';
-import { HardDrive } from 'lucide-react';
-import type { SyncHealthDayItem, SystemHealthReport } from '@solar-track/core';
+import { HardDrive, Wifi, CheckCircle2, AlertCircle } from 'lucide-react';
+import type { CanonicalSolarSnapshot, SyncHealthDayItem, SystemHealthReport } from '@solar-track/core';
+import { CloudOutageLedgerCard } from './HealthFooterLedgers';
 
 interface HealthSync14StageProps {
   report: SystemHealthReport;
+  canonicalSnapshot: CanonicalSolarSnapshot;
   todayYmd: string;
   boxWidth: number;
   hoveredSyncIdx: number | null;
   onHoverSyncIdx: (idx: number | null) => void;
   onInspectDayInPerformance: (ymd: string) => void;
+  lastUpdateDate: string;
+  syncMeta: {
+    syncedAtIstLabel: string;
+    sseConnected: boolean;
+    nextPollInSec: number;
+    inBackoff: boolean;
+    backoffRemainingSec: number;
+  };
 }
 
 function getSyncBarColor(day: SyncHealthDayItem, todayYmd: string): string {
-  if (day.ymd === todayYmd && day.isConfirmed) return '#107C41';
-  if (day.dipCategory === 'WIFI_OUTAGE_UNLOGGED' || (!day.isConfirmed && day.ymd < todayYmd)) return '#E11D48';
+  if (day.ymd === todayYmd && day.isConfirmed) return '#10B981';
+  if (day.dipCategory === 'WIFI_OUTAGE_UNLOGGED' || (!day.isConfirmed && day.ymd < todayYmd)) return '#F43F5E';
   if (!day.isConfirmed) return '#F59E0B';
-  if (day.dipCategory === 'OUTAGE_GAP') return '#E11D48';
-  if (day.coveragePct >= 85) return '#107C41';
+  if (day.dipCategory === 'OUTAGE_GAP') return '#F43F5E';
+  if (day.coveragePct >= 85) return '#10B981';
   if (day.coveragePct >= 65) return '#0284C7';
   return '#F59E0B';
 }
 
 /**
- * 14-day datalogger packet delivery and unlogged Wi-Fi outage bar chart.
+ * 14-day datalogger packet delivery and Wi-Fi outage audit stage.
  */
 export const HealthSync14Stage: React.FC<HealthSync14StageProps> = ({
   report,
+  canonicalSnapshot,
   todayYmd,
   boxWidth,
   hoveredSyncIdx,
   onHoverSyncIdx,
   onInspectDayInPerformance,
+  lastUpdateDate,
+  syncMeta,
 }) => {
-  const { syncDays14, pendingEepromDays, unloggedOutageDays } = report;
+  const { syncDays14, pendingEepromDays, unloggedOutageDays, logger } = report;
 
   const isCompact = boxWidth < 520;
   const svgW = Math.max(300, boxWidth);
-  const svgH = isCompact ? 255 : 295;
-  const padL = isCompact ? 38 : 48;
-  const padR = isCompact ? 16 : 24;
-  const padT = 22;
-  const padB = 34;
+  const svgH = isCompact ? 230 : 260;
+  const padL = isCompact ? 40 : 50;
+  const padR = isCompact ? 24 : 32;
+  const padT = 20;
+  const padB = 32;
   const plotW = Math.max(80, svgW - padL - padR);
   const plotH = Math.max(80, svgH - padT - padB);
 
   const count = Math.max(1, syncDays14.length);
   const colW = plotW / count;
-  const barW = Math.max(8, Math.min(28, colW * 0.62));
+  const barW = Math.max(10, Math.min(26, colW * 0.58));
+  const barRx = Math.min(barW / 2, 6);
   const hoveredSync = hoveredSyncIdx !== null ? syncDays14[hoveredSyncIdx] ?? null : null;
+
+  const confirmedDaysCount = syncDays14.filter((d) => d.isConfirmed).length;
 
   return (
     <div className="px-4 sm:px-6 pt-3 pb-4">
+      {/* Top 3-Card Apple Connection Summary */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+        <div className="p-3.5 rounded-2xl bg-white/95 border border-slate-200/80 shadow-xs flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <Wifi className="w-5 h-5" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[10.5px] font-bold uppercase tracking-wider text-slate-500">
+              Connection Reliability
+            </div>
+            <div className="text-[20px] font-extrabold text-slate-900 tabular-nums">
+              {logger.rawDeliveryPct !== null ? `${logger.rawDeliveryPct}%` : '100%'}
+            </div>
+            <div className="text-[11px] font-medium text-emerald-700 truncate">
+              {logger.expectedSlots > 0
+                ? `${logger.rawReceivedSlots}/${logger.expectedSlots} packets received today`
+                : 'Active live telemetry stream'}
+            </div>
+          </div>
+        </div>
+
+        <div className="p-3.5 rounded-2xl bg-white/95 border border-slate-200/80 shadow-xs flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-5 h-5" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[10.5px] font-bold uppercase tracking-wider text-slate-500">
+              14-Day Sync Uptime
+            </div>
+            <div className="text-[20px] font-extrabold text-slate-900 tabular-nums">
+              {confirmedDaysCount} of {syncDays14.length} Days
+            </div>
+            <div className="text-[11px] font-medium text-slate-500 truncate">
+              {Math.round((confirmedDaysCount / Math.max(1, syncDays14.length)) * 100)}% verified archive coverage
+            </div>
+          </div>
+        </div>
+
+        <div className="p-3.5 rounded-2xl bg-white/95 border border-slate-200/80 shadow-xs flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+            <AlertCircle className="w-5 h-5" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[10.5px] font-bold uppercase tracking-wider text-slate-500">
+              Wi-Fi Outages
+            </div>
+            <div className="text-[20px] font-extrabold text-slate-900 tabular-nums">
+              {unloggedOutageDays.length === 0 ? '0 Days' : `${unloggedOutageDays.length} Day Offline`}
+            </div>
+            <div className="text-[11px] font-medium text-slate-500 truncate">
+              {unloggedOutageDays.length > 0
+                ? `${unloggedOutageDays[0]?.shortLabel} unlogged`
+                : 'Zero data drops recorded'}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Legend & Hint */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-2 text-[11px] font-medium text-slate-500">
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3.5">
           <span className="inline-flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-[#107C41]" /> Confirmed Online (≥85%)
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+            Verified Online (≥85%)
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-sky-600" /> Cloud / Partial Sync
+            <span className="w-2.5 h-2.5 rounded-full bg-sky-500" />
+            Partial Sync
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-amber-500" /> Pending Sync (&lt;00:00 IST)
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+            Today Live In Progress
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-rose-600" /> Unlogged Outage / Drop
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+            Wi-Fi Outage
           </span>
         </div>
         <span className="text-[10.5px] font-semibold text-slate-400">
-          Click any day bar to open 5-min curve in Performance
+          Click any day to open 5-minute performance curve
         </span>
       </div>
 
+      {/* 14-Day Apple Capsule Bar Chart */}
       <div className="relative w-full select-none">
         {syncDays14.length === 0 ? (
-          <div className="h-[240px] flex items-center justify-center text-xs font-semibold text-slate-400">
+          <div className="h-[230px] flex items-center justify-center text-xs font-semibold text-slate-400">
             Syncing 14-day logger coverage ledger...
           </div>
         ) : (
@@ -92,7 +172,7 @@ export const HealthSync14Stage: React.FC<HealthSync14StageProps> = ({
                     x2={padL + plotW}
                     y1={y}
                     y2={y}
-                    stroke="#E2E8F0"
+                    stroke={pct === 0 ? '#CBD5E1' : '#F1F5F9'}
                     strokeDasharray={pct === 0 ? undefined : '3 3'}
                   />
                   <text
@@ -110,7 +190,7 @@ export const HealthSync14Stage: React.FC<HealthSync14StageProps> = ({
             {syncDays14.map((d, i) => {
               const cx = padL + (i + 0.5) * colW;
               const x = cx - barW / 2;
-              const valPct = Math.min(100, Math.max(4, d.coveragePct));
+              const valPct = Math.min(100, Math.max(6, d.coveragePct));
               const bh = (valPct / 100) * plotH;
               const y = padT + plotH - bh;
               const color = getSyncBarColor(d, todayYmd);
@@ -125,30 +205,38 @@ export const HealthSync14Stage: React.FC<HealthSync14StageProps> = ({
                   onMouseEnter={() => onHoverSyncIdx(i)}
                   onClick={() => onInspectDayInPerformance(d.ymd)}
                 >
-                  {isHovered && (
-                    <rect
-                      x={padL + i * colW}
-                      y={padT}
-                      width={colW}
-                      height={plotH}
-                      fill="#F1F5F9"
-                      rx={4}
-                    />
-                  )}
+                  {/* Subtle column hover highlight */}
+                  <rect
+                    x={padL + i * colW}
+                    y={padT}
+                    width={colW}
+                    height={plotH}
+                    fill={isHovered ? '#F8FAFC' : 'transparent'}
+                    rx={4}
+                  />
+
+                  {/* Benchmark potential track */}
+                  <rect
+                    x={x}
+                    y={padT}
+                    width={barW}
+                    height={plotH}
+                    rx={barRx}
+                    fill={isHovered ? '#E2E8F0' : '#F1F5F9'}
+                    className="transition-colors duration-150"
+                  />
+
+                  {/* Rounded capsule bar */}
                   <rect
                     x={x}
                     y={y}
                     width={barW}
-                    height={Math.max(4, bh)}
-                    rx={4}
+                    height={Math.max(barW, bh)}
+                    rx={barRx}
                     fill={color}
-                    fillOpacity={d.isConfirmed ? 0.92 : 0.72}
-                    stroke={isHovered ? '#0F172A' : undefined}
-                    strokeWidth={isHovered ? 1.2 : 0}
+                    opacity={isHovered ? 1 : 0.92}
                   />
-                  {!d.isConfirmed && d.ymd < todayYmd && (
-                    <circle cx={cx} cy={Math.max(padT + 4, y - 6)} r={2.5} fill="#F59E0B" />
-                  )}
+
                   {showTick && (
                     <text
                       x={cx}
@@ -167,12 +255,13 @@ export const HealthSync14Stage: React.FC<HealthSync14StageProps> = ({
           </svg>
         )}
 
+        {/* Hover inspector tooltip */}
         {hoveredSync && hoveredSyncIdx !== null && (
           <div
-            className="pointer-events-none absolute top-2 z-20 rounded-xl bg-slate-900/95 text-white px-3 py-2 shadow-xl text-[11px] min-w-[205px]"
+            className="pointer-events-none absolute top-2 z-20 rounded-xl bg-slate-900/95 text-white px-3 py-2 shadow-xl text-[11px] min-w-[205px] backdrop-blur-md"
             style={{
               left: Math.min(
-                Math.max(8, padL + (hoveredSyncIdx + 0.5) * (plotW / Math.max(1, syncDays14.length)) - 102),
+                Math.max(8, padL + (hoveredSyncIdx + 0.5) * colW - 102),
                 Math.max(8, svgW - 220),
               ),
             }}
@@ -183,16 +272,17 @@ export const HealthSync14Stage: React.FC<HealthSync14StageProps> = ({
             </div>
             <div className="text-slate-300 mt-1 tabular-nums">
               {hoveredSync.isConfirmed && hoveredSync.realKwh !== null
-                ? `Confirmed: ${hoveredSync.realKwh.toFixed(1)} kWh (Model ~${hoveredSync.modeledKwh.toFixed(1)} kWh)`
+                ? `Confirmed: ${hoveredSync.realKwh.toFixed(1)} kWh (Target ~${hoveredSync.modeledKwh.toFixed(1)} kWh)`
                 : hoveredSync.dipCategory === 'WIFI_OUTAGE_UNLOGGED'
-                  ? `Wi-Fi Offline All Day (Missed by Cloud) · Twin Est. ~${hoveredSync.modeledKwh.toFixed(1)} kWh`
-                  : `Awaiting Wi-Fi sync before 00:00 IST · Est. ~${hoveredSync.modeledKwh.toFixed(1)} kWh`}
+                  ? `Wi-Fi Offline All Day · Target ~${hoveredSync.modeledKwh.toFixed(1)} kWh`
+                  : `Live today · Target ~${hoveredSync.modeledKwh.toFixed(1)} kWh`}
             </div>
-            <div className="text-[10px] text-slate-400 mt-1">{hoveredSync.eventLabel} · Click to inspect</div>
+            <div className="text-[10px] text-slate-400 mt-1">Click to inspect 5-minute curve</div>
           </div>
         )}
       </div>
 
+      {/* Outage notification pill if any day missed */}
       {(unloggedOutageDays.length > 0 || pendingEepromDays.length > 0) && (
         <div className="mt-2 pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px]">
           <span
@@ -219,6 +309,17 @@ export const HealthSync14Stage: React.FC<HealthSync14StageProps> = ({
           </div>
         </div>
       )}
+
+      {/* Embedded Cloud Outage & Logger Sync Ledger */}
+      <div className="mt-5">
+        <CloudOutageLedgerCard
+          report={report}
+          canonicalSnapshot={canonicalSnapshot}
+          lastUpdateDate={lastUpdateDate}
+          syncMeta={syncMeta}
+          onInspectDayInPerformance={onInspectDayInPerformance}
+        />
+      </div>
     </div>
   );
 };

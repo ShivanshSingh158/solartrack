@@ -34,7 +34,7 @@ export const PerformanceStageTooltips: React.FC<PerformanceStageTooltipsProps> =
   selectedDate,
   compareDateYmd,
   showModelOverlay,
-  showPriorWeekOverlay,
+  showPriorWeekOverlay: _showPriorWeekOverlay,
   dayHoverInfo,
   bulletBars,
   activeHoveredBarYmd,
@@ -66,7 +66,7 @@ export const PerformanceStageTooltips: React.FC<PerformanceStageTooltipsProps> =
             <div className="flex items-center justify-between gap-2">
               <span className="inline-flex items-center gap-1.5 text-sky-300">
                 <span className="w-2.5 border-t border-dashed border-sky-400" />
-                Model
+                Target
               </span>
               <span className="font-semibold">
                 ~{dayHoverInfo.modelKw.toFixed(2)} kW · {dayHoverInfo.modelCumKwh.toFixed(1)} kWh
@@ -77,18 +77,14 @@ export const PerformanceStageTooltips: React.FC<PerformanceStageTooltipsProps> =
           <div className="flex items-center justify-between gap-2">
             <span className="inline-flex items-center gap-1.5 text-emerald-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              {dayHoverInfo.realKw !== null
-                ? 'Real AC'
-                : dayHoverInfo.bridgedKw !== null
-                  ? 'EDay Bridged'
-                  : 'Real AC'}
+              Solar Power
             </span>
             <span className={`font-bold ${dayHoverInfo.bridgedKw !== null ? 'text-amber-200' : 'text-emerald-200'}`}>
               {dayHoverInfo.realKw !== null
                 ? `${dayHoverInfo.realKw.toFixed(2)} kW · ${dayHoverInfo.realCumKwh!.toFixed(1)} kWh`
                 : dayHoverInfo.bridgedKw !== null
-                  ? `~${dayHoverInfo.bridgedKw.toFixed(2)} kW (+${dayHoverInfo.bridgedSegmentKwh?.toFixed(1)} kWh gap)`
-                  : 'Standby / No pt'}
+                  ? `~${dayHoverInfo.bridgedKw.toFixed(2)} kW (+${dayHoverInfo.bridgedSegmentKwh?.toFixed(1)} kWh)`
+                  : 'Standby'}
             </span>
           </div>
 
@@ -96,11 +92,10 @@ export const PerformanceStageTooltips: React.FC<PerformanceStageTooltipsProps> =
             <div className="flex items-center justify-between gap-2">
               <span className="inline-flex items-center gap-1.5 text-amber-300">
                 <span className="w-2.5 border-t border-dashed border-amber-400" />
-                PV DC
+                Rooftop DC
               </span>
               <span className="font-semibold text-amber-200">
                 {dayHoverInfo.dcKw.toFixed(2)} kW
-                {dayHoverInfo.instantEtaPct !== null ? ` (η ${dayHoverInfo.instantEtaPct}%)` : ''}
               </span>
             </div>
           )}
@@ -181,59 +176,50 @@ export const PerformanceStageTooltips: React.FC<PerformanceStageTooltipsProps> =
 
     return (
       <div
-        className="pointer-events-none absolute top-2 z-30 w-60 rounded-2xl bg-slate-900/95 text-white border border-slate-700/80 shadow-xl px-3.5 py-2.5 text-[11px] backdrop-blur-md"
+        className="pointer-events-none absolute top-2 z-30 w-56 rounded-2xl bg-slate-900/95 text-white border border-slate-700/80 shadow-2xl px-3.5 py-2.5 text-[11px] backdrop-blur-xl transition-all duration-150"
         style={{
           left:
             cx > svgW * 0.56
-              ? `${Math.max(8, cx - 252)}px`
-              : `${Math.min(svgW - 248, cx + 14)}px`,
+              ? `${Math.max(8, cx - 238)}px`
+              : `${Math.min(svgW - 234, cx + 12)}px`,
         }}
       >
         <div className="flex items-center justify-between border-b border-white/10 pb-1.5 mb-1.5">
           <span className="font-bold text-white">
             {formatWeekdayShort(b.ymd)} · {formatIndianDate(b.ymd, 'medium')}
           </span>
-        </div>
-        <div className="space-y-1 tabular-nums">
-          <div className="flex items-center justify-between">
-            <span className="text-emerald-300">Cloud Logged</span>
-            <span className="font-bold">{b.realKwh.toFixed(2)} kWh</span>
-          </div>
-          {(b.bufferKwh ?? 0) > 0.05 && (
-            <>
-              <div className="flex items-center justify-between">
-                <span className="text-amber-300">Outage Buffer</span>
-                <span className="font-semibold">+{b.bufferKwh!.toFixed(2)} kWh</span>
-              </div>
-              <div className="flex items-center justify-between pt-0.5 border-t border-white/10">
-                <span className="text-white font-semibold">Total Output</span>
-                <span className="font-bold text-amber-200">{(b.realKwh + b.bufferKwh!).toFixed(2)} kWh</span>
-              </div>
-            </>
+          {b.isToday && (
+            <span className="text-[9.5px] font-bold uppercase tracking-wider text-emerald-400">
+              Today
+            </span>
           )}
+        </div>
+        <div className="space-y-1.5 tabular-nums">
           <div className="flex items-center justify-between">
-            <span className="text-sky-300">Physics Model</span>
-            <span className="font-semibold">
-              ~{b.modelKwh.toFixed(1)} kWh{' '}
-              {b.capturePct !== null ? `(${b.capturePct}%)` : ''}
+            <span className="text-slate-300 font-medium">Solar Generated</span>
+            <span className="font-bold text-emerald-300">{b.realKwh.toFixed(1)} kWh</span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-slate-300 font-medium">Sunny Target</span>
+            <span className="font-semibold text-slate-200">
+              ~{b.modelKwh.toFixed(1)} kWh
+              {b.capturePct !== null ? ` (${b.capturePct}%)` : ''}
             </span>
           </div>
-          {b.idealClearSkyKwh > 0 && (
-            <div className="flex items-center justify-between">
-              <span className="text-slate-400">Clear-Sky Ceiling</span>
-              <span>{b.idealClearSkyKwh.toFixed(1)} kWh</span>
+
+          {b.idealClearSkyKwh > 0 && b.idealClearSkyKwh > b.modelKwh + 0.3 && (
+            <div className="flex items-center justify-between text-[10.5px]">
+              <span className="text-slate-400">Clear Sky Max</span>
+              <span className="text-slate-300">{b.idealClearSkyKwh.toFixed(1)} kWh</span>
             </div>
           )}
-          {timescale === 'week' && showPriorWeekOverlay && typeof b.prevPeriodKwh === 'number' && (
-            <div className="flex items-center justify-between">
-              <span className="text-indigo-300">Prior 7d Same Slot</span>
-              <span>{b.prevPeriodKwh.toFixed(1)} kWh</span>
+
+          {b.dipReasonLabel && (
+            <div className="pt-1.5 border-t border-white/10 text-[10px] text-slate-300 flex items-center justify-between">
+              <span>{b.dipReasonLabel}</span>
             </div>
           )}
-          <div className="pt-1 border-t border-white/10 flex items-center justify-between text-[10px]">
-            <span className="text-slate-300">{b.dipReasonLabel}</span>
-            {!b.isFuture && <span className="text-sky-300 font-semibold">Click → 5-Min</span>}
-          </div>
         </div>
       </div>
     );

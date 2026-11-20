@@ -24,7 +24,7 @@ export interface PrintFinancialStatementModalProps {
 
 /**
  * Printable financial statement dialog: Asset summary, CapEx ROI,
- * LCOE, and 100% Reconciled Cash Flow Bridge.
+ * Cost per Unit, and 100% Reconciled Cash Flow Bridge.
  */
 export const PrintFinancialStatementModal: React.FC<PrintFinancialStatementModalProps> = ({
   isOpen,
@@ -81,7 +81,7 @@ export const PrintFinancialStatementModal: React.FC<PrintFinancialStatementModal
               <div className="text-base font-extrabold text-slate-900 mt-0.5">{config.locationName}</div>
               <div className="text-slate-500 mt-0.5">
                 Commissioned {config.commissioningDisplay} · {config.capacityKwp.toFixed(2)} kWp ·
-                Tariff ₹{activeTariff.toFixed(2)}/kWh
+                Grid Tariff ₹{activeTariff.toFixed(2)}/kWh
               </div>
             </div>
             <div className="text-right tabular-nums">
@@ -104,7 +104,7 @@ export const PrintFinancialStatementModal: React.FC<PrintFinancialStatementModal
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
             <div className="p-3 rounded-2xl border border-slate-200/80">
-              <div className="text-[10px] font-bold uppercase text-slate-400">Net CapEx</div>
+              <div className="text-[10px] font-bold uppercase text-slate-400">Net Investment</div>
               <div className="text-sm font-extrabold text-slate-900 mt-1 tabular-nums">
                 {formatINR(payback.netCapexInr)}
               </div>
@@ -115,7 +115,7 @@ export const PrintFinancialStatementModal: React.FC<PrintFinancialStatementModal
               </div>
             </div>
             <div className="p-3 rounded-2xl border border-slate-200/80">
-              <div className="text-[10px] font-bold uppercase text-slate-400">Breakeven</div>
+              <div className="text-[10px] font-bold uppercase text-slate-400">Payback Date</div>
               <div className="text-sm font-extrabold text-emerald-700 mt-1 tabular-nums">
                 {payback.breakevenLabel}
               </div>
@@ -124,7 +124,7 @@ export const PrintFinancialStatementModal: React.FC<PrintFinancialStatementModal
               </div>
             </div>
             <div className="p-3 rounded-2xl border border-slate-200/80">
-              <div className="text-[10px] font-bold uppercase text-slate-400">All-In LCOE</div>
+              <div className="text-[10px] font-bold uppercase text-slate-400">Cost per Unit</div>
               <div className="text-sm font-extrabold text-slate-900 mt-1 tabular-nums">
                 ₹{payback.lcoeAllInInrPerKwh.toFixed(2)}/kWh
               </div>
@@ -133,24 +133,24 @@ export const PrintFinancialStatementModal: React.FC<PrintFinancialStatementModal
               </div>
             </div>
             <div className="p-3 rounded-2xl border border-slate-200/80">
-              <div className="text-[10px] font-bold uppercase text-slate-400">Cycle Accrued</div>
+              <div className="text-[10px] font-bold uppercase text-slate-400">Cycle Credit</div>
               <div className="text-sm font-extrabold text-slate-900 mt-1 tabular-nums">
                 {formatINR(discom.accruedPlusPendingInr)}
               </div>
               <div className="text-[10px] text-slate-500">
-                {discom.confirmedFormatted} + {formatINR(discom.pendingInr)} unlogged
+                {discom.confirmedFormatted} + {formatINR(discom.pendingInr)} pending sync
               </div>
             </div>
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-900 mb-2">100% Reconciled Cash Flow Bridge ({pnlSummary.daysCount} Days)</h4>
+            <h4 className="font-bold text-slate-900 mb-2">Daily Cash Flow Attribution ({pnlSummary.daysCount} Days)</h4>
             <table className="w-full text-left border-collapse tabular-nums">
               <thead>
                 <tr className="border-b border-slate-200 text-[10px] uppercase text-slate-400">
                   <th className="py-1.5">Bucket</th>
                   <th className="py-1.5 text-right">Amount (₹)</th>
-                  <th className="py-1.5 text-right">Share of Ideal</th>
+                  <th className="py-1.5 text-right">Share of Optimal</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -160,22 +160,22 @@ export const PrintFinancialStatementModal: React.FC<PrintFinancialStatementModal
                   <td className="py-1.5 text-right">{pnlSummary.earnedPct}%</td>
                 </tr>
                 <tr>
-                  <td className="py-1.5 font-medium text-sky-700">Weather / Cloud Dip Opportunity</td>
-                  <td className="py-1.5 text-right font-semibold">{formatINR(pnlSummary.weatherDipInr)}</td>
+                  <td className="py-1.5 font-medium text-sky-700">Weather & Cloud Dip</td>
+                  <td className="py-1.5 text-right font-semibold">-{formatINR(pnlSummary.weatherDipInr)}</td>
                   <td className="py-1.5 text-right">{pnlSummary.weatherDipPct}%</td>
                 </tr>
                 <tr>
-                  <td className="py-1.5 font-medium text-amber-700">Surface Soiling & Aerosol Haze Loss</td>
-                  <td className="py-1.5 text-right font-semibold">{formatINR(pnlSummary.soilLossInr)}</td>
+                  <td className="py-1.5 font-medium text-amber-700">Dust & Surface Soiling Dip</td>
+                  <td className="py-1.5 text-right font-semibold">-{formatINR(pnlSummary.soilLossInr)}</td>
                   <td className="py-1.5 text-right">{pnlSummary.soilLossPct}%</td>
                 </tr>
                 <tr>
-                  <td className="py-1.5 font-medium text-rose-700">Wi-Fi Outage / Unlogged Days</td>
-                  <td className="py-1.5 text-right font-semibold">{formatINR(pnlSummary.pendingOutageInr)}</td>
+                  <td className="py-1.5 font-medium text-slate-600">Pending Sync / Meter Delay</td>
+                  <td className="py-1.5 text-right font-semibold">-{formatINR(pnlSummary.pendingOutageInr)}</td>
                   <td className="py-1.5 text-right">{pnlSummary.pendingOutagePct}%</td>
                 </tr>
                 <tr className="border-t border-slate-300 font-extrabold text-slate-900">
-                  <td className="py-1.5">100% Ideal Clear-Sky Potential</td>
+                  <td className="py-1.5">Theoretical Clear-Sky Potential</td>
                   <td className="py-1.5 text-right">{formatINR(pnlSummary.idealPotentialInr)}</td>
                   <td className="py-1.5 text-right">100.0%</td>
                 </tr>
@@ -185,7 +185,7 @@ export const PrintFinancialStatementModal: React.FC<PrintFinancialStatementModal
 
           <div>
             <h4 className="font-bold text-slate-900 mb-2">
-              Open-Meteo 12-Month Solar Baseline ({payback.archiveWindowLabel || 'Live Estimate'})
+              365-Day Solar Weather Baseline ({payback.archiveWindowLabel || 'Past 12 Months'})
             </h4>
             <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 text-center tabular-nums">
               {payback.seasonalProfile.map((m) => (

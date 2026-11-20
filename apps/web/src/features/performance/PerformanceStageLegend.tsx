@@ -53,7 +53,7 @@ export const PerformanceStageLayerToggles: React.FC<StageLayerTogglesProps> = ({
           }`}
         >
           <span className="w-3.5 border-t-2 border-dashed border-sky-600 inline-block" />
-          <span>Physics Model</span>
+          <span>Expected Target</span>
         </button>
 
         {!isCombined && (
@@ -71,7 +71,7 @@ export const PerformanceStageLayerToggles: React.FC<StageLayerTogglesProps> = ({
                   : 'bg-slate-100 border-slate-300'
               }`}
             />
-            <span>PV DC + Loss Band</span>
+            <span>Solar DC</span>
           </button>
         )}
       </div>
@@ -166,7 +166,7 @@ export const PerformanceStageLegend: React.FC<PerformanceStageLegendProps> = ({
   showPvDcOverlay,
   compareDateYmd,
   primaryGapCurve,
-  dayRadiationMjM2,
+  dayRadiationMjM2: _dayRadiationMjM2,
   physicsModel,
 }) => (
   <div className="mt-2 pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[11px] font-medium text-slate-500">
@@ -175,18 +175,18 @@ export const PerformanceStageLegend: React.FC<PerformanceStageLegendProps> = ({
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <span className="inline-flex items-center gap-1.5 text-slate-700 font-semibold">
             <span className="w-3.5 h-[2.5px] rounded-full bg-emerald-600 inline-block" />
-            Real Inverter AC (kW)
+            Real Solar Output (kW)
           </span>
           {showModelOverlay && (
             <span className="inline-flex items-center gap-1.5 text-sky-700 font-semibold">
               <span className="w-3.5 border-t-2 border-dashed border-sky-600 inline-block" />
-              Physics Model (kW)
+              Target (kW)
             </span>
           )}
           {showPvDcOverlay && !isCombined && (
             <span className="inline-flex items-center gap-1.5 text-amber-700 font-semibold">
               <span className="w-3.5 border-t-2 border-dashed border-amber-600 inline-block" />
-              PV DC & Loss Band
+              Solar DC (kW)
             </span>
           )}
           {compareDateYmd && (
@@ -198,12 +198,11 @@ export const PerformanceStageLegend: React.FC<PerformanceStageLegendProps> = ({
           {primaryGapCurve?.hasBridgedGaps && (
             <span className="inline-flex items-center gap-1.5 text-amber-700 font-semibold">
               <span className="w-3.5 border-t-2 border-dashed border-amber-600 inline-block" />
-              EDay-Confirmed Wi-Fi Gap (+{primaryGapCurve.recoveredKwh.toFixed(1)} kWh)
+              Recovered Energy (+{primaryGapCurve.recoveredKwh.toFixed(1)} kWh)
             </span>
           )}
         </div>
         <span className="text-[10.5px] text-slate-400 tabular-nums">
-          {dayRadiationMjM2 ? `${dayRadiationMjM2.toFixed(1)} MJ/m² day · ` : ''}
           Solar Noon {physicsModel.solarNoonText}
         </span>
       </>
@@ -212,29 +211,21 @@ export const PerformanceStageLegend: React.FC<PerformanceStageLegendProps> = ({
     {(timescale === 'week' || timescale === 'month') && (
       <>
         <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="w-3.5 h-2 rounded-xs bg-sky-500/15 border-t-2 border-sky-600 inline-block" />
-            Physics Model Target
+          <span className="inline-flex items-center gap-1.5 text-slate-700">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
+            Solar Generation
           </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-emerald-600 inline-block" />
-            On Track
+          <span className="inline-flex items-center gap-1.5 text-slate-600">
+            <span className="w-2.5 h-2.5 rounded-full bg-slate-200 inline-block" />
+            Clear-Sky Target
           </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-sky-600 inline-block" />
-            Cloud/Rain
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-amber-600 inline-block" />
-            Fog/Haze
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-rose-600 inline-block" />
-            Soiling/Gap
+          <span className="inline-flex items-center gap-1.5 text-slate-600">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
+            Weather Dip
           </span>
         </div>
         <span className="text-[10.5px] text-slate-400">
-          Click any bar to inspect 5-minute solar curve
+          Click any day to view 5-minute curve
         </span>
       </>
     )}

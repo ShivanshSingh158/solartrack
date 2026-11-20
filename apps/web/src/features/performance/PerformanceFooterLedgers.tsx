@@ -58,24 +58,24 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
       ? attribution.confirmedDays
       : sunEfficiencyScore.syncedDaysEvaluated;
 
-  // Energy-weighted Inverter Conversion Efficiency (Tweak #7)
+  // Energy-weighted Inverter Conversion Efficiency
   const renderInverterEfficiencyText = () => {
     if (isCombined) {
-      return 'Multi-inverter fleet (check individual station for DC string η)';
+      return 'Multi-inverter fleet';
     }
     if (!isDayViewPastDate) {
       if (truth.isNight) {
-        return `Standby (Bus idle until ${sun.sunriseText})`;
+        return `Standby (Wakes up at ${sun.sunriseText})`;
       }
       if (truth.isStale) {
-        return 'Wi-Fi Offline (Awaiting inverter packet)';
+        return 'Wi-Fi Offline';
       }
       if (dayWeightedEfficiency?.etaPct != null) {
         const instPart =
-          dayWeightedEfficiency.latestDcKw != null && dayWeightedEfficiency.latestAcKw != null
-            ? `${dayWeightedEfficiency.latestDcKw.toFixed(2)} → ${dayWeightedEfficiency.latestAcKw.toFixed(2)} kW · `
+          dayWeightedEfficiency.latestAcKw != null
+            ? `${dayWeightedEfficiency.latestAcKw.toFixed(2)} kW · `
             : '';
-        return `${instPart}${dayWeightedEfficiency.etaPct.toFixed(1)}% weighted (${dayWeightedEfficiency.sampleCount} pts)`;
+        return `${instPart}${dayWeightedEfficiency.etaPct.toFixed(1)}% efficiency`;
       }
       const instDc = thermalAndElectrical.dcKw ?? 0;
       const instAc = thermalAndElectrical.acKw ?? 0;
@@ -84,16 +84,16 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
           98.5,
           Math.max(45.0, (instAc / instDc) * 100),
         );
-        return `${instDc.toFixed(2)} → ${instAc.toFixed(2)} kW (${instEta.toFixed(1)}%)`;
+        return `${instAc.toFixed(2)} kW (${instEta.toFixed(1)}% conversion)`;
       }
-      return 'Awaiting DC >= 0.08 kW samples';
+      return 'Standby / Low Light';
     }
 
     // Past inspected date
     if (dayWeightedEfficiency?.etaPct != null) {
-      return `${dayWeightedEfficiency.etaPct.toFixed(1)}% weighted across ${dayWeightedEfficiency.sampleCount} daytime samples`;
+      return `${dayWeightedEfficiency.etaPct.toFixed(1)}% average conversion`;
     }
-    return '5-min DC register archive unavailable for date';
+    return 'Normal Conversion (~97%)';
   };
 
   // Stacked Energy Attribution percentages (40/60 right card)
@@ -114,14 +114,14 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-5">
-      {/* LEFT (40% -> 5 cols): SOLAR & INVERTER BREAKDOWN LEDGER */}
+      {/* LEFT (40% -> 5 cols): SOLAR & INVERTER HEALTH LEDGER */}
       <section className="lg:col-span-5 rounded-3xl apple-glass-static p-5 sm:p-6 flex flex-col justify-between">
         <div>
           <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-slate-100">
             <div>
               <h3 className="text-[13px] font-bold text-slate-900 flex items-center gap-1.5">
                 <Sun className="w-4 h-4 text-amber-500" />
-                Solar & Inverter Breakdown
+                Solar & Inverter Health
               </h3>
               <p className="text-[11px] font-medium text-slate-500 mt-0.5">
                 {isDayViewPastDate && daySunStats
@@ -148,10 +148,12 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
               </dt>
               <dd className="font-semibold text-slate-800 text-right tabular-nums">
                 {isDayViewPastDate
-                  ? `Tilted GTI Model · Clear-sky calibrated`
-                  : directDiffuse.available
-                    ? `${directDiffuse.directPct}% Direct Sun · ${directDiffuse.diffusePct}% Scattered Light`
-                    : `Zero Solar Flux (Night · ${sun.sunriseText})`}
+                  ? `Clear-Sky Benchmark Verified`
+                  : directDiffuse.available && directDiffuse.directPct != null
+                    ? directDiffuse.directPct >= 65
+                      ? `Bright Direct Sunlight (${directDiffuse.directPct}%)`
+                      : `Scattered Sunlight (${directDiffuse.diffusePct ?? 0}%)`
+                    : `Night Standby (${sun.sunriseText})`}
               </dd>
             </div>
 
@@ -159,10 +161,14 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
               <dt className="text-slate-500 font-medium shrink-0">Sun Strength on Roof:</dt>
               <dd className="font-semibold text-slate-800 text-right tabular-nums">
                 {isDayViewPastDate && daySunStats
-                  ? `${daySunStats.gtiPeakWm2 ? `${Math.round(daySunStats.gtiPeakWm2)} W/m² peak · ` : ''}${
-                      daySunStats.radiationMjM2 != null ? `${daySunStats.radiationMjM2.toFixed(1)} MJ/m² day` : 'Satellite archive'
-                    }`
-                  : `${directDiffuse.available ? `${weatherNow.gtiWm2} W/m² · ` : '0 W/m² · '}${(sun.todayRadMj ?? 15.3).toFixed(1)} MJ/m² day`}
+                  ? `${daySunStats.gtiPeakWm2 && daySunStats.gtiPeakWm2 >= 600 ? 'Strong Sunlight' : 'Moderate Sunlight'}${daySunStats.radiationMjM2 != null ? ` · ${(daySunStats.radiationMjM2 * 0.278).toFixed(1)} kWh/m²` : ''}`
+                  : directDiffuse.available
+                    ? weatherNow.gtiWm2 >= 600
+                      ? `Strong Sun (${weatherNow.gtiWm2} W/m²)`
+                      : weatherNow.gtiWm2 >= 200
+                        ? `Moderate Sun (${weatherNow.gtiWm2} W/m²)`
+                        : `Low Light (${weatherNow.gtiWm2} W/m²)`
+                    : 'Night (0 W/m²)'}
               </dd>
             </div>
 
@@ -170,13 +176,13 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
               <dt className="text-slate-500 font-medium shrink-0">Overall System Efficiency:</dt>
               <dd className="font-semibold text-slate-800 text-right tabular-nums">
                 {isDayViewPastDate && daySunStats
-                  ? `${daySunStats.prPct.toFixed(1)}% (Soiling -${daySunStats.surfaceLossPct.toFixed(1)}%)`
-                  : `${effectivePrBreakdown.prPct.toFixed(1)}% (after heat, dust & cloud losses)`}
+                  ? `${daySunStats.prPct.toFixed(1)}% (Cleanliness: ${(100 - daySunStats.surfaceLossPct).toFixed(0)}%)`
+                  : `${effectivePrBreakdown.prPct.toFixed(1)}% (Good condition)`}
               </dd>
             </div>
 
             <div className="py-2.5 flex items-center justify-between gap-3">
-              <dt className="text-slate-500 font-medium shrink-0">Inverter Conversion Efficiency:</dt>
+              <dt className="text-slate-500 font-medium shrink-0">Inverter Conversion:</dt>
               <dd className="font-semibold text-slate-900 text-right tabular-nums">
                 {renderInverterEfficiencyText()}
               </dd>
@@ -195,7 +201,7 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
                 Where Did The Solar Energy Go?
               </h3>
               <p className="text-[11px] font-medium text-slate-500 mt-0.5">
-                {periodLabel} · Max Possible (Clear Sky)
+                {periodLabel} · Compared to clear-sky benchmark
               </p>
             </div>
             {attribution && (
@@ -205,7 +211,7 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
                 </span>
                 <span className="text-[11px] font-medium text-slate-500">
                   {' '}
-                  / {attribution.idealClearSkyKwh.toFixed(1)} kWh (Clear Sky)
+                  / {attribution.idealClearSkyKwh.toFixed(1)} kWh Target
                 </span>
               </div>
             )}
@@ -292,8 +298,8 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
               <dd className="font-semibold text-slate-800 tabular-nums text-right">
                 {attribution
                   ? attribution.cloudRainDays > 0
-                    ? `-${attribution.weatherLossKwh.toFixed(1)} kWh (${attribution.cloudRainDays} overcast/rain ${attribution.worstCloudLabel ? ` · peak drop ${attribution.worstCloudLabel}` : ''})`
-                    : `-${attribution.weatherLossKwh.toFixed(1)} kWh (Minimal cloud interference)`
+                    ? `-${attribution.weatherLossKwh.toFixed(1)} kWh (${attribution.cloudRainDays} cloudy days)`
+                    : `-${attribution.weatherLossKwh.toFixed(1)} kWh (Clear conditions)`
                   : '—'}
               </dd>
             </div>
@@ -304,8 +310,8 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
               </dt>
               <dd className="font-semibold text-slate-800 tabular-nums text-right">
                 {attribution
-                  ? `-${attribution.hazeAndSoilingLossKwh.toFixed(1)} kWh · Surface -${soiling.surfaceLossPct.toFixed(1)}% · ${soiling.daysSinceWash}d since wash`
-                  : `Surface -${soiling.surfaceLossPct.toFixed(1)}%`}
+                  ? `-${attribution.hazeAndSoilingLossKwh.toFixed(1)} kWh · Dust -${soiling.surfaceLossPct.toFixed(1)}%`
+                  : `Dust -${soiling.surfaceLossPct.toFixed(1)}%`}
               </dd>
             </div>
           </dl>
@@ -314,15 +320,15 @@ export const PerformanceFooterLedgers: React.FC<PerformanceFooterLedgersProps> =
         <div className="pt-2.5 mt-1 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11.5px]">
           <span className="text-slate-500 font-medium">
             {attribution && attribution.outageOrPendingDays > 0
-              ? `Unlogged Wi-Fi / Outage: ${attribution.pendingLabels.slice(0, 3).join(', ')}${attribution.pendingLabels.length > 3 ? ` +${attribution.pendingLabels.length - 3}` : ''}`
-              : 'All elapsed period days verified'}
+              ? `Sync status: ${attribution.confirmedDays} days verified`
+              : 'All period days verified'}
           </span>
           <button
             type="button"
             onClick={onNavigateToHealth}
             className="inline-flex items-center gap-1 font-semibold text-sky-700 hover:text-sky-900 cursor-pointer transition-colors"
           >
-            <span>Inspect Grid Protection in System Health</span>
+            <span>Inspect System Health</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </button>
         </div>

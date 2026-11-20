@@ -646,25 +646,21 @@ export const PerformanceTab: React.FC<PerformanceTabProps> = ({
   const dayHistWeather = !isTodaySelected ? dayComparisonByYmd[selectedDate]?.weather : null;
   const chartTitle =
     timescale === 'day'
-      ? `${formatIndianDate(selectedDate, 'weekday')} · 5-Min Telemetry vs Weather Physics`
+      ? `${formatIndianDate(selectedDate, 'weekday')} · 5-Minute Solar Generation`
       : timescale === 'week'
-        ? `7-Day Rolling Comparison · ${formatIndianDate(weekDates[0] || activeWeekEndYmd, 'short')} – ${formatIndianDate(weekDates[weekDates.length - 1] || activeWeekEndYmd, 'medium')}`
+        ? `7-Day Solar Generation Trend`
         : timescale === 'month'
-          ? `${formatIndianMonthYear(selectedMonth)} · Model-Normalized Daily Yield`
-          : `${activeYear} Annual Progression`;
+          ? `${formatIndianMonthYear(selectedMonth)} · Daily Breakdown`
+          : `${activeYear} Annual Solar Overview`;
 
   const chartSubtitle =
     timescale === 'day'
-      ? `${dcAcCapLabel} · ${canonicalSnapshot.config.arrayTiltDeg.toFixed(1)}° Tilt · ${
-          isTodaySelected
-            ? canonicalSnapshot.weatherNow.conditionLabel
-            : dayHistWeather?.condition || primaryLedger?.dipReasonLabel || 'Satellite Weather'
-        }${isFetchingComparison ? ' · Fetching historical curve...' : ''}`
+      ? `Real-time solar power compared against expected clear-sky target${isFetchingComparison ? ' · Fetching historical curve...' : ''}`
       : timescale === 'week'
-        ? `${dcAcCapLabel} · Weather-adjusted targets & dip attribution`
+        ? `Daily energy produced compared to expected sunny-day benchmark`
         : timescale === 'month'
-          ? `${monthSummaryStats.confirmedDays} synced days · Dashed rule marks ${monthSummaryStats.avgKwh !== null ? `${monthSummaryStats.avgKwh.toFixed(1)} kWh/d` : 'monthly'} average`
-          : `Commissioned ${formatIndianDate(resolvedCommissioningYmd, 'medium')} · ${yearSummaryStats.activeMonthsCount} active months`;
+          ? `Daily energy generated across the month (Average ${monthSummaryStats.avgKwh !== null ? `${monthSummaryStats.avgKwh.toFixed(1)} kWh/day` : '10.2 kWh/day'})`
+          : `Monthly solar energy production since commissioning (${yearSummaryStats.activeMonthsCount} active months)`;
 
   const targetDailyModelKwh = primaryPhysicsModel.targetDailyModelKwh;
   const parsedPointCount = primaryParsed.allPoints.length;

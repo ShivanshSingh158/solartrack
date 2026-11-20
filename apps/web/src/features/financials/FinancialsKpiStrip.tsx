@@ -4,12 +4,17 @@ import {
   type CanonicalSolarSnapshot,
   type DiscomCycleBreakdown,
   type PaybackHorizonAnalysis,
+  type ReconciledCashPnlSummary,
 } from '@solar-track/core';
+import type { FinancialsStageView } from './FinancialsCockpitStage';
 
 interface FinancialsKpiStripProps {
+  stageView: FinancialsStageView;
   payback: PaybackHorizonAnalysis;
   discom: DiscomCycleBreakdown;
+  pnlSummary: ReconciledCashPnlSummary;
   canonicalSnapshot: CanonicalSolarSnapshot;
+  draftSystemCost: number;
   subsidyInr: number;
   washCostInr: number;
   isWhatIfActive: boolean;
@@ -40,9 +45,12 @@ const TONE_CLASS: Record<FinKpiCol['primaryTone'], string> = {
 };
 
 export const FinancialsKpiStrip: React.FC<FinancialsKpiStripProps> = ({
+  stageView,
   payback,
   discom,
+  pnlSummary,
   canonicalSnapshot,
+  draftSystemCost,
   subsidyInr,
   washCostInr,
   isWhatIfActive,
@@ -59,63 +67,136 @@ export const FinancialsKpiStrip: React.FC<FinancialsKpiStripProps> = ({
     ? payback.physicalPaidOffPct
     : payback.paidOffPct;
 
-  const col1: FinKpiCol = {
-    eyebrow: isWhatIfActive ? 'Projected Lifetime Value' : 'Total Lifetime Saved',
-    accentDot: 'emerald',
-    primary: formatINR(headlineSavedInr),
-    primaryTone: 'emerald',
-    primaryUnit: `${headlineLifetimeKwh.toFixed(1)} kWh`,
-    rightMeta: `${headlinePaidOffPct}% of system paid off`,
-    subtitle:
-      payback.unloggedSavedInr > 0
-        ? `${formatINR(payback.confirmedSavedInr)} Cloud + ${formatINR(payback.unloggedSavedInr)} ${canonicalSnapshot.lifetime.hardwareSource === 'waaree-api' ? 'Inverter Register' : canonicalSnapshot.lifetime.isEtotalAnchored ? 'LCD Synced' : 'Buffer'} · Net ${formatINR(payback.netCapexInr)}`
-        : subsidyInr > 0
-        ? `Net target ${formatINR(payback.netCapexInr)} (-₹${Math.round(subsidyInr / 1000)}k subsidy)`
-        : `Remaining to CapEx: ${formatINR(payback.remainingInr)}`,
-  };
+  let cols: [FinKpiCol, FinKpiCol, FinKpiCol, FinKpiCol];
 
-  const hasCycleBuffer = discom.pendingUnitsKwh > 0.2;
-  const headlineCycleUnits = hasCycleBuffer
-    ? discom.accruedPlusPendingKwh
-    : discom.confirmedUnitsKwh;
-
-  const col2: FinKpiCol = {
-    eyebrow: `Billing Cycle (Day ${discom.billingCycleDay})`,
-    accentDot: hasCycleBuffer ? 'emerald' : 'sky',
-    primary: hasCycleBuffer ? formatINR(discom.accruedPlusPendingInr) : discom.confirmedFormatted,
-    primaryTone: 'slate',
-    primaryUnit: `${headlineCycleUnits.toFixed(1)} kWh`,
-    rightMeta: `Day ${discom.daysElapsedInCycle}/${discom.cycleTotalDays}`,
-    subtitle:
-      discom.pendingUnitsKwh > 0.1
-        ? `${discom.confirmedUnitsKwh.toFixed(1)} Cloud + ${discom.pendingUnitsKwh.toFixed(1)} Buffer (${discom.confirmedFormatted})`
-        : `Cycle projection: ${formatINR(discom.projectedCycleInr)} (${discom.projectedCycleUnitsKwh} kWh)`,
-  };
-
-  const col3: FinKpiCol = {
-    eyebrow: 'Full Payback Date',
-    accentDot: payback.breakevenYears !== null && payback.breakevenYears <= 5 ? 'emerald' : 'sky',
-    primary: payback.breakevenLabel,
-    primaryTone: 'slate',
-    primaryUnit: payback.breakevenYears !== null ? `~${payback.breakevenYears} yrs` : undefined,
-    rightMeta: `${payback.annualizedCashYieldPct}% annual return`,
-    subtitle: `First year savings: ${formatINR(payback.year1ProjectedInr)} (${payback.year1SeasonalKwh} kWh)`,
-  };
-
-  const col4: FinKpiCol = {
-    eyebrow: 'Your Solar Cost',
-    accentDot: 'emerald',
-    primary: `₹${payback.lcoeAllInInrPerKwh.toFixed(2)}`,
-    primaryTone: 'slate',
-    primaryUnit: '/ unit (25y)',
-    rightMeta: `Saves ₹${payback.lcoeSavingsSpreadInr.toFixed(2)}/u vs grid`,
-    subtitle:
-      washCostInr > 0
-        ? `Incl. ${payback.washesPerYear} washes/yr (${formatINR(payback.annualWashExpenseInr)}/yr)`
-        : `25-year net earnings: ${formatINR(payback.netProfit25YrInr)}`,
-  };
-
-  const cols: [FinKpiCol, FinKpiCol, FinKpiCol, FinKpiCol] = [col1, col2, col3, col4];
+  if (stageView === 'cycle') {
+    const cycleCompletionPct = Math.round(
+      (discom.confirmedInr / Math.max(1, discom.projectedCycleInr)) * 100,
+    );
+    cols = [
+      {
+        eyebrow: 'Active Billing Cycle',
+        accentDot: 'emerald',
+        primary: discom.cyclePeriodText,
+        primaryTone: 'slate',
+        primaryUnit: `Day ${discom.daysElapsedInCycle}/${discom.cycleTotalDays}`,
+        rightMeta: `${discom.daysRemainingInCycle} days left`,
+        subtitle: 'DISCOM Net-Metered Window',
+      },
+      {
+        eyebrow: 'Confirmed Bill Credit',
+        accentDot: 'emerald',
+        primary: discom.confirmedFormatted,
+        primaryTone: 'emerald',
+        primaryUnit: `${discom.confirmedUnitsKwh.toFixed(1)} kWh`,
+        rightMeta: `${cycleCompletionPct}% of cycle`,
+        subtitle: 'Verified by meter telemetry',
+      },
+      {
+        eyebrow: 'Pending Sync Buffer',
+        accentDot: discom.pendingInr > 0 ? 'amber' : 'slate',
+        primary: `+${formatINR(discom.pendingInr)}`,
+        primaryTone: discom.pendingInr > 0 ? 'amber' : 'slate',
+        primaryUnit: `${discom.pendingUnitsKwh.toFixed(1)} kWh`,
+        rightMeta: discom.pendingInr > 0 ? 'Awaiting sync' : '100% Synced',
+        subtitle: 'Real-time generation buffer',
+      },
+      {
+        eyebrow: 'Projected Cycle Total',
+        accentDot: 'sky',
+        primary: `~${formatINR(discom.projectedCycleInr)}`,
+        primaryTone: 'slate',
+        primaryUnit: `~${discom.projectedCycleUnitsKwh} kWh`,
+        rightMeta: `Target: ₹${(discom.projectedCycleInr * 12).toLocaleString('en-IN')}/yr`,
+        subtitle: 'Estimated full-month credit',
+      },
+    ];
+  } else if (stageView === 'pnl') {
+    cols = [
+      {
+        eyebrow: 'Month-to-Date Earned',
+        accentDot: 'emerald',
+        primary: formatINR(pnlSummary.earnedInr),
+        primaryTone: 'emerald',
+        primaryUnit: `${pnlSummary.earnedPct}% optimal`,
+        rightMeta: `${pnlSummary.daysCount} days logged`,
+        subtitle: 'Realized solar electricity savings',
+      },
+      {
+        eyebrow: 'Weather Impact',
+        accentDot: 'sky',
+        primary: `-${formatINR(pnlSummary.weatherDipInr)}`,
+        primaryTone: 'sky',
+        primaryUnit: `${pnlSummary.weatherDipPct}% dip`,
+        rightMeta: 'Clouds / Rain',
+        subtitle: 'Natural atmospheric attenuation',
+      },
+      {
+        eyebrow: 'Dust & Smog Dip',
+        accentDot: 'amber',
+        primary: `-${formatINR(pnlSummary.soilLossInr)}`,
+        primaryTone: 'amber',
+        primaryUnit: `${pnlSummary.soilLossPct}% dip`,
+        rightMeta: 'Surface film',
+        subtitle: 'Recoverable with module wash',
+      },
+      {
+        eyebrow: 'Delay / Pending Sync',
+        accentDot: 'slate',
+        primary: `-${formatINR(pnlSummary.pendingOutageInr)}`,
+        primaryTone: 'slate',
+        primaryUnit: `${pnlSummary.pendingOutagePct}%`,
+        rightMeta: 'Wi-Fi / Delay',
+        subtitle: 'Recovers upon meter refresh',
+      },
+    ];
+  } else {
+    // stageView === 'payback'
+    cols = [
+      {
+        eyebrow: isWhatIfActive ? 'Projected Lifetime Saved' : 'Total Lifetime Saved',
+        accentDot: 'emerald',
+        primary: formatINR(headlineSavedInr),
+        primaryTone: 'emerald',
+        primaryUnit: `${headlineLifetimeKwh.toFixed(1)} kWh`,
+        rightMeta: `${headlinePaidOffPct}% of system paid off`,
+        subtitle: `Remaining to CapEx: ${formatINR(payback.remainingInr)}`,
+      },
+      {
+        eyebrow: 'Net Plant Investment',
+        accentDot: 'slate',
+        primary: formatINR(payback.netCapexInr),
+        primaryTone: 'slate',
+        primaryUnit: subsidyInr > 0 ? `Gross ${formatINR(draftSystemCost)}` : undefined,
+        rightMeta:
+          subsidyInr > 0
+            ? `-₹${Math.round(subsidyInr / 1000)}k subsidy`
+            : '₹0 subsidy',
+        subtitle: `Initial rooftop investment`,
+      },
+      {
+        eyebrow: 'Full Payback Date',
+        accentDot: payback.breakevenYears !== null && payback.breakevenYears <= 5 ? 'emerald' : 'sky',
+        primary: payback.breakevenLabel,
+        primaryTone: 'slate',
+        primaryUnit: payback.breakevenYears !== null ? `~${payback.breakevenYears} yrs` : undefined,
+        rightMeta: `${payback.annualizedCashYieldPct}% annual yield`,
+        subtitle: `First year savings: ${formatINR(payback.year1ProjectedInr)} (${payback.year1SeasonalKwh} kWh)`,
+      },
+      {
+        eyebrow: 'Solar Cost per Unit',
+        accentDot: 'emerald',
+        primary: `₹${payback.lcoeAllInInrPerKwh.toFixed(2)}`,
+        primaryTone: 'slate',
+        primaryUnit: '/ unit (25y)',
+        rightMeta: `Saves ₹${payback.lcoeSavingsSpreadInr.toFixed(2)}/u vs grid`,
+        subtitle:
+          washCostInr > 0
+            ? `Incl. ${payback.washesPerYear} washes/yr (${formatINR(payback.annualWashExpenseInr)}/yr)`
+            : `25-year net profit: ${formatINR(payback.netProfit25YrInr)}`,
+      },
+    ];
+  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/75 border-b border-slate-200/75 bg-slate-50/40">

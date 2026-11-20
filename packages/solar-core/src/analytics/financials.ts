@@ -5,6 +5,16 @@ import type { CanonicalSolarSnapshot } from '../types/snapshot.ts';
 import type { AnnualSolarBaseline, SolarWeatherResponse } from '../types/weather.ts';
 
 const IST_MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+export function formatYmdToStandard(ymd: string): string {
+  const parts = ymd.split('-');
+  if (parts.length !== 3) return ymd;
+  const year = parts[0];
+  const monthIdx = parseInt(parts[1], 10) - 1;
+  const day = parseInt(parts[2], 10);
+  const monthName = IST_MONTH_SHORT[monthIdx] ?? parts[1];
+  return `${day} ${monthName} ${year}`;
+}
 const PANEL_ANNUAL_DEGRADATION = 0.0055; // 0.55%/yr PERC linear degradation warranty standard
 
 export interface SeasonalMonthBaseline {
@@ -164,7 +174,7 @@ export function buildSeasonalProfileFromArchive(
 
     return {
       source: 'open_meteo_365d_archive',
-      archiveWindowLabel: `${annualBaseline.startYmd} → ${annualBaseline.endYmd}`,
+      archiveWindowLabel: `${formatYmdToStandard(annualBaseline.startYmd)} – ${formatYmdToStandard(annualBaseline.endYmd)}`,
       empiricalFactor,
       months,
       year1Kwh: Math.round(yrSum),

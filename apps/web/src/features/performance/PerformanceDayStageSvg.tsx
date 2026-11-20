@@ -175,7 +175,7 @@ export const PerformanceDayStageSvg: React.FC<PerformanceDayStageSvgProps> = ({
                 fontSize="9.5"
                 fontWeight="600"
               >
-                EDay Bridge · +{matchedBridge.recoveredKwh.toFixed(1)} kWh
+                Recovered · +{matchedBridge.recoveredKwh.toFixed(1)} kWh
               </text>
             )}
           </g>
