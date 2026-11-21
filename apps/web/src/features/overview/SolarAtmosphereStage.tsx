@@ -17,6 +17,7 @@ import {
 } from '@solar-track/core';
 import { AtmosphereWeatherArtwork } from './AtmosphereWeatherArtwork';
 import { SatellitePlantMap } from './SatellitePlantMap';
+import { RealisticAtmosphereBackground } from './RealisticAtmosphereBackground';
 import {
   buildAtmosphereStateData,
   resolveEffectiveAtmosphereMode,
@@ -92,7 +93,7 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
   const windReal = weatherData?.current?.windSpeed != null ? Math.round(weatherData.current.windSpeed) : 4.5;
   const usAqi = weatherData?.current?.usAqi ?? weatherData?.todayForecast?.usAqi ?? 164;
 
-  const effectiveMode = useMemo(
+  const naturalMode = useMemo(
     () =>
       resolveEffectiveAtmosphereMode({
         isEstimatedLive,
@@ -105,6 +106,8 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
       }),
     [isEstimatedLive, liveKw, isDayReal, weatherData, solarPhase, usAqi, sunContext]
   );
+
+  const effectiveMode = naturalMode;
 
   const isNight = effectiveMode === 'night';
   const isDarkTheme = effectiveMode === 'night' || effectiveMode === 'thunderstorm';
@@ -168,11 +171,21 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
         <div
           className={`rounded-3xl relative overflow-hidden flex flex-col justify-between p-6 sm:p-7 apple-glass-static transition-all duration-300 min-h-[296px] ${stateData.bgClass}`}
         >
+          {/* Dynamic Full-Bleed Atmospheric Weather Simulation (Sun rays, wind-driven volumetric clouds, rain, lightning, haze) */}
+          <RealisticAtmosphereBackground
+            mode={effectiveMode}
+            windKmH={windReal}
+            dni={dniReal}
+            usAqi={usAqi}
+            isNight={isNight}
+          />
+
           <svg
-            className="absolute bottom-0 left-0 right-0 w-full h-[55px] pointer-events-none opacity-10"
+            className="absolute bottom-0 left-0 right-0 w-full h-[55px] pointer-events-none opacity-10 z-0"
             viewBox="0 0 1000 55"
             preserveAspectRatio="none"
             fill="currentColor"
+            style={effectiveMode === 'sunny' ? { filter: 'url(#solarHeatShimmer)' } : undefined}
           >
             <path d="M 0,55 L 0,44 L 18,44 L 18,36 L 32,36 L 36,24 L 40,36 L 54,36 L 54,44 L 70,44 L 70,30 L 78,30 L 82,14 L 86,30 L 94,30 L 94,44 L 115,44 L 115,38 L 135,38 L 140,28 L 145,38 L 165,38 L 165,44 L 190,44 L 195,32 L 205,22 L 215,32 L 220,44 L 245,44 L 245,28 L 260,28 L 265,16 L 270,28 L 285,28 L 285,44 L 310,44 L 310,36 L 335,36 L 340,44 L 370,44 L 375,34 L 385,20 L 395,34 L 400,44 L 430,44 L 430,32 L 450,32 L 450,44 L 475,44 L 480,24 L 490,10 L 500,24 L 505,44 L 530,44 L 530,36 L 555,36 L 555,44 L 585,44 L 590,30 L 600,18 L 610,30 L 615,44 L 640,44 L 640,34 L 665,34 L 665,44 L 690,44 L 695,26 L 705,12 L 715,26 L 720,44 L 750,44 L 750,36 L 775,36 L 775,44 L 805,44 L 810,32 L 820,18 L 830,32 L 835,44 L 865,44 L 865,30 L 890,30 L 890,44 L 915,44 L 920,22 L 930,8 L 940,22 L 945,44 L 970,44 L 970,34 L 1000,34 L 1000,55 Z" />
           </svg>
@@ -225,19 +238,21 @@ export const SolarAtmosphereStage: React.FC<SolarAtmosphereStageProps> = ({
               )}
             </div>
 
-            <div className={`flex items-center space-x-1.5 text-[11px] font-medium select-none ${
-              showEstimatedMode
-                ? isDarkTheme ? 'text-amber-300' : 'text-amber-700'
-                : isDarkTheme ? 'text-slate-400' : 'text-slate-500'
-            }`}>
-              <Clock className="w-3 h-3 shrink-0 opacity-70" strokeWidth={2} />
-              <span>
-                {showHardwareLive
-                  ? `Synced ${compactLastSeen}`
-                  : showEstimatedMode
-                  ? `Offline · ${compactLastSeen}`
-                  : compactLastSeen}
-              </span>
+            <div className="flex items-center gap-2.5">
+              <div className={`flex items-center space-x-1.5 text-[11px] font-medium select-none ${
+                showEstimatedMode
+                  ? isDarkTheme ? 'text-amber-300' : 'text-amber-700'
+                  : isDarkTheme ? 'text-slate-400' : 'text-slate-500'
+              }`}>
+                <Clock className="w-3 h-3 shrink-0 opacity-70" strokeWidth={2} />
+                <span>
+                  {showHardwareLive
+                    ? `Synced ${compactLastSeen}`
+                    : showEstimatedMode
+                    ? `Offline · ${compactLastSeen}`
+                    : compactLastSeen}
+                </span>
+              </div>
             </div>
           </div>
 

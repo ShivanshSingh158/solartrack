@@ -391,7 +391,7 @@ body::-webkit-scrollbar,
 
 /* 1. Atmospheric Hero Stage Gradients (Soft Luminous Pastels & Deep Storms/Night) */
 .hero-stage-sunny {
-  background: linear-gradient(135deg, #FFFDF0 0%, #FEF9C3 25%, #FDE68A 65%, #FBBF24 100%);
+  background: linear-gradient(135deg, #FFFDF5 0%, #FEF3C7 28%, #FDE68A 65%, #F59E0B 100%);
   color: #451A03;
 }
 .hero-stage-partly-cloudy {
@@ -407,12 +407,12 @@ body::-webkit-scrollbar,
   color: #431407;
 }
 .hero-stage-showers {
-  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 28%, #BAE6FD 65%, #7DD3FC 100%);
+  background: linear-gradient(135deg, #BAE6FD 0%, #93C5FD 28%, #60A5FA 65%, #3B82F6 100%);
   color: #082F49;
 }
 .hero-stage-rainy {
-  background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 28%, #7DD3FC 65%, #38BDF8 100%);
-  color: #0C4A6E;
+  background: linear-gradient(135deg, #93C5FD 0%, #60A5FA 28%, #3B82F6 65%, #1D4ED8 100%);
+  color: #082F49;
 }
 .hero-stage-thunderstorm {
   background: linear-gradient(135deg, #090D16 0%, #172033 30%, #1E293B 65%, #0F172A 100%);
@@ -627,6 +627,110 @@ body::-webkit-scrollbar,
 .sun-breathe {
   transform-origin: center;
   animation: sun-breathe 4.5s ease-in-out infinite;
+}
+
+/* Anchored Sun Rotation (Concentric with Sun Center at 0, 0) */
+@keyframes sun-spin-locked {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sun-god-rays-spin {
+  transform-origin: 0px 0px;
+  animation: sun-spin-locked 90s linear infinite;
+  will-change: transform;
+}
+
+.sun-flare-ring-spin {
+  transform-origin: 0px 0px;
+  animation: sun-spin-locked 28s linear infinite;
+  will-change: transform;
+}
+
+/* Passing Cloud: Gently drifts across, dissolves/disappears so full sun shines, then comes back when returning to this place */
+@keyframes cloud-dissipate-return {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 1;
+  }
+  20% {
+    transform: translate(14px, 2px) scale(1.02);
+    opacity: 0.92;
+  }
+  40% {
+    transform: translate(36px, 5px) scale(0.95);
+    opacity: 0.45;
+  }
+  55% {
+    transform: translate(58px, 8px) scale(0.85);
+    opacity: 0;
+  }
+  56% {
+    transform: translate(-50px, -6px) scale(0.85);
+    opacity: 0;
+  }
+  75% {
+    transform: translate(-32px, -4px) scale(0.92);
+    opacity: 0;
+  }
+  85% {
+    transform: translate(-18px, -2px) scale(0.96);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 1;
+  }
+}
+
+.cloud-dissipate-return {
+  animation: cloud-dissipate-return 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+/* Realistic Ultra-Slow Solar Ray Rotation & Atmospheric Pulse */
+@keyframes spin-ultra-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-ultra-slow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spin-ultra-slow 95s linear infinite;
+}
+
+@keyframes sun-glow-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.94); opacity: 0.75; }
+  50% { transform: translate(-50%, -50%) scale(1.06); opacity: 0.95; }
+}
+.sun-glow-pulse {
+  animation: sun-glow-pulse 6s ease-in-out infinite;
+}
+
+/* Seamless Continuous Horizontal Cloud Conveyor (Moving with Wind Physics) */
+@keyframes clouds-drift-seamless {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+
+.clouds-conveyor {
+  animation: clouds-drift-seamless linear infinite;
+  will-change: transform;
+}
+
+/* Seamless Continuous Parallax Cloud Pan */
+@keyframes cloud-pan-across {
+  0% { transform: translateX(-25%); }
+  50% { transform: translateX(15%); }
+  100% { transform: translateX(-25%); }
 }
 
 /* Extended smooth rain drops */

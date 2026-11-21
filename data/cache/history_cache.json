@@ -77,6 +77,50 @@
         {
           "index": 19,
           "value": 12.199999999999989
+        },
+        {
+          "index": 20,
+          "value": 10.400000000000006
+        },
+        {
+          "index": 21,
+          "value": 0.9000000000000057
+        },
+        {
+          "index": 22,
+          "value": 0
+        },
+        {
+          "index": 23,
+          "value": 0
+        },
+        {
+          "index": 24,
+          "value": 0
+        },
+        {
+          "index": 25,
+          "value": 0
+        },
+        {
+          "index": 26,
+          "value": 0
+        },
+        {
+          "index": 27,
+          "value": 0
+        },
+        {
+          "index": 28,
+          "value": 0
+        },
+        {
+          "index": 29,
+          "value": 0
+        },
+        {
+          "index": 30,
+          "value": 0
         }
       ],
       "variable": "generation",
@@ -158,6 +202,50 @@
         },
         {
           "index": 19,
+          "value": 0
+        },
+        {
+          "index": 20,
+          "value": 0
+        },
+        {
+          "index": 21,
+          "value": 0
+        },
+        {
+          "index": 22,
+          "value": 0
+        },
+        {
+          "index": 23,
+          "value": 0
+        },
+        {
+          "index": 24,
+          "value": 0
+        },
+        {
+          "index": 25,
+          "value": 0
+        },
+        {
+          "index": 26,
+          "value": 0
+        },
+        {
+          "index": 27,
+          "value": 0
+        },
+        {
+          "index": 28,
+          "value": 0
+        },
+        {
+          "index": 29,
+          "value": 0
+        },
+        {
+          "index": 30,
           "value": 0
         }
       ],
@@ -241,6 +329,50 @@
         {
           "index": 19,
           "value": 0
+        },
+        {
+          "index": 20,
+          "value": 0
+        },
+        {
+          "index": 21,
+          "value": 0
+        },
+        {
+          "index": 22,
+          "value": 0
+        },
+        {
+          "index": 23,
+          "value": 0
+        },
+        {
+          "index": 24,
+          "value": 0
+        },
+        {
+          "index": 25,
+          "value": 0
+        },
+        {
+          "index": 26,
+          "value": 0
+        },
+        {
+          "index": 27,
+          "value": 0
+        },
+        {
+          "index": 28,
+          "value": 0
+        },
+        {
+          "index": 29,
+          "value": 0
+        },
+        {
+          "index": 30,
+          "value": 0
         }
       ],
       "variable": "gridConsumption",
@@ -322,6 +454,50 @@
         },
         {
           "index": 19,
+          "value": 0
+        },
+        {
+          "index": 20,
+          "value": 0
+        },
+        {
+          "index": 21,
+          "value": 0
+        },
+        {
+          "index": 22,
+          "value": 0
+        },
+        {
+          "index": 23,
+          "value": 0
+        },
+        {
+          "index": 24,
+          "value": 0
+        },
+        {
+          "index": 25,
+          "value": 0
+        },
+        {
+          "index": 26,
+          "value": 0
+        },
+        {
+          "index": 27,
+          "value": 0
+        },
+        {
+          "index": 28,
+          "value": 0
+        },
+        {
+          "index": 29,
+          "value": 0
+        },
+        {
+          "index": 30,
           "value": 0
         }
       ],
@@ -1166,8 +1342,8 @@
       "miniData": []
     }
   ],
-  "1e2b2018-5a70-43e9-96a3-f4da846ea954_year_total_2026": 212,
-  "1e2b2018-5a70-43e9-96a3-f4da846ea954_month_2026_11_savedYmd": "2026-11-20",
+  "1e2b2018-5a70-43e9-96a3-f4da846ea954_year_total_2026": 221.5,
+  "1e2b2018-5a70-43e9-96a3-f4da846ea954_month_2026_11_savedYmd": "2026-11-21",
   "1e2b2018-5a70-43e9-96a3-f4da846ea954_year_months_2026": [
     {
       "index": 1,
@@ -1211,7 +1387,7 @@
     },
     {
       "index": 11,
-      "value": 194.4
+      "value": 203.9
     },
     {
       "index": 12,

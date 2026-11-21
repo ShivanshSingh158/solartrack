@@ -10,10 +10,11 @@ export const AtmosphereWeatherArtwork: React.FC<AtmosphereWeatherArtworkProps> =
   effectiveMode,
   isNight,
 }) => (
-  <div className="md:col-span-2 hidden md:flex items-center justify-center">
+  <div className="md:col-span-2 hidden md:flex items-center justify-center relative">
     <div className="w-[140px] h-[140px] relative flex items-center justify-center">
-      <svg className="w-[140px] h-[140px] drop-shadow-lg overflow-visible" viewBox="0 0 140 140" fill="none">
+      <svg className="w-[140px] h-[140px] drop-shadow-xl overflow-visible" viewBox="0 0 140 140" fill="none">
         <defs>
+          {/* Lunar Spherical & Crater Gradients */}
           <radialGradient id="moonSphereGrad" cx="38%" cy="32%" r="68%">
             <stop offset="0%" stopColor="#FFFDF7" />
             <stop offset="40%" stopColor="#FEF3C7" />
@@ -33,24 +34,64 @@ export const AtmosphereWeatherArtwork: React.FC<AtmosphereWeatherArtworkProps> =
             <stop offset="100%" stopColor="#B45309" stopOpacity="0.12" />
           </radialGradient>
 
-          <linearGradient id="cloudGradDay" x1="0%" y1="0%" x2="0%" y2="100%">
+          {/* 3D Realistic Volumetric Cloud Gradients */}
+          <linearGradient id="cloudSunsetVolumetric" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#FFFBEB" stopOpacity="0.98" />
+            <stop offset="28%" stopColor="#FDE68A" stopOpacity="0.96" />
+            <stop offset="58%" stopColor="#FED7AA" stopOpacity="0.92" />
+            <stop offset="82%" stopColor="#FDA4AF" stopOpacity="0.88" />
+            <stop offset="100%" stopColor="#FB7185" stopOpacity="0.82" />
+          </linearGradient>
+
+          <linearGradient id="cloudSunsetRim" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#FDE047" stopOpacity="0.95" />
+            <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1.0" />
+            <stop offset="100%" stopColor="#FBBF24" stopOpacity="0.9" />
+          </linearGradient>
+
+          <linearGradient id="cloudDayVolumetric" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.98" />
-            <stop offset="100%" stopColor="#E2E8F0" stopOpacity="0.9" />
+            <stop offset="45%" stopColor="#F8FAFC" stopOpacity="0.95" />
+            <stop offset="78%" stopColor="#E2E8F0" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#CBD5E1" stopOpacity="0.75" />
+          </linearGradient>
+
+          <linearGradient id="cloudDayRim" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1.0" />
+            <stop offset="60%" stopColor="#FEF08A" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.6" />
+          </linearGradient>
+
+          <radialGradient id="cloudPuffHighlight" cx="45%" cy="35%" r="60%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.65" />
+            <stop offset="55%" stopColor="#FFFFFF" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.0" />
+          </radialGradient>
+
+          <linearGradient id="cloudGradDay" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1.0" />
+            <stop offset="60%" stopColor="#F8FAFC" stopOpacity="0.96" />
+            <stop offset="100%" stopColor="#E2E8F0" stopOpacity="0.92" />
           </linearGradient>
 
           <linearGradient id="cloudGradBackDay" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="#CBD5E1" stopOpacity="0.6" />
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#CBD5E1" stopOpacity="0.65" />
+          </linearGradient>
+
+          <linearGradient id="cloudShadingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#94A3B8" stopOpacity="0.0" />
+            <stop offset="100%" stopColor="#64748B" stopOpacity="0.22" />
           </linearGradient>
 
           <linearGradient id="nightCloudFront" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#334155" stopOpacity="0.92" />
-            <stop offset="100%" stopColor="#1E293B" stopOpacity="0.96" />
+            <stop offset="0%" stopColor="#334155" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#1E293B" stopOpacity="0.98" />
           </linearGradient>
 
           <linearGradient id="nightCloudBack" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#1E293B" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="#0F172A" stopOpacity="0.6" />
+            <stop offset="0%" stopColor="#1E293B" stopOpacity="0.65" />
+            <stop offset="100%" stopColor="#0F172A" stopOpacity="0.75" />
           </linearGradient>
 
           <linearGradient id="rainCloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -58,17 +99,44 @@ export const AtmosphereWeatherArtwork: React.FC<AtmosphereWeatherArtworkProps> =
             <stop offset="100%" stopColor="#1E293B" stopOpacity="0.98" />
           </linearGradient>
 
-          <radialGradient id="sunSphereGrad" cx="40%" cy="35%" r="65%">
+          {/* 3D Specular Solar Sphere Gradients */}
+          <radialGradient id="sunSphereGrad" cx="35%" cy="30%" r="70%">
             <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="35%" stopColor="#FEF08A" />
-            <stop offset="70%" stopColor="#F59E0B" />
-            <stop offset="100%" stopColor="#D97706" />
+            <stop offset="25%" stopColor="#FEF08A" />
+            <stop offset="60%" stopColor="#F59E0B" />
+            <stop offset="90%" stopColor="#D97706" />
+            <stop offset="100%" stopColor="#B45309" />
           </radialGradient>
 
+          {/* Radiant Solar Corona */}
           <radialGradient id="sunAuraGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FEF08A" stopOpacity="0.6" />
-            <stop offset="50%" stopColor="#F59E0B" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="#FFFBEB" stopOpacity="0.8" />
+            <stop offset="35%" stopColor="#FEF08A" stopOpacity="0.45" />
+            <stop offset="65%" stopColor="#F59E0B" stopOpacity="0.18" />
             <stop offset="100%" stopColor="#D97706" stopOpacity="0.0" />
+          </radialGradient>
+
+          {/* Ethereal Golden God-Rays emanating directly from the Sun Center (0, 0) */}
+          <radialGradient id="sunGodRayGrad" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="100">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.85" />
+            <stop offset="25%" stopColor="#FEF08A" stopOpacity="0.45" />
+            <stop offset="65%" stopColor="#F59E0B" stopOpacity="0.14" />
+            <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.0" />
+          </radialGradient>
+
+          <radialGradient id="sunAuraGradUser" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="50">
+            <stop offset="0%" stopColor="#FFFBEB" stopOpacity="0.85" />
+            <stop offset="35%" stopColor="#FEF08A" stopOpacity="0.45" />
+            <stop offset="65%" stopColor="#F59E0B" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#D97706" stopOpacity="0.0" />
+          </radialGradient>
+
+          <radialGradient id="sunSphereGradUser" gradientUnits="userSpaceOnUse" cx="-5" cy="-6" r="26">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="25%" stopColor="#FEF08A" />
+            <stop offset="60%" stopColor="#F59E0B" />
+            <stop offset="90%" stopColor="#D97706" />
+            <stop offset="100%" stopColor="#B45309" />
           </radialGradient>
 
           <linearGradient id="shootingStarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -77,6 +145,7 @@ export const AtmosphereWeatherArtwork: React.FC<AtmosphereWeatherArtworkProps> =
           </linearGradient>
         </defs>
 
+        {/* 1. NIGHT SCENE */}
         {isNight && (
           <g>
             <circle cx="70" cy="65" r="50" fill="url(#moonAuraGrad)" className="moon-halo-pulse" />
@@ -122,7 +191,7 @@ export const AtmosphereWeatherArtwork: React.FC<AtmosphereWeatherArtworkProps> =
                 fill="url(#nightCloudFront)"
                 stroke="rgba(255, 255, 255, 0.12)"
                 strokeWidth="1"
-                filter="drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35))"
+                filter="drop-shadow(0 6px 14px rgba(0, 0, 0, 0.45))"
               />
               <path
                 d="M 48,75 a 13,13 0 0,1 20,-4 a 18,18 0 0,1 32,5"
@@ -135,12 +204,13 @@ export const AtmosphereWeatherArtwork: React.FC<AtmosphereWeatherArtworkProps> =
           </g>
         )}
 
+        {/* 2. RAIN & SHOWERS */}
         {(effectiveMode === 'rainy' || effectiveMode === 'showers') && (
           <g>
             {effectiveMode === 'showers' && (
               <g>
-                <circle cx="50" cy="44" r="24" fill="url(#sunAuraGrad)" className="sun-breathe" />
-                <circle cx="50" cy="44" r="18" fill="url(#sunSphereGrad)" />
+                <circle cx="50" cy="44" r="26" fill="url(#sunAuraGrad)" className="sun-breathe" />
+                <circle cx="50" cy="44" r="19" fill="url(#sunSphereGrad)" />
               </g>
             )}
 
@@ -148,15 +218,15 @@ export const AtmosphereWeatherArtwork: React.FC<AtmosphereWeatherArtworkProps> =
               className="cloud-drift-2"
               d="M32,52 a14,14 0 0,1 26,-7 a19,19 0 0,1 36,4 a13,13 0 0,1 0,24 h-60 a13,13 0 0,1 -2,-21 z"
               fill="url(#rainCloudGrad)"
-              opacity="0.65"
+              opacity="0.75"
             />
 
             <g className="cloud-drift-1">
               <path
                 d="M40,58 a15,15 0 0,1 28,-8 a20,20 0 0,1 38,5 a14,14 0 0,1 0,26 h-64 a14,14 0 0,1 -2,-23 z"
                 fill="url(#rainCloudGrad)"
-                filter="drop-shadow(0 6px 14px rgba(15, 23, 42, 0.25))"
-                stroke="rgba(255, 255, 255, 0.15)"
+                filter="drop-shadow(0 8px 18px rgba(15, 23, 42, 0.35))"
+                stroke="rgba(255, 255, 255, 0.18)"
                 strokeWidth="1"
               />
             </g>
@@ -172,14 +242,15 @@ export const AtmosphereWeatherArtwork: React.FC<AtmosphereWeatherArtworkProps> =
           </g>
         )}
 
+        {/* 3. THUNDERSTORM */}
         {effectiveMode === 'thunderstorm' && (
           <g>
             <g className="cloud-drift-1">
               <path
                 d="M36,54 a16,16 0 0,1 30,-9 a22,22 0 0,1 42,6 a15,15 0 0,1 0,28 h-70 a15,15 0 0,1 -2,-25 z"
                 fill="url(#rainCloudGrad)"
-                filter="drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45))"
-                stroke="rgba(250, 204, 21, 0.25)"
+                filter="drop-shadow(0 10px 22px rgba(0, 0, 0, 0.55))"
+                stroke="rgba(250, 204, 21, 0.35)"
                 strokeWidth="1.2"
               />
             </g>
@@ -187,12 +258,12 @@ export const AtmosphereWeatherArtwork: React.FC<AtmosphereWeatherArtworkProps> =
             <path
               d="M72,64 L62,82 L74,82 L64,106"
               stroke="#FDE047"
-              strokeWidth="3.2"
+              strokeWidth="3.4"
               strokeLinecap="round"
               strokeLinejoin="round"
               fill="none"
               className="lightning-flash"
-              filter="drop-shadow(0 0 12px #FACC15)"
+              filter="drop-shadow(0 0 14px #FACC15)"
             />
 
             <g>
@@ -203,13 +274,14 @@ export const AtmosphereWeatherArtwork: React.FC<AtmosphereWeatherArtworkProps> =
           </g>
         )}
 
+        {/* 4. SNOW */}
         {effectiveMode === 'snow' && (
           <g>
             <g className="cloud-drift-1">
               <path
                 d="M38,54 a15,15 0 0,1 28,-8 a20,20 0 0,1 38,5 a14,14 0 0,1 0,26 h-64 a14,14 0 0,1 -2,-23 z"
                 fill="url(#cloudGradDay)"
-                filter="drop-shadow(0 4px 12px rgba(186, 230, 253, 0.4))"
+                filter="drop-shadow(0 6px 16px rgba(186, 230, 253, 0.45))"
                 stroke="#BAE6FD"
                 strokeWidth="1.2"
               />
@@ -231,101 +303,220 @@ export const AtmosphereWeatherArtwork: React.FC<AtmosphereWeatherArtworkProps> =
           </g>
         )}
 
+        {/* 5. SUNSET (3D Volumetric Fluffy Twilight Cloud with Sunlit Golden Rim) */}
         {effectiveMode === 'sunset' && (
           <g>
-            <circle cx="70" cy="58" r="32" fill="url(#sunAuraGrad)" className="sun-breathe" />
-            <circle cx="70" cy="58" r="24" fill="url(#sunSphereGrad)" />
-
-            <g className="cloud-drift-1">
-              <path
-                d="M30,76 a12,12 0 0,1 24,-6 a18,18 0 0,1 36,4 a12,12 0 0,1 0,22 h-58 a12,12 0 0,1 -2,-20 z"
-                fill="url(#cloudGradDay)"
-                stroke="#FDA4AF"
-                strokeWidth="1.2"
-                opacity="0.9"
-              />
-            </g>
-          </g>
-        )}
-
-        {effectiveMode === 'hazy' && (
-          <g>
-            <circle cx="70" cy="62" r="36" fill="url(#sunAuraGrad)" className="sun-breathe" />
-            <circle cx="70" cy="62" r="25" fill="url(#sunSphereGrad)" opacity="0.85" />
-
-            <g className="mist-wave-1">
-              <rect x="24" y="52" width="75" height="4" rx="2" fill="#EA580C" opacity="0.25" />
-              <rect x="42" y="68" width="65" height="4" rx="2" fill="#C2410C" opacity="0.28" />
-            </g>
-            <g className="mist-wave-2">
-              <rect x="30" y="80" width="85" height="5" rx="2.5" fill="#EA580C" opacity="0.32" />
-            </g>
-          </g>
-        )}
-
-        {(effectiveMode === 'cloudy' || effectiveMode === 'partly_cloudy') && (
-          <g>
-            <circle cx="56" cy="46" r="28" fill="url(#sunAuraGrad)" className="sun-breathe" />
-            <circle cx="56" cy="46" r="20" fill="url(#sunSphereGrad)" />
-
-            <path
-              className="cloud-drift-2"
-              d="M32,56 a14,14 0 0,1 26,-7 a19,19 0 0,1 36,4 a13,13 0 0,1 0,24 h-60 a13,13 0 0,1 -2,-21 z"
-              fill="url(#cloudGradBackDay)"
-            />
-
-            <g className="cloud-drift-1">
-              <path
-                d="M40,64 a15,15 0 0,1 28,-8 a20,20 0 0,1 38,5 a14,14 0 0,1 0,26 h-64 a14,14 0 0,1 -2,-23 z"
-                fill="url(#cloudGradDay)"
-                stroke="#E2E8F0"
-                strokeWidth="1.2"
-                filter="drop-shadow(0 6px 14px rgba(15, 23, 42, 0.12))"
-              />
-              <path
-                d="M44,61 a15,15 0 0,1 24,-5 a20,20 0 0,1 34,5"
-                fill="none"
-                stroke="#FDE047"
-                strokeWidth="1.4"
-                opacity="0.6"
-              />
-            </g>
-          </g>
-        )}
-
-        {effectiveMode === 'sunny' && (
-          <g>
-            <circle cx="70" cy="62" r="44" fill="url(#sunAuraGrad)" className="sun-breathe" />
-
-            <g className="spin-slow" style={{ transformOrigin: '70px 62px' }}>
-              <g stroke="#F59E0B" strokeWidth="2.2" strokeLinecap="round" opacity="0.85">
-                <line x1="70" y1="28" x2="70" y2="34" />
-                <line x1="70" y1="90" x2="70" y2="96" />
-                <line x1="36" y1="62" x2="42" y2="62" />
-                <line x1="98" y1="62" x2="104" y2="62" />
-                <line x1="46" y1="38" x2="50" y2="42" />
-                <line x1="90" y1="82" x2="94" y2="86" />
-                <line x1="94" y1="38" x2="90" y2="42" />
-                <line x1="50" y1="82" x2="46" y2="86" />
-              </g>
-            </g>
-
+            <circle cx="70" cy="58" r="38" fill="url(#sunAuraGrad)" className="sun-breathe" />
             <circle
               cx="70"
-              cy="62"
+              cy="58"
               r="25"
               fill="url(#sunSphereGrad)"
-              filter="drop-shadow(0 0 14px rgba(245, 158, 11, 0.45))"
+              filter="drop-shadow(0 4px 18px rgba(245, 158, 11, 0.45))"
+            />
+            <path
+              d="M 54,50 A 18,18 0 0,1 78,38"
+              fill="none"
+              stroke="#FFFFFF"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              opacity="0.8"
             />
 
+            {/* 3D Volumetric Fluffy Sunset Cloud System */}
             <g className="cloud-drift-1">
+              {/* Rear Depth Volume */}
               <path
-                d="M44,76 a12,12 0 0,1 22,-6 a16,16 0 0,1 32,4 a11,11 0 0,1 0,22 h-52 a11,11 0 0,1 -2,-20 z"
-                fill="url(#cloudGradDay)"
-                stroke="#FEF08A"
-                strokeWidth="1.2"
-                filter="drop-shadow(0 4px 10px rgba(180, 83, 9, 0.12))"
+                d="M 44,78 C 34,74 32,62 38,55 C 42,48 52,47 58,51 C 64,40 80,38 90,45 C 98,42 108,48 110,56 C 118,63 116,74 108,80 C 98,84 86,82 78,79 C 68,83 54,83 44,78 Z"
+                fill="#F43F5E"
+                opacity="0.30"
+                filter="drop-shadow(0 4px 12px rgba(225, 29, 72, 0.25))"
               />
+
+              {/* Main 3D Volumetric Cloud Body */}
+              <g filter="drop-shadow(0 8px 20px rgba(190, 24, 93, 0.22))">
+                <path
+                  d="M 36,88 C 24,86 20,74 26,65 C 30,56 42,54 48,58 C 54,46 72,42 84,49 C 92,46 106,52 108,62 C 116,68 116,80 106,88 C 96,93 82,91 74,87 C 64,92 48,93 36,88 Z"
+                  fill="url(#cloudSunsetVolumetric)"
+                />
+
+                {/* 3D Volumetric Spherical Puff Highlights (Fluffy depth) */}
+                <ellipse cx="68" cy="58" rx="16" ry="12" fill="url(#cloudPuffHighlight)" />
+                <ellipse cx="44" cy="70" rx="12" ry="9" fill="url(#cloudPuffHighlight)" />
+                <ellipse cx="94" cy="72" rx="14" ry="10" fill="url(#cloudPuffHighlight)" />
+
+                {/* Intense Sunlit Golden-Amber Rim Light along Upper Contour */}
+                <path
+                  d="M 26,65 C 30,56 42,54 48,58 C 54,46 72,42 84,49 C 92,46 106,52 108,62 C 116,68 116,78 108,84"
+                  stroke="url(#cloudSunsetRim)"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  fill="none"
+                  opacity="0.95"
+                />
+              </g>
+            </g>
+          </g>
+        )}
+
+        {/* 6. HAZY */}
+        {effectiveMode === 'hazy' && (
+          <g>
+            <circle cx="70" cy="62" r="40" fill="url(#sunAuraGrad)" className="sun-breathe" />
+            <circle cx="70" cy="62" r="26" fill="url(#sunSphereGrad)" opacity="0.9" />
+
+            <g className="mist-wave-1">
+              <rect x="20" y="52" width="82" height="4.5" rx="2.25" fill="#EA580C" opacity="0.32" />
+              <rect x="38" y="68" width="72" height="4.5" rx="2.25" fill="#C2410C" opacity="0.35" />
+            </g>
+            <g className="mist-wave-2">
+              <rect x="28" y="80" width="90" height="5.5" rx="2.75" fill="#EA580C" opacity="0.38" />
+            </g>
+          </g>
+        )}
+
+        {/* 7. CLOUDY & PARTLY CLOUDY */}
+        {(effectiveMode === 'cloudy' || effectiveMode === 'partly_cloudy') && (
+          <g>
+            <circle cx="56" cy="46" r="30" fill="url(#sunAuraGrad)" className="sun-breathe" />
+            <circle cx="56" cy="46" r="21" fill="url(#sunSphereGrad)" />
+
+            {/* 3D Volumetric Fluffy Cloud System with Sunlit Golden-White Rim */}
+            <g className="cloud-drift-1">
+              {/* Rear Depth Volume */}
+              <path
+                d="M 44,78 C 34,74 32,62 38,55 C 42,48 52,47 58,51 C 64,40 80,38 90,45 C 98,42 108,48 110,56 C 118,63 116,74 108,80 C 98,84 86,82 78,79 C 68,83 54,83 44,78 Z"
+                fill="#94A3B8"
+                opacity="0.25"
+                filter="drop-shadow(0 4px 12px rgba(15, 23, 42, 0.15))"
+              />
+
+              {/* Main 3D Volumetric Cloud Body */}
+              <g filter="drop-shadow(0 8px 20px rgba(15, 23, 42, 0.16))">
+                <path
+                  d="M 36,88 C 24,86 20,74 26,65 C 30,56 42,54 48,58 C 54,46 72,42 84,49 C 92,46 106,52 108,62 C 116,68 116,80 106,88 C 96,93 82,91 74,87 C 64,92 48,93 36,88 Z"
+                  fill="url(#cloudDayVolumetric)"
+                />
+
+                {/* 3D Volumetric Spherical Puff Highlights */}
+                <ellipse cx="68" cy="58" rx="16" ry="12" fill="url(#cloudPuffHighlight)" />
+                <ellipse cx="44" cy="70" rx="12" ry="9" fill="url(#cloudPuffHighlight)" />
+                <ellipse cx="94" cy="72" rx="14" ry="10" fill="url(#cloudPuffHighlight)" />
+
+                {/* Luminous Sunlit White-Gold Rim Light */}
+                <path
+                  d="M 26,65 C 30,56 42,54 48,58 C 54,46 72,42 84,49 C 92,46 106,52 108,62 C 116,68 116,78 108,84"
+                  stroke="url(#cloudDayRim)"
+                  strokeWidth="2.0"
+                  strokeLinecap="round"
+                  fill="none"
+                  opacity="0.9"
+                />
+              </g>
+            </g>
+          </g>
+        )}
+
+        {/* 8. OPTIMAL SUN (Sunny Clear Sky - Sun Rays Anchored Directly to Sun Center) */}
+        {effectiveMode === 'sunny' && (
+          <g>
+            {/* Unified Sun System: Locked and centered at (70, 60) */}
+            <g transform="translate(70, 60)">
+              {/* 1. Luminous Pulsing Solar Corona at Sun Center */}
+              <circle cx="0" cy="0" r="48" fill="url(#sunAuraGradUser)" className="sun-breathe" />
+
+              {/* 2. Soft Celestial God-Rays Rotating Directly Around Sun Center (0, 0) */}
+              <g className="sun-god-rays-spin">
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0"
+                  to="360"
+                  dur="90s"
+                  repeatCount="indefinite"
+                />
+                <g fill="url(#sunGodRayGrad)">
+                  <polygon points="0,0 99.5,-9.6 99.5,9.6" />
+                  <polygon points="0,0 91.0,41.5 81.4,58.1" />
+                  <polygon points="0,0 58.1,81.4 41.5,91.0" />
+                  <polygon points="0,0 9.6,99.5 -9.6,99.5" />
+                  <polygon points="0,0 -41.5,91.0 -58.1,81.4" />
+                  <polygon points="0,0 -81.4,58.1 -91.0,41.5" />
+                  <polygon points="0,0 -99.5,9.6 -99.5,-9.6" />
+                  <polygon points="0,0 -91.0,-41.5 -81.4,-58.1" />
+                  <polygon points="0,0 -58.1,-81.4 -41.5,-91.0" />
+                  <polygon points="0,0 -9.6,-99.5 9.6,-99.5" />
+                  <polygon points="0,0 41.5,-91.0 58.1,-81.4" />
+                  <polygon points="0,0 81.4,-58.1 91.0,-41.5" />
+                </g>
+              </g>
+
+              {/* 3. Subtle Solar Flare Ring Radiating from Center (0, 0) */}
+              <g className="sun-flare-ring-spin">
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0"
+                  to="360"
+                  dur="28s"
+                  repeatCount="indefinite"
+                />
+                <g stroke="#F59E0B" strokeWidth="2.2" strokeLinecap="round" opacity="0.75">
+                  <line x1="0" y1="-34" x2="0" y2="-28" />
+                  <line x1="0" y1="28" x2="0" y2="34" />
+                  <line x1="-34" y1="0" x2="-28" y2="0" />
+                  <line x1="28" y1="0" x2="34" y2="0" />
+                  <line x1="-24" y1="-24" x2="-20" y2="-20" />
+                  <line x1="20" y1="20" x2="24" y2="24" />
+                  <line x1="24" y1="-24" x2="20" y2="-20" />
+                  <line x1="-20" y1="20" x2="-24" y2="24" />
+                </g>
+              </g>
+
+              {/* 4. 3D Specular Sun Orb */}
+              <circle
+                cx="0"
+                cy="0"
+                r="26"
+                fill="url(#sunSphereGradUser)"
+                filter="drop-shadow(0 4px 16px rgba(245, 158, 11, 0.45))"
+              />
+
+              {/* 5. Realistic Curved Specular Highlight on Sun */}
+              <path
+                d="M -16,-8 A 20,20 0 0,1 8,-20"
+                fill="none"
+                stroke="#FFFFFF"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                opacity="0.8"
+              />
+            </g>
+
+            {/* 6. 3D Volumetric Fluffy Foreground Cloud with Sun Rim-Light */}
+            {/* Slowly drifts across, dissolves/disappears so full sun shines, then comes back when returning to this place */}
+            <g className="cloud-dissipate-return">
+              <g filter="drop-shadow(0 8px 20px rgba(180, 83, 9, 0.22))">
+                <path
+                  d="M 36,88 C 24,86 20,74 26,65 C 30,56 42,54 48,58 C 54,46 72,42 84,49 C 92,46 106,52 108,62 C 116,68 116,80 106,88 C 96,93 82,91 74,87 C 64,92 48,93 36,88 Z"
+                  fill="url(#cloudDayVolumetric)"
+                />
+
+                {/* 3D Volumetric Spherical Puff Highlights */}
+                <ellipse cx="68" cy="58" rx="16" ry="12" fill="url(#cloudPuffHighlight)" />
+                <ellipse cx="44" cy="70" rx="12" ry="9" fill="url(#cloudPuffHighlight)" />
+                <ellipse cx="94" cy="72" rx="14" ry="10" fill="url(#cloudPuffHighlight)" />
+
+                {/* Luminous Sunlit Golden Rim Light */}
+                <path
+                  d="M 26,65 C 30,56 42,54 48,58 C 54,46 72,42 84,49 C 92,46 106,52 108,62 C 116,68 116,78 108,84"
+                  stroke="url(#cloudDayRim)"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  fill="none"
+                  opacity="0.95"
+                />
+              </g>
             </g>
           </g>
         )}
